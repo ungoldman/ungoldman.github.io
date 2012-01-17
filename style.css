@@ -1,0 +1,46 @@
+    * {
+      border: 0;
+      margin: 0;
+      outline: 0;
+      padding: 0; }
+    html {
+      -webkit-animation-name: 'fadeload';
+      -webkit-animation-duration: 1s;
+      -webkit-animation-iteration-count: 1; }
+    @-webkit-keyframes fadeload {
+      0% { opacity: 0; -webkit-transform: opacity 0; }
+      100% { opacity: 1; -webkit-transform: opacity 1; }
+    }
+    html {
+      background: #fff;
+      color: #222;
+      font-family: sans-serif; }
+    body {
+      margin: 0 auto;
+      max-width: 700px;
+      padding: 0 15px; }
+    h1 {
+      padding-top: 100px;
+      font: bold 42px sans-serif; }
+    hr {
+      border: 1px solid #999;
+      margin: 10px 0 15px; }
+    ul {
+      list-style: none;
+      text-align: right; }
+    li {
+      clear: both;
+      float: right;
+      font: bold 18px sans-serif; }
+    li.name { font: bold 26px sans-serif; }
+    li.secondary {
+      font: normal 17px sans-serif;
+      color: #999; }
+    li.link {
+      color: #999;
+      margin: 10px 0 5px; }
+    li.link:hover { color: #666; }
+    li.link:hover a { color: #f33; }
+    a {
+      color: #f99;
+      text-decoration: none; }
