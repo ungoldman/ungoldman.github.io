@@ -87,7 +87,7 @@ header {
           .profile li.link:hover a { color: #f33; }
 
 /* webkit only */
-html {
+header, .content {
   -webkit-animation-name: 'fadeload';
   -webkit-animation-duration: 1s;
   -webkit-animation-iteration-count: 1;
