@@ -373,6 +373,7 @@ footer a {
       width: 100%;
     }
     #content section h2 { margin: 0; }
+    #content section article { margin: 0; }
     #content section ul {
       margin-left: 10%;
     }
