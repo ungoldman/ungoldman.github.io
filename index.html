@@ -1,14 +1,16 @@
 ---
 layout: default
-title: Hello there!
+title: Nate Goldman | Front End Developer
 ---
 
 {% for post in site.posts limit:5 %}
 <section class="post">
-  <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+  <h2>
+    <a href="{{ post.url }}">{{ post.title }}</a>
+  </h2>
   <article>
     {{ post.content }}
   </article>
-  <p class="timestamp">Posted on {{ post.date | date_to_long_string }}</p>
+  <p class="timestamp">{{ post.date | date_to_long_string }}</p>
 </section>
 {% endfor %}

@@ -20,18 +20,18 @@
 
 <header>
   <hgroup>
-    <h1><a href="http://ngoldman.me" target="_top">Nate Goldman</a></h1>
-    <h2>Front End Developer</h2>
+    <h1><a href="/" target="_top">Nate Goldman</a></h1>
+    <h2><a href="/" target="_top">Front End Developer</a></h2>
   </hgroup>
   <ul class="social">
     <li>
-      <a href="http://ngoldman.me" target="_top">home</a>
+      <a href="/" target="_top">home</a>
     </li>
     <li>
       <a href="http://twitter.com/n8ji" target="_top">twitter</a>
     </li>
     <li>
-      <a href="http://github.com/golna" target="_top">github</a>
+      <a href="http://github.com/ngoldman" target="_top">github</a>
     </li>
     <li>
       <a href="http://www.linkedin.com/in/nategoldman" target="_top">linkedin</a>
@@ -41,17 +41,18 @@
 
 <div id="content">
 
-<section>
-  <h2>{{ page.title }}</h2>
-  <article>
-    {{ content }}
-  </article>
-</section>
+  <section class="post">
+    <h2>{{ page.title }}</h2>
+    <article>
+      {{ content }}
+    </article>
+    <p class="timestamp">{{ page.date | date_to_long_string }}</p>
+  </section>
 
-</div>
+</div><!-- /content -->
 
-</div>
-</div>
+</div><!-- /main    -->
+</div><!-- /wrapper -->
 
 <!--section class="profile">
     <ul>
@@ -67,3 +68,6 @@
 <footer>
   <p class="right">Author: Nathaniel N.M. Goldman ~ (cc) 2012 Attribution Share-Alike</a></p>
 </footer>
+
+</body>
+</html>
