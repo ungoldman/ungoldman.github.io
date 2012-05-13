@@ -55,38 +55,46 @@ ul.social li {
   float: left;
 }
 ul.social li a {
-  background: #ace;
-  background: -webkit-linear-gradient(bottom, #38b, #7be);
-  background: -moz-linear-gradient(bottom, #38b, #7be);
-  background: -ms-linear-gradient(bottom, #38b, #7be);
-  background: linear-gradient(bottom, #38b, #7be);
+  background: #56A2D5;
+  background-image: linear-gradient(bottom, #38b, #7be);
+  background-image: -o-linear-gradient(bottom, #38b, #7be);
+  background-image: -moz-linear-gradient(bottom, #38b, #7be);
+  background-image: -webkit-linear-gradient(bottom, #38b, #7be);
+  background-image: -ms-linear-gradient(bottom, #38b, #7be);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, rgb(51,136,187)),
+    color-stop(1, rgb(119,187,238))
+  );
   -webkit-box-shadow: 0 1px 0 #49c,
-              0 2px 0 #4993c9,
-              0 3px 0 #38b,
-              0 4px 0 #3882b8,
-              0 3px 2px rgba(0,0,0,.4),
-              0 6px 1px rgba(0,0,0,.1),
-              0 0 5px rgba(0,0,0,.1),
-              0 1px 3px rgba(0,0,0,.3),
-              0 3px 5px rgba(0,0,0,.2);
-  -moz-box-shadow: 0 1px 0 #49c,
-              0 2px 0 #4993c9,
-              0 3px 0 #38b,
-              0 4px 0 #3882b8,
-              0 3px 2px rgba(0,0,0,.4),
-              0 6px 1px rgba(0,0,0,.1),
-              0 0 5px rgba(0,0,0,.1),
-              0 1px 3px rgba(0,0,0,.3),
-              0 3px 5px rgba(0,0,0,.2);
-  box-shadow: 0 1px 0 #49c,
-              0 2px 0 #4993c9,
-              0 3px 0 #38b,
-              0 4px 0 #3882b8,
-              0 3px 2px rgba(0,0,0,.4),
-              0 6px 1px rgba(0,0,0,.1),
-              0 0 5px rgba(0,0,0,.1),
-              0 1px 3px rgba(0,0,0,.3),
-              0 3px 5px rgba(0,0,0,.2);
+                      0 2px 0 #4993c9,
+                      0 3px 0 #38b,
+                      0 4px 0 #3882b8,
+                      0 3px 2px rgba(0,0,0,.4),
+                      0 6px 1px rgba(0,0,0,.1),
+                      0 0 5px rgba(0,0,0,.1),
+                      0 1px 3px rgba(0,0,0,.3),
+                      0 3px 5px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 1px 0 #49c,
+                      0 2px 0 #4993c9,
+                      0 3px 0 #38b,
+                      0 4px 0 #3882b8,
+                      0 3px 2px rgba(0,0,0,.4),
+                      0 6px 1px rgba(0,0,0,.1),
+                      0 0 5px rgba(0,0,0,.1),
+                      0 1px 3px rgba(0,0,0,.3),
+                      0 3px 5px rgba(0,0,0,.2);
+          box-shadow: 0 1px 0 #49c,
+                      0 2px 0 #4993c9,
+                      0 3px 0 #38b,
+                      0 4px 0 #3882b8,
+                      0 3px 2px rgba(0,0,0,.4),
+                      0 6px 1px rgba(0,0,0,.1),
+                      0 0 5px rgba(0,0,0,.1),
+                      0 1px 3px rgba(0,0,0,.3),
+                      0 3px 5px rgba(0,0,0,.2);
   color: #fff;
   display: block;
   font-size: 15px;
@@ -107,47 +115,62 @@ ul.social li a {
     border-radius: 0 6px 6px 0;
   }
   ul.social a:hover {
-    background: #6cf;
-    background: -webkit-linear-gradient(bottom, #79b, #8df);
-    background: -moz-linear-gradient(bottom, #79b, #8df);
-    background: -ms-linear-gradient(bottom, #79b, #8df);
-    background: linear-gradient(bottom, #79b, #8df);
+    background: #81C1E3;
+    background-image: linear-gradient(bottom, #79b, #8df);
+    background-image: -o-linear-gradient(bottom, #79b, #8df);
+    background-image: -moz-linear-gradient(bottom, #79b, #8df);
+    background-image: -webkit-linear-gradient(bottom, #79b, #8df);
+    background-image: -ms-linear-gradient(bottom, #79b, #8df);
+    background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0, rgb(119,153,187)),
+      color-stop(1, rgb(136,221,255))
+    );
     -webkit-box-shadow: 0 1px 0 #7be,
-                0 2px 0 #79b3e9,
-                0 3px 0 #6ad,
-                0 3px 2px rgba(0,0,0,.4),
-                0 6px 1px rgba(0,0,0,.1);
-    -moz-box-shadow: 0 1px 0 #7be,
-                0 2px 0 #79b3e9,
-                0 3px 0 #6ad,
-                0 3px 2px rgba(0,0,0,.4),
-                0 6px 1px rgba(0,0,0,.1);
-    box-shadow: 0 1px 0 #7be,
-                0 2px 0 #79b3e9,
-                0 3px 0 #6ad,
-                0 3px 2px rgba(0,0,0,.4),
-                0 6px 1px rgba(0,0,0,.1);
+                        0 2px 0 #79b3e9,
+                        0 3px 0 #6ad,
+                        0 3px 2px rgba(0,0,0,.4),
+                        0 6px 1px rgba(0,0,0,.1);
+       -moz-box-shadow: 0 1px 0 #7be,
+                        0 2px 0 #79b3e9,
+                        0 3px 0 #6ad,
+                        0 3px 2px rgba(0,0,0,.4),
+                        0 6px 1px rgba(0,0,0,.1);
+            box-shadow: 0 1px 0 #7be,
+                        0 2px 0 #79b3e9,
+                        0 3px 0 #6ad,
+                        0 3px 2px rgba(0,0,0,.4),
+                        0 6px 1px rgba(0,0,0,.1);
     text-shadow: 0 1px 0 #888;
   }
   ul.social a:active {
-    background: #6cf;
-    background: -webkit-linear-gradient(bottom, #79b, #8df);
-    background: -moz-linear-gradient(bottom, #79b, #8df);
-    background: -ms-linear-gradient(bottom, #79b, #8df);
-    background: linear-gradient(bottom, #79b, #8df);
+    background: #81C1E3;
+    background-image: linear-gradient(bottom, #79b, #8df);
+    background-image: -o-linear-gradient(bottom, #79b, #8df);
+    background-image: -moz-linear-gradient(bottom, #79b, #8df);
+    background-image: -webkit-linear-gradient(bottom, #79b, #8df);
+    background-image: -ms-linear-gradient(bottom, #79b, #8df);
+    background-image: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0, rgb(119,153,187)),
+      color-stop(1, rgb(136,221,255))
+    );
     -webkit-box-shadow: 0 1px 0 #38b,
-                0 2px 2px rgba(0,0,0,.4),
-                0 5px 1px rgba(0,0,0,.1);
-    -moz-box-shadow: 0 1px 0 #38b,
-                0 2px 2px rgba(0,0,0,.4),
-                0 5px 1px rgba(0,0,0,.1);
-    box-shadow: 0 1px 0 #38b,
-                0 2px 2px rgba(0,0,0,.4),
-                0 5px 1px rgba(0,0,0,.1);
+                        0 2px 2px rgba(0,0,0,.4),
+                        0 5px 1px rgba(0,0,0,.1);
+       -moz-box-shadow: 0 1px 0 #38b,
+                        0 2px 2px rgba(0,0,0,.4),
+                        0 5px 1px rgba(0,0,0,.1);
+            box-shadow: 0 1px 0 #38b,
+                        0 2px 2px rgba(0,0,0,.4),
+                        0 5px 1px rgba(0,0,0,.1);
     position: relative;
     bottom: -2px;
   }
-
 
 /* transition effects */
 ul.social a {
