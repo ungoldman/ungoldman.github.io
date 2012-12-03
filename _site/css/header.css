@@ -1,0 +1,193 @@
+header.site {
+  background: #cedce7;
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NlZGNlNyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM1OTZhNzIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72));
+  background: -webkit-linear-gradient(top, #cedce7 0%,#596a72 100%);
+  background: -o-linear-gradient(top, #cedce7 0%,#596a72 100%);
+  background: -ms-linear-gradient(top, #cedce7 0%,#596a72 100%);
+  background: linear-gradient(to bottom, #cedce7 0%,#596a72 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', endColorstr='#596a72',GradientType=0 );
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  line-height: 1.5;
+  font-family: 'Open Sans', helvetica, arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header.site .container {
+  text-align: center;
+}
+
+header.site .wrapper {
+  display: inline-block;
+  padding: 30px 20px 40px;
+  text-align: left;
+}
+
+header.site .name {
+  font-family: 'Exo', 'Open Sans', arial, helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 62px;
+  padding-top: 8px;
+}
+
+header.site .tagline {
+  font-family: 'Open Sans', arial, helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+i.icon.logo {
+  display: inline-block;
+  background: url(/img/logo.png) center center no-repeat;
+  height: 100px;
+  width: 100px;
+
+  animation-play-state: running;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-name: spin;
+}
+
+@keyframes spin {
+  0%   { -webkit-transform: rotate(0deg);    }
+  50%  { -webkit-transform: rotate(1080deg); }
+  100% { -webkit-transform: rotate(0deg);    }
+}
+
+/* From: http://www.paulrhayes.com/experiments/cube-3d/touch.html */
+.viewport {
+  float: left;
+  margin: 0 40px 0 10px;
+
+  -webkit-perspective: 800;
+  -webkit-perspective-origin: 50% 50px;
+  -webkit-transform: scale(0.75,0.75);
+
+  -moz-perspective: 800;
+  -moz-perspective-origin: 50% 50px;
+  -moz-transform: scale(0.75,0.75);
+
+  perspective: 800;
+  perspective-origin: 50% 50px;
+  transform: scale(0.75,0.75);
+}
+
+.cube {
+  position: relative;
+  margin: 0 auto;
+  height: 110px;
+  width: 110px;
+  -webkit-transition: -webkit-transform 50ms linear;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: rotateX(-10deg) rotateY(20deg);
+
+  -moz-transition: -moz-transform 50ms linear;
+  -moz-transform-style: preserve-3d;
+  -moz-transform: rotateX(-10deg) rotateY(20deg);
+
+  transition: transform 50ms linear;
+  transform-style: preserve-3d;
+  transform: rotateX(-10deg) rotateY(20deg);
+}
+
+  .cube h2 {
+    color: #fff;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .cube a {
+    color: #fff;
+  }
+
+  .cube > div {
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    padding: 5px;
+    background-color: rgba(63,107,157,.85);
+    font-size: 110px;
+    line-height: 1;
+    text-align: center;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(255,255,255,.3);
+  }
+
+    .cube > div span {
+      font-size: 110px;
+      line-height: 110px;
+    }
+
+  .cube > div:first-child  {
+    -webkit-transform: rotateX(90deg) translateZ(75px);
+    -moz-transform: rotateX(90deg) translateZ(75px);
+    transform: rotateX(90deg) translateZ(75px);
+  }
+
+  .cube > div:nth-child(2) {
+    -webkit-transform: translateZ(75px);
+    -moz-transform: translateZ(75px);
+    transform: translateZ(75px);
+  }
+
+  .cube > div:nth-child(3) {
+    -webkit-transform: rotateY(90deg) translateZ(75px);
+    -moz-transform: rotateY(90deg) translateZ(75px);
+    transform: rotateY(90deg) translateZ(75px);
+    text-align: center;
+  }
+
+  .cube > div:nth-child(4) {
+    -webkit-transform: rotateY(180deg) translateZ(75px);
+    -moz-transform: rotateY(180deg) translateZ(75px);
+    transform: rotateY(180deg) translateZ(75px);
+  }
+
+  .cube > div:nth-child(5) {
+    -webkit-transform: rotateY(-90deg) translateZ(75px);
+    -moz-transform: rotateY(-90deg) translateZ(75px);
+    transform: rotateY(-90deg) translateZ(75px);
+  }
+
+  .cube > div:nth-child(5) p {
+    text-align: center;
+    font-size: 2.77em;
+    margin: 40px;
+    line-height: 60px;
+  }
+
+  .cube > div:nth-child(6) {
+    -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+    -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+    transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+  }
+
+/* respondo */
+
+@media (max-width: 767px) {
+  header.site .wrapper {
+    padding: 30px 20px 40px;
+    text-align: center;
+  }
+  header.site .name {
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+  header.site .tagline {
+    font-size: 18px;
+    padding: 0 20px;
+  }
+  .viewport {
+    float: none;
+    margin: 0 0 20px;
+  }
+}

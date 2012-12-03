@@ -1,0 +1,48 @@
+@import url(http://fonts.googleapis.com/css?family=Exo:400,600,700,800);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700);
+
+/* defaults */
+
+html, body {
+  background: #fff;
+  color: #333;
+  font-family: 'Open Sans', helvetica, arial, sans-serif;
+  font-weight: 400;
+}
+
+a {
+  color: #369;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #67c9d4;
+}
+
+/* util */
+
+.group:before,
+.group:after {
+    content: "";
+    display: table;
+}
+.group:after {
+    clear: both;
+}
+.group {
+    zoom: 1; /* For IE 6/7 (trigger hasLayout) */
+}
+
+/* bootstrap overrides */
+
+@media (max-width: 767px) {
+  body {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+  #content {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
