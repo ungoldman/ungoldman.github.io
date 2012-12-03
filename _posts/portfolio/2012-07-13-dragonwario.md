@@ -9,5 +9,6 @@ tags: node.js, javascript, command-line, games
 ---
 
 Dragon Wario was a simple demonstration of a text-only choose-your-own-adventure
-game using Node.js's readline module. I also made us of the colors module to
-give the text a bit more flair.
+game using Node.js's [readline](http://nodejs.org/api/readline.html) module.
+I also made use of the [colors](https://npmjs.org/package/colors) module to give
+the text a bit more zazz.
