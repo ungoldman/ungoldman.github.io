@@ -12,4 +12,9 @@
 .navbar .brand {
   font-family: 'Exo', 'Maven Pro', arial, helvetica, sans-serif;
   font-weight: 600;
+  color: #ccc;
+}
+
+.navbar .brand:hover {
+  color: #fff;
 }
