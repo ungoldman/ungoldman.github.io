@@ -4,27 +4,24 @@ title: Lab | Nate Goldman | Web Developer, Portland, Oregon
 ---
 
 <header class="page-header">
-  <h2>Lab</h2>
+  <h2><i class="icon-beaker"></i>&nbsp;&nbsp;Lab</h2>
 </header>
 
-<div class="articles">
+<div class="articles group">
   {% for post in site.categories.lab %}
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
-        <p class="detail"><time datetime="{{ page.date }}">{{ post.date | date_to_long_string }}</time></p>
-
-        {% if post.image %}
-        <figure class="screenshot">
-          <img class="screenshot" src="{{ post.image }}" alt="">
+    <a class="item" href="{{ post.url }}">
+      {% if post.image %}
+        <figure class="screenshot" style="background-image:url({{ post.image }});">
+          <img src="{{ post.image }}" alt="">
         </figure>
-        {% endif %}
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      {% endif %}
+      <header>
+        <h3 class="title">{{ post.title }}</h3>
       </header>
 
-      {{ post.description }}
-    </article>
+      <p class="description">{{ post.description }}</p>
+
+      <time class="timestamp">{{ post.date | date: "%B %Y" }}</time>
+    </a>
   {% endfor %}
 </div>

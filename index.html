@@ -7,23 +7,25 @@ title: Nate Goldman | Web Developer, Portland, Oregon
   <h2>Recent Work</h2>
 </header>
 
-<div class="articles">
-  {% for post in site.posts limit:5 %}
-    <article class="item">
+<div class="articles group">
+  {% for post in site.posts limit:6 %}
+    <a class="item" href="{{ post.url }}">
       {% if post.image %}
-        <figure class="screenshot">
-          <img class="screenshot" src="{{ post.image }}" alt="">
+        <figure class="screenshot" style="background-image:url({{ post.image }});">
+          <img src="{{ post.image }}" alt="">
         </figure>
       {% endif %}
       <header>
-        <h3 class="title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
-        <p class="detail"><time datetime="{{ page.date }}">{{ post.date | date_to_long_string }}</time></p>
+        <h3 class="title">{{ post.title }}</h3>
+        <!-- <p class="detail"></p> -->
 
         <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
         <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
       </header>
 
-      {{ post.description }}
-    </article>
+      <p class="description">{{ post.description }}</p>
+
+      <time class="timestamp">{{ post.date | date: "%B %Y" }}</time>
+    </a>
   {% endfor %}
 </div>

@@ -12,18 +12,20 @@
 <!-- <link href="/css/bootstrap.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="/css/bootstrap-responsive.min.css" media="screen" rel="stylesheet" type="text/css" /> -->
 <link rel="stylesheet" href="/css/bootstrap.css">
-<link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="/css/bootstrap-responsive.css">
 <link rel="stylesheet" href="/css/font-awesome.css">
 <link rel="stylesheet" href="/css/global.css">
 <link rel="stylesheet" href="/css/header.css">
 <link rel="stylesheet" href="/css/nav.css">
 <link rel="stylesheet" href="/css/content.css">
+<link rel="stylesheet" href="/css/footer.css">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <script type="text/javascript" src="/js/prefixfree.js"></script>
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-static-top">
+<div id="main">
+  <div class="navbar navbar-inverse navbar-static-top">
   <div class="navbar-inner">
     <div class="container">
       <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -44,7 +46,7 @@
           </li>
           <li>
             <a href="/about.html">
-            <i class="icon-book"></i> About
+            <i class="icon-user"></i> About
             </a>
           </li>
         </ul>
@@ -82,190 +84,170 @@
 <div class="container">
   <section id="content">
     <header class="page-header">
-  <h2>Lab</h2>
+  <h2><i class="icon-beaker"></i>&nbsp;&nbsp;Lab</h2>
 </header>
 
-<div class="articles">
+<div class="articles group">
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/tweetsnearme.html">Tweets Near Me</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-tweetsnearme1.png" alt="">
+    <a class="item" href="/lab/2012/09/01/tetromino.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-tetromino1.png);">
+          <img src="/img/work/2012-12-01-tetromino1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">Tetromino</h3>
       </header>
 
-      A Twitter and Google Maps mashup.
-    </article>
+      <p class="description">A multiplayer tetris clone.</p>
+
+      <time class="timestamp">September 2012</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/tetromino.html">Tetromino</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-tetromino1.png" alt="">
+    <a class="item" href="/lab/2012/08/16/cognac.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-cognac1.png);">
+          <img src="/img/work/2012-12-01-cognac1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">Cognac</h3>
       </header>
 
-      A multiplayer tetris clone.
-    </article>
+      <p class="description">A CoffeeScript powered Express application boilerplate.</p>
+
+      <time class="timestamp">August 2012</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/martin.html">Martin</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-martin1.png" alt="">
+    <a class="item" href="/lab/2012/07/13/dragonwario.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/dragonwario.png);">
+          <img src="/img/work/dragonwario.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">Dragon Wario</h3>
       </header>
 
-      A Sinatra MVC application boilerplate optimized for Heroku.
-    </article>
+      <p class="description">A command-line text adventure demo written using Node.js.</p>
+
+      <time class="timestamp">July 2012</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/gifst.html">Gif.st</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-gifst1.png" alt="">
+    <a class="item" href="/lab/2012/06/01/geochat.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-geochat1.png);">
+          <img src="/img/work/2012-12-01-geochat1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">Geochat</h3>
       </header>
 
-      A service for uploading and sharing animated gifs.
-    </article>
+      <p class="description">A real-time, location-aware map-based chat service.</p>
+
+      <time class="timestamp">June 2012</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/geochat.html">Geochat</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-geochat1.png" alt="">
+    <a class="item" href="/lab/2011/12/01/martin.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-martin1.png);">
+          <img src="/img/work/2012-12-01-martin1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">Martin</h3>
       </header>
 
-      A real-time, location-aware map-based chat service.
-    </article>
+      <p class="description">A Sinatra MVC application boilerplate optimized for Heroku.</p>
+
+      <time class="timestamp">December 2011</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/dragonwario.html">Dragon Wario</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-tweetsnearme1.png" alt="">
+    <a class="item" href="/lab/2011/12/01/class-cloud.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-classcloud1.png);">
+          <img src="/img/work/2012-12-01-classcloud1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">Class Cloud</h3>
       </header>
 
-      A command-line text adventure written with Node.js.
-    </article>
+      <p class="description">An prototype educational tool to help students track assignments and files.</p>
+
+      <time class="timestamp">December 2011</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/cognac.html">Cognac</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-cognac1.png" alt="">
+    <a class="item" href="/lab/2011/11/11/aipd-redesign.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-aipd1.png);">
+          <img src="/img/work/2012-12-01-aipd1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">AIPD Redesign</h3>
       </header>
 
-      A CoffeeScript powered Express application boilerplate.
-    </article>
+      <p class="description">A redesign of the Art Institute of Portland's site for a class project.</p>
+
+      <time class="timestamp">November 2011</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/class-cloud.html">Class Cloud</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-classcloud1.png" alt="">
+    <a class="item" href="/lab/2011/09/16/gifst.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-gifst1.png);">
+          <img src="/img/work/2012-12-01-gifst1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">gif.st</h3>
       </header>
 
-      A tool for reviewing and commenting designs.
-    </article>
+      <p class="description">A service for uploading and sharing animated gifs.</p>
+
+      <time class="timestamp">September 2011</time>
+    </a>
   
-    <article class="item">
-      <header>
-        <h3 class="title"><a href="/lab/2012/12/01/aipd-redesign.html">AIPD Redesign</a></h3>
-        <p class="detail"><time datetime="">01 December 2012</time></p>
-
-        
-        <figure class="screenshot">
-          <img class="screenshot" src="/img/work/2012-12-01-aipd1.png" alt="">
+    <a class="item" href="/lab/2011/06/01/tweetsnearme.html">
+      
+        <figure class="screenshot" style="background-image:url(/img/work/2012-12-01-tweetsnearme1.png);">
+          <img src="/img/work/2012-12-01-tweetsnearme1.png" alt="">
         </figure>
-        
-
-        <!-- <p class="detail">Client: <a href="http://www.symantec.com/">Symantec</a></h4>
-        <p class="detail">Agency: <a href="http://finedesigngroup.com">Fine</a></p> -->
+      
+      <header>
+        <h3 class="title">tweetsnear.me</h3>
       </header>
 
-      A redesign of the Art Institute of Portland's site for a class project.
-    </article>
+      <p class="description">A Twitter and Google Maps mashup.</p>
+
+      <time class="timestamp">June 2011</time>
+    </a>
   
 </div>
 
   </section>
 </div>
 
+</div>
 
 <footer class="site group">
   <div class="container">
-    <p class="pull-left">Hi</p>
-    <p class="pull-right">Bye</p>
+    <p class="philo"></p>
   </div>
 </footer>
 
 <script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery.pjax.js"></script>
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <script type="text/javascript" src="/js/cube.js"></script>
-<script type="text/javascript" src="/js/jquery.masonry.js"></script>
+<script type="text/javascript" src="/js/philo.js"></script>
+<script type="text/javascript">
+  $(function(){
+    $('#main').pjax("a[target!='_blank']");
+    $('[rel=tooltip]').tooltip();
+  });
+</script>
 
 </body>
 </html>
