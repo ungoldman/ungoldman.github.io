@@ -2,6 +2,7 @@
 layout: portfolio_page
 title: Tetromino
 description: A multiplayer tetris clone.
+site: http://tetromino.herokuapp.com
 source: https://github.com/nodebros/tetromino
 image: /img/work/2012-12-01-tetromino1.png
 category: lab

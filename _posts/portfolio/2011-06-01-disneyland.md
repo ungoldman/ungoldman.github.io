@@ -5,7 +5,7 @@ description: A Facebook tab for Disney's Disneyland theme park.
 image: /img/work/disneyland-fb.png
 client: Disney
 client-site: http://disney.com
-agency: Dachis
+agency: Dachis Group
 agency-site: http://dachisgroup.com
 category: work
 tags: html, css, javascript, jquery, ruby, sinatra, facebook
