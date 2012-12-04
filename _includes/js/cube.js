@@ -1,7 +1,7 @@
 // From: http://www.paulrhayes.com/experiments/cube-3d/touch.html
 $(function(){
     if (! $('.cube').length) return;
-    if (! $(window).width() < 768) return;
+    if ($(window).width() < 768) return;
 
     var el = document.createElement('div'),
         transformProps = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' '),
