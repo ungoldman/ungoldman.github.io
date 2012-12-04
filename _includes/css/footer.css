@@ -39,3 +39,15 @@ footer.site .nav li a:hover {
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  footer.site .nav.pull-left,
+  footer.site .nav.pull-right {
+    float: none;
+    text-align: center;
+  }
+  footer.site .nav li {
+    float: none;
+    display: inline-block;
+  }
+}

@@ -27,7 +27,7 @@ JavaScript) and back-end code (Ruby on Rails). This site makes heavy use of
 JavaScript and jQuery to drive the animation. It also uses URL hashes to handle
 navigating each part of the story.
 
-![](/img/work/befriends2.png)
+![](/img/work/befriends2.jpg)
 
 One of the most interesting pieces of animation is the first part of the
 [clutter](http://www.befriendswithyourpc.com/#clutter) section, which features a

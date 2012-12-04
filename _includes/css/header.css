@@ -55,109 +55,13 @@ i.icon.logo {
   100% { -webkit-transform: rotate(0deg);    }
 }
 
-/* From: http://www.paulrhayes.com/experiments/cube-3d/touch.html */
-.viewport {
-  float: left;
-  margin: 0 40px 0 10px;
-
-  -webkit-perspective: 800;
-  -webkit-perspective-origin: 50% 50px;
-  -webkit-transform: scale(0.75,0.75);
-
-  -moz-perspective: 800;
-  -moz-perspective-origin: 50% 50px;
-  -moz-transform: scale(0.75,0.75);
-
-  perspective: 800;
-  perspective-origin: 50% 50px;
-  transform: scale(0.75,0.75);
-}
-
-.cube {
-  position: relative;
-  margin: 0 auto;
-  height: 110px;
-  width: 110px;
-  -webkit-transition: -webkit-transform 50ms linear;
-  -webkit-transform-style: preserve-3d;
-  -webkit-transform: rotateX(-10deg) rotateY(20deg);
-
-  -moz-transition: -moz-transform 50ms linear;
-  -moz-transform-style: preserve-3d;
-  -moz-transform: rotateX(-10deg) rotateY(20deg);
-
-  transition: transform 50ms linear;
-  transform-style: preserve-3d;
-  transform: rotateX(-10deg) rotateY(20deg);
-}
-
-  .cube h2 {
-    color: #fff;
-    padding-top: 0;
-    margin-top: 0;
-  }
-
-  .cube a {
-    color: #fff;
-  }
-
-  .cube > div {
-    position: absolute;
-    height: 100px;
-    width: 100px;
-    padding: 5px;
-    background-color: rgba(63,107,157,.85);
-    font-size: 110px;
-    line-height: 1;
-    text-align: center;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    box-shadow: 0 0 5px rgba(255,255,255,.3);
-  }
-
-  .cube > div:first-child  {
-    -webkit-transform: rotateX(90deg) translateZ(75px);
-    -moz-transform: rotateX(90deg) translateZ(75px);
-    transform: rotateX(90deg) translateZ(75px);
-  }
-
-  .cube > div:nth-child(2) {
-    -webkit-transform: translateZ(75px);
-    -moz-transform: translateZ(75px);
-    transform: translateZ(75px);
-  }
-
-  .cube > div:nth-child(3) {
-    -webkit-transform: rotateY(90deg) translateZ(75px);
-    -moz-transform: rotateY(90deg) translateZ(75px);
-    transform: rotateY(90deg) translateZ(75px);
-    text-align: center;
-  }
-
-  .cube > div:nth-child(4) {
-    -webkit-transform: rotateY(180deg) translateZ(75px);
-    -moz-transform: rotateY(180deg) translateZ(75px);
-    transform: rotateY(180deg) translateZ(75px);
-  }
-
-  .cube > div:nth-child(5) {
-    -webkit-transform: rotateY(-90deg) translateZ(75px);
-    -moz-transform: rotateY(-90deg) translateZ(75px);
-    transform: rotateY(-90deg) translateZ(75px);
-  }
-
-  .cube > div:nth-child(6) {
-    -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
-    -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
-    transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
-  }
+.viewport { display: none }
 
 /* respondo */
 
 @media (max-width: 767px) {
   header.site .wrapper {
-    padding: 35px 20px 20px;
+    padding: 35px 20px 30px;
     text-align: center;
   }
   header.site .meta {
@@ -173,10 +77,107 @@ i.icon.logo {
     font-size: 16px;
     padding: 0 20px;
   }
+}
+
+@media (min-width: 768px) {
+  /* From: http://www.paulrhayes.com/experiments/cube-3d/touch.html */
   .viewport {
-    float: none;
-    margin: 0 0 32px;
+    display: block;
+    float: left;
+    margin: 0 40px 0 10px;
+
+    -webkit-perspective: 800;
+    -webkit-perspective-origin: 50% 50px;
+    -webkit-transform: scale(0.75,0.75);
+
+    -moz-perspective: 800;
+    -moz-perspective-origin: 50% 50px;
+    -moz-transform: scale(0.75,0.75);
+
+    perspective: 800;
+    perspective-origin: 50% 50px;
+    transform: scale(0.75,0.75);
   }
+
+  .cube {
+    position: relative;
+    margin: 0 auto;
+    height: 110px;
+    width: 110px;
+    -webkit-transition: -webkit-transform 50ms linear;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform: rotateX(-10deg) rotateY(20deg);
+
+    -moz-transition: -moz-transform 50ms linear;
+    -moz-transform-style: preserve-3d;
+    -moz-transform: rotateX(-10deg) rotateY(20deg);
+
+    transition: transform 50ms linear;
+    transform-style: preserve-3d;
+    transform: rotateX(-10deg) rotateY(20deg);
+  }
+
+    .cube h2 {
+      color: #fff;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .cube a {
+      color: #fff;
+    }
+
+    .cube > div {
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      padding: 5px;
+      background-color: rgba(63,107,157,.85);
+      font-size: 110px;
+      line-height: 1;
+      text-align: center;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      box-shadow: 0 0 5px rgba(255,255,255,.3);
+    }
+
+    .cube > div:first-child  {
+      -webkit-transform: rotateX(90deg) translateZ(75px);
+      -moz-transform: rotateX(90deg) translateZ(75px);
+      transform: rotateX(90deg) translateZ(75px);
+    }
+
+    .cube > div:nth-child(2) {
+      -webkit-transform: translateZ(75px);
+      -moz-transform: translateZ(75px);
+      transform: translateZ(75px);
+    }
+
+    .cube > div:nth-child(3) {
+      -webkit-transform: rotateY(90deg) translateZ(75px);
+      -moz-transform: rotateY(90deg) translateZ(75px);
+      transform: rotateY(90deg) translateZ(75px);
+      text-align: center;
+    }
+
+    .cube > div:nth-child(4) {
+      -webkit-transform: rotateY(180deg) translateZ(75px);
+      -moz-transform: rotateY(180deg) translateZ(75px);
+      transform: rotateY(180deg) translateZ(75px);
+    }
+
+    .cube > div:nth-child(5) {
+      -webkit-transform: rotateY(-90deg) translateZ(75px);
+      -moz-transform: rotateY(-90deg) translateZ(75px);
+      transform: rotateY(-90deg) translateZ(75px);
+    }
+
+    .cube > div:nth-child(6) {
+      -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+      -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+      transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+    }
 }
 
 @media (max-width: 979px) and (min-width: 768px) {

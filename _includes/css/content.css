@@ -154,6 +154,7 @@
 }
 
 .post img {
+  width: 100%;
   margin: 0 auto 24px;
   display: block;
   box-shadow: 0 7px 9px -6px rgba(0, 0, 0, .7);
@@ -225,5 +226,11 @@
   }
   #content {
     width: auto;
+  }
+}
+
+@media (max-width:480px) {
+  .item .screenshot {
+    height: 100px;
   }
 }
