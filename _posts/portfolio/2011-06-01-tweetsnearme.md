@@ -3,7 +3,7 @@ layout: portfolio_page
 title: tweetsnear.me
 description: A Twitter and Google Maps mashup.
 source: https://github.com/ngoldman/tweetsnearme
-image: /img/work/2012-12-01-tweetsnearme1.png
+image: /img/work/tnm.jpg
 category: lab
 tags: node.js, javascript, twitter, geolocation, mapping, html5
 ---

@@ -4,7 +4,7 @@ title: AIPD Redesign
 description: A redesign of the Art Institute of Portland's site for a class project.
 site: http://aipd.heroku.com
 source: https://github.com/ngoldman/aipd-redesign
-image: /img/work/2012-12-01-aipd1.png
+image: /img/work/aipd-redesign.jpg
 category: lab
 tags: ruby, sinatra, less, javascript, jquery
 ---

@@ -7,7 +7,7 @@ client-site: http://www.symantec.com
 agency: Fine
 agency-site: http://finedesigngroup.com
 site: http://www.befriendswithyourpc.com
-image: /img/work/2012-11-29-befriends3.png
+image: /img/work/befriends1.jpg
 category: work
 tags: ruby, rails, animation, javascript, jquery
 ---
@@ -27,7 +27,7 @@ JavaScript) and back-end code (Ruby on Rails). This site makes heavy use of
 JavaScript and jQuery to drive the animation. It also uses URL hashes to handle
 navigating each part of the story.
 
-![](/img/work/2012-11-29-befriends2.png)
+![](/img/work/befriends2.png)
 
 One of the most interesting pieces of animation is the first part of the
 [clutter](http://www.befriendswithyourpc.com/#clutter) section, which features a

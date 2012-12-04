@@ -4,7 +4,7 @@ title: Class Cloud
 description: An prototype educational tool to help students track assignments and files.
 site: http://class-cloud-staging.herokuapp.com
 source: https://github.com/ngoldman/class-cloud
-image: /img/work/2012-12-01-classcloud1.png
+image: /img/work/class-cloud.jpg
 category: lab
 tags: ruby, rails, postgresql, javascript, jquery, project management
 ---

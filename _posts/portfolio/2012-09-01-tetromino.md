@@ -4,7 +4,7 @@ title: Tetromino
 description: A multiplayer tetris clone.
 site: http://tetromino.herokuapp.com
 source: https://github.com/nodebros/tetromino
-image: /img/work/2012-12-01-tetromino1.png
+image: /img/work/tetromino.jpg
 category: lab
 tags: node.js, javascript, html5, canvas, couchdb, games
 ---
