@@ -4,12 +4,12 @@
 
 #content {
   padding-bottom: 100px;
-  max-width: 940px;
   margin: 0 auto;
 }
 
 .page-header h2 {
   color: #777;
+  color: #444;
   font-family: 'Exo', 'Open Sans', arial, helvetica, sans-serif;
   font-weight: 400;
 }
@@ -52,7 +52,7 @@
               0 5px 0 -3px #ccc,
               0 7px 0 -4px #ddd,
               0 0 40px rgba(100, 100, 100, 0.1) inset;
-  transition: all .1s linear;
+  transition: color .1s linear;
   border-radius: 8px 8px 0 0;
   border: 1px solid #ccc;
   color: #444;
@@ -87,7 +87,8 @@
 
 .item .screenshot {
   box-shadow: 0 0 6px rgba(0,0,0,0.3) inset;
-  background-position: 0 0;
+  background-color: #999;
+  background-position: center 0;
   background-repeat: no-repeat;
   background-size: 100%;
   height: 150px;
@@ -163,6 +164,12 @@
   font-size: 13px;
 }
 
+@media (max-width: 767px) {
+  .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+    margin: 0;
+  }
+}
+
 @media (min-width: 660px) and (max-width: 979px) {
   #content {
     max-width: 620px;
@@ -202,5 +209,20 @@
   footer.site {
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media (min-width: 980px) and (max-width: 1199px) {
+  #content {
+    max-width: 940px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .item, .item .screenshot {
+    width: 356px;
+  }
+  #content {
+    width: auto;
   }
 }

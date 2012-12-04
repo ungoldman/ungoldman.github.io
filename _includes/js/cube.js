@@ -1,6 +1,5 @@
 // From: http://www.paulrhayes.com/experiments/cube-3d/touch.html
 $(function(){
-
     if (! $('.cube').length) return;
 
     var el = document.createElement('div'),

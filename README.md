@@ -1,3 +1,3 @@
 # ngoldman.github.com
 
-gh-pages ftw!
+Nate Goldman's portfolio site.

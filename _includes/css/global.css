@@ -45,6 +45,16 @@ a:hover {
     zoom: 1; /* For IE 6/7 (trigger hasLayout) */
 }
 
+h2 {
+  font-size: 24px;
+  line-height: 36px;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 27px;
+}
+
 /* bootstrap overrides */
 
 @media (max-width: 767px) {

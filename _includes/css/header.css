@@ -24,7 +24,7 @@ header.site .container {
 
 header.site .wrapper {
   display: inline-block;
-  padding: 30px 20px 40px;
+  padding: 36px 20px 40px;
   text-align: left;
 }
 
@@ -37,7 +37,6 @@ header.site .name {
   font-weight: 600;
   font-size: 40px;
   line-height: 62px;
-  padding-top: 8px;
 }
 
 header.site .tagline {
@@ -179,23 +178,41 @@ i.icon.logo {
 
 @media (max-width: 767px) {
   header.site .wrapper {
-    padding: 30px 20px 40px;
+    padding: 35px 20px 20px;
     text-align: center;
   }
   header.site .meta {
     padding-left: 0;
   }
   header.site .name {
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: 1px;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 0px;
+    line-height: 32px;
   }
   header.site .tagline {
-    font-size: 18px;
+    font-size: 16px;
     padding: 0 20px;
   }
   .viewport {
     float: none;
-    margin: 0 0 20px;
+    margin: 0 0 32px;
+  }
+}
+
+@media (max-width: 979px) and (min-width: 768px) {
+  header.site .tagline {
+    font-size: 18px;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  header.site .wrapper {
+    padding: 70px 20px 70px;
+  }
+  header.site .name {
+    font-size: 46px;
+    line-height: 62px;
   }
 }

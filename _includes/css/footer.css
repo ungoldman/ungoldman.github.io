@@ -15,3 +15,27 @@ footer.site {
 footer.site .container {
   padding: 15px 20px 25px;
 }
+
+footer.site .nav li {
+  float: left;
+  padding: 3px 7px;
+}
+
+footer.site .nav li a {
+  color: #555;
+  font-size: 14px;
+}
+
+footer.site .nav li a:hover {
+  background: none;
+  color: #333;
+}
+
+@media (max-width: 767px) {
+  footer.site .nav li a {
+    font-size: 16px;
+  }
+  footer.site .nav li a .text {
+    display: none;
+  }
+}
