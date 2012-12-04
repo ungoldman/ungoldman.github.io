@@ -1,5 +1,5 @@
 header.site {
-  background: #557C9D url(/img/deepsea.jpg) 0 0 repeat-x;
+  background: #557C9D url(/img/deepsea.jpg) center 0 repeat-x;
   border: none;
   border-radius: 0;
   color: #fff;
@@ -116,11 +116,6 @@ i.icon.logo {
     box-shadow: 0 0 5px rgba(255,255,255,.3);
   }
 
-    .cube > div span {
-      font-size: 110px;
-      line-height: 110px;
-    }
-
   .cube > div:first-child  {
     -webkit-transform: rotateX(90deg) translateZ(75px);
     -moz-transform: rotateX(90deg) translateZ(75px);
@@ -150,13 +145,6 @@ i.icon.logo {
     -webkit-transform: rotateY(-90deg) translateZ(75px);
     -moz-transform: rotateY(-90deg) translateZ(75px);
     transform: rotateY(-90deg) translateZ(75px);
-  }
-
-  .cube > div:nth-child(5) p {
-    text-align: center;
-    font-size: 2.77em;
-    margin: 40px;
-    line-height: 60px;
   }
 
   .cube > div:nth-child(6) {
