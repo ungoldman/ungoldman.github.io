@@ -128,18 +128,24 @@ i.icon.logo {
     }
 
     .cube > div {
-      position: absolute;
-      height: 100px;
-      width: 100px;
-      padding: 5px;
       background-color: rgba(63,107,157,.85);
-      font-size: 110px;
-      line-height: 1;
-      text-align: center;
-      color: #fff;
       border: none;
-      border-radius: 3px;
-      box-shadow: 0 0 5px rgba(255,255,255,.3);
+      color: #fff;
+      font-size: 110px;
+      height: 100px;
+      line-height: 1;
+      padding: 5px;
+      position: absolute;
+      text-align: center;
+      width: 100px;
+
+      -webkit-border-radius: 3px;
+         -moz-border-radius: 3px;
+              border-radius: 3px;
+
+      -webkit-box-shadow: 0 0 5px rgba(255,255,255,.3);
+         -moz-box-shadow: 0 0 5px rgba(255,255,255,.3);
+              box-shadow: 0 0 5px rgba(255,255,255,.3);
     }
 
     .cube > div:first-child  {
