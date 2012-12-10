@@ -32,7 +32,7 @@ header.site .name {
 
 header.site .tagline {
   font-family: 'Open Sans', arial, helvetica, sans-serif;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 300;
 }
 
@@ -74,7 +74,7 @@ i.icon.logo {
     line-height: 32px;
   }
   header.site .tagline {
-    font-size: 16px;
+    font-size: 14px;
     padding: 0 20px;
   }
 }
@@ -180,13 +180,6 @@ i.icon.logo {
     }
 }
 
-@media (max-width: 979px) and (min-width: 768px) {
-  header.site .tagline {
-    font-size: 18px;
-  }
-}
-
-
 @media (min-width: 1200px) {
   header.site .wrapper {
     padding: 70px 20px 70px;
@@ -194,5 +187,9 @@ i.icon.logo {
   header.site .name {
     font-size: 46px;
     line-height: 62px;
+  }
+
+  header.site .tagline {
+    font-size: 17px;
   }
 }
