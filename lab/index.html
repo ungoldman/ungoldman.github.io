@@ -1,14 +1,14 @@
 ---
-layout: index
-title: Nate Goldman | Web Developer, Portland, Oregon
+layout: lab
+title: Lab | Nate Goldman | Web Developer, Portland, Oregon
 ---
 
 <header class="page-header">
-  <h2><i class="icon-star"></i> Recent Projects</h2>
+  <h2><i class="icon-beaker"></i>&nbsp;&nbsp;Lab</h2>
 </header>
 
 <div class="articles group">
-  {% for post in site.posts limit:6 %}
+  {% for post in site.categories.lab %}
     <a class="item" href="{{ post.url }}">
       {% if post.image %}
         <figure class="screenshot" style="background-image:url({{ post.image }});">
@@ -16,14 +16,7 @@ title: Nate Goldman | Web Developer, Portland, Oregon
         </figure>
       {% endif %}
       <header>
-        <h3 class="title">
-          {% if post.category == 'work' %}
-            <i class="icon-wrench"></i>
-          {% elsif post.category == 'lab' %}
-            <i class="icon-beaker"></i>
-          {% endif %}
-          {{ post.title }}
-        </h3>
+        <h3 class="title">{{ post.title }}</h3>
       </header>
 
       <p class="description">{{ post.description }}</p>
