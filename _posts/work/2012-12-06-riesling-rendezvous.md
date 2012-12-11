@@ -1,7 +1,7 @@
 ---
 layout: portfolio_page
 title: Riesling Rendezvous 2013
-description: A promotional site for the annual Riesling Rendezvous wine tasting event.
+description: A promotional site and content management system for the annual Riesling Rendezvous wine tasting event.
 client: Chateau Ste. Michelle
 client-site: http://www.ste-michelle.com
 agency: Fine

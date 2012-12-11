@@ -1,7 +1,7 @@
 ---
 layout: portfolio_page
 title: Be Friends With Your PC
-description: A promotional site for Symantec's Norton Utilities product line.
+description: An interactive promotional site for Symantec's Norton Utilities anti-virus software.
 client: Symantec
 client-site: http://www.symantec.com
 agency: Fine
