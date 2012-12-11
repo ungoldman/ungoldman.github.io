@@ -20,7 +20,11 @@ header.site .wrapper {
 }
 
 header.site .meta {
-  padding-left: 170px;
+  padding-left: 130px;
+}
+
+header.site .meta h1 {
+  margin-top: 3px;
 }
 
 header.site .name {
@@ -33,7 +37,7 @@ header.site .name {
 header.site .tagline {
   font-family: 'Open Sans', arial, helvetica, sans-serif;
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 i.icon.logo {
@@ -41,21 +45,34 @@ i.icon.logo {
   background: url(/img/logo.png) center center no-repeat;
   height: 100px;
   width: 100px;
+}
+
+.animate i.icon.logo {
+  -webkit-animation-play-state: running;
+  -webkit-animation-duration: 5s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-name: spin;
 
   animation-play-state: running;
-  animation-duration: 10s;
+  animation-duration: 5s;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: linear;
   animation-name: spin;
+}
+
+@-webkit-keyframes spin {
+  0%   { -webkit-transform: rotate(0deg);    }
+  100% { -webkit-transform: rotate(360deg);  }
 }
 
 @keyframes spin {
   0%   { -webkit-transform: rotate(0deg);    }
-  50%  { -webkit-transform: rotate(1080deg); }
-  100% { -webkit-transform: rotate(0deg);    }
+  100% { -webkit-transform: rotate(360deg);  }
 }
 
-.viewport { display: none }
+header.site .viewport { display: none }
+header.site .static { display: none }
 
 /* respondo */
 
@@ -81,29 +98,37 @@ i.icon.logo {
 
 @media (min-width: 768px) {
   /* From: http://www.paulrhayes.com/experiments/cube-3d/touch.html */
-  .viewport {
+  header.site .static {
+    display: block;
+    float: left;
+  }
+  header.site.animate .static { display: none }
+  header.site.animate .meta { padding-left: 170px }
+  header.site.animate .meta h1 { margin-top: 10px }
+  header.site.animate .viewport {
     display: block;
     float: left;
     margin: 0 40px 0 10px;
 
     -webkit-perspective: 800;
-    -webkit-perspective-origin: 50% 50px;
+    -webkit-perspective-origin: 50% -100%;
     -webkit-transform: scale(0.75,0.75);
 
     -moz-perspective: 800;
-    -moz-perspective-origin: 50% 50px;
+    -moz-perspective-origin: 50% -100%;
     -moz-transform: scale(0.75,0.75);
 
     perspective: 800;
-    perspective-origin: 50% 50px;
+    perspective-origin: 50% -100%;
     transform: scale(0.75,0.75);
   }
 
   .cube {
-    position: relative;
+    height: 120px;
     margin: 0 auto;
-    height: 110px;
-    width: 110px;
+    position: relative;
+    width: 120px;
+
     -webkit-transition: -webkit-transform 50ms linear;
     -webkit-transform-style: preserve-3d;
     -webkit-transform: rotateX(-10deg) rotateY(20deg);
@@ -129,7 +154,7 @@ i.icon.logo {
 
     .cube > div {
       background-color: rgba(63,107,157,.85);
-      border: none;
+      border: 5px solid rgba(255,255,255,.1);
       color: #fff;
       font-size: 110px;
       height: 100px;
@@ -138,51 +163,47 @@ i.icon.logo {
       position: absolute;
       text-align: center;
       width: 100px;
+      overflow: hidden;
 
-      -webkit-border-radius: 3px;
-         -moz-border-radius: 3px;
-              border-radius: 3px;
-
-      -webkit-box-shadow: 0 0 5px rgba(255,255,255,.3);
-         -moz-box-shadow: 0 0 5px rgba(255,255,255,.3);
-              box-shadow: 0 0 5px rgba(255,255,255,.3);
+      -webkit-border-radius: 5px;
+         -moz-border-radius: 5px;
+              border-radius: 5px;
     }
 
     .cube > div:first-child  {
-      -webkit-transform: rotateX(90deg) translateZ(75px);
-      -moz-transform: rotateX(90deg) translateZ(75px);
-      transform: rotateX(90deg) translateZ(75px);
+      -webkit-transform: rotateX(90deg) translateZ(58px);
+      -moz-transform: rotateX(90deg) translateZ(58px);
+      transform: rotateX(90deg) translateZ(58px);
     }
 
     .cube > div:nth-child(2) {
-      -webkit-transform: translateZ(75px);
-      -moz-transform: translateZ(75px);
-      transform: translateZ(75px);
+      -webkit-transform: translateZ(58px);
+      -moz-transform: translateZ(58px);
+      transform: translateZ(58px);
     }
 
     .cube > div:nth-child(3) {
-      -webkit-transform: rotateY(90deg) translateZ(75px);
-      -moz-transform: rotateY(90deg) translateZ(75px);
-      transform: rotateY(90deg) translateZ(75px);
-      text-align: center;
+      -webkit-transform: rotateY(90deg) translateZ(58px);
+      -moz-transform: rotateY(90deg) translateZ(58px);
+      transform: rotateY(90deg) translateZ(58px);
     }
 
     .cube > div:nth-child(4) {
-      -webkit-transform: rotateY(180deg) translateZ(75px);
-      -moz-transform: rotateY(180deg) translateZ(75px);
-      transform: rotateY(180deg) translateZ(75px);
+      -webkit-transform: rotateY(180deg) translateZ(58px);
+      -moz-transform: rotateY(180deg) translateZ(58px);
+      transform: rotateY(180deg) translateZ(58px);
     }
 
     .cube > div:nth-child(5) {
-      -webkit-transform: rotateY(-90deg) translateZ(75px);
-      -moz-transform: rotateY(-90deg) translateZ(75px);
-      transform: rotateY(-90deg) translateZ(75px);
+      -webkit-transform: rotateY(-90deg) translateZ(58px);
+      -moz-transform: rotateY(-90deg) translateZ(58px);
+      transform: rotateY(-90deg) translateZ(58px);
     }
 
     .cube > div:nth-child(6) {
-      -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
-      -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
-      transform: rotateX(-90deg) rotate(180deg) translateZ(75px);
+      -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(58px);
+      -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(58px);
+      transform: rotateX(-90deg) rotate(180deg) translateZ(58px);
     }
 }
 
