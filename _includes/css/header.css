@@ -40,14 +40,14 @@ header.site .tagline {
   font-weight: 400;
 }
 
-i.icon.logo {
+i.icon-logo {
   display: inline-block;
   background: url(/img/logo.png) center center no-repeat;
   height: 100px;
   width: 100px;
 }
 
-.animate i.icon.logo {
+.animate i.icon-logo {
   -webkit-animation-play-state: running;
   -webkit-animation-duration: 5s;
   -webkit-animation-iteration-count: infinite;
@@ -124,10 +124,10 @@ header.site .static { display: none }
   }
 
   .cube {
-    height: 120px;
+    height: 110px;
     margin: 0 auto;
     position: relative;
-    width: 120px;
+    width: 110px;
 
     -webkit-transition: -webkit-transform 50ms linear;
     -webkit-transform-style: preserve-3d;
@@ -153,8 +153,10 @@ header.site .static { display: none }
     }
 
     .cube > div {
-      background-color: rgba(63,107,157,.85);
+      background: rgba(63,107,157,.85) url(/img/rubix/rubix_globe_side1.jpg) center center no-repeat;
+      background-size: cover;
       border: 5px solid rgba(255,255,255,.1);
+      border: none;
       color: #fff;
       font-size: 110px;
       height: 100px;
@@ -164,46 +166,47 @@ header.site .static { display: none }
       text-align: center;
       width: 100px;
       overflow: hidden;
-
-      -webkit-border-radius: 5px;
-         -moz-border-radius: 5px;
-              border-radius: 5px;
     }
 
     .cube > div:first-child  {
-      -webkit-transform: rotateX(90deg) translateZ(58px);
-      -moz-transform: rotateX(90deg) translateZ(58px);
-      transform: rotateX(90deg) translateZ(58px);
+      -webkit-transform: rotateX(90deg) translateZ(54px);
+      -moz-transform: rotateX(90deg) translateZ(54px);
+      transform: rotateX(90deg) translateZ(54px);
     }
 
     .cube > div:nth-child(2) {
-      -webkit-transform: translateZ(58px);
-      -moz-transform: translateZ(58px);
-      transform: translateZ(58px);
+      background-image: url(/img/rubix/rubix_globe_side2.jpg);
+      -webkit-transform: translateZ(54px);
+      -moz-transform: translateZ(54px);
+      transform: translateZ(54px);
     }
 
     .cube > div:nth-child(3) {
-      -webkit-transform: rotateY(90deg) translateZ(58px);
-      -moz-transform: rotateY(90deg) translateZ(58px);
-      transform: rotateY(90deg) translateZ(58px);
+      background-image: url(/img/rubix/rubix_globe_side3.jpg);
+      -webkit-transform: rotateY(90deg) translateZ(54px);
+      -moz-transform: rotateY(90deg) translateZ(54px);
+      transform: rotateY(90deg) translateZ(54px);
     }
 
     .cube > div:nth-child(4) {
-      -webkit-transform: rotateY(180deg) translateZ(58px);
-      -moz-transform: rotateY(180deg) translateZ(58px);
-      transform: rotateY(180deg) translateZ(58px);
+      background-image: url(/img/rubix/rubix_globe_side5.jpg);
+      -webkit-transform: rotateY(180deg) translateZ(54px);
+      -moz-transform: rotateY(180deg) translateZ(54px);
+      transform: rotateY(180deg) translateZ(54px);
     }
 
     .cube > div:nth-child(5) {
-      -webkit-transform: rotateY(-90deg) translateZ(58px);
-      -moz-transform: rotateY(-90deg) translateZ(58px);
-      transform: rotateY(-90deg) translateZ(58px);
+      background-image: url(/img/rubix/rubix_globe_side4.jpg);
+      -webkit-transform: rotateY(-90deg) translateZ(54px);
+      -moz-transform: rotateY(-90deg) translateZ(54px);
+      transform: rotateY(-90deg) translateZ(54px);
     }
 
     .cube > div:nth-child(6) {
-      -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(58px);
-      -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(58px);
-      transform: rotateX(-90deg) rotate(180deg) translateZ(58px);
+      background-image: url(/img/rubix/rubix_globe_side6.jpg);
+      -webkit-transform: rotateX(-90deg) rotate(180deg) translateZ(54px);
+      -moz-transform: rotateX(-90deg) rotate(180deg) translateZ(54px);
+      transform: rotateX(-90deg) rotate(180deg) translateZ(54px);
     }
 }
 
