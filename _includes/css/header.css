@@ -1,5 +1,7 @@
 header.site {
   background: #557C9D url(/img/deepsea.jpg) center 0 repeat-x;
+  /*background: #000 url(/img/blur-space.jpg) center center no-repeat;
+  background-size: cover;*/
   border: none;
   border-radius: 0;
   color: #fff;
@@ -109,10 +111,6 @@ header.site .static { display: none }
     display: block;
     float: left;
     margin: 0 40px 0 10px;
-
-    -webkit-box-shadow: 3px 21px 68px -10px #000;
-       -moz-box-shadow: 3px 21px 68px -10px #000;
-            box-shadow: 3px 21px 68px -10px #000;
 
     -webkit-perspective: 800;
     -webkit-perspective-origin: 50% -100%;
