@@ -7,7 +7,6 @@ client: Disney
 client-site: http://disney.com
 agency: Dachis Group
 agency-site: http://dachisgroup.com
-category: work
 tags: html, css, javascript, jquery, ruby, sinatra, facebook
 ---
 
