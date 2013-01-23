@@ -2,7 +2,6 @@
 layout: portfolio_page
 title: Tetromino
 description: A multiplayer tetris clone built with JavaScript and Node.js.
-site: http://tetromino.jit.su
 source: https://github.com/nodebros/tetromino
 image: /img/work/tetromino.jpg
 category: lab

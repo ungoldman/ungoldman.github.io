@@ -2,7 +2,6 @@
 layout: portfolio_page
 title: Class Cloud
 description: A prototype educational tool to help students track assignments and files.
-site: http://class-cloud-staging.herokuapp.com
 source: https://github.com/ngoldman/class-cloud
 image: /img/work/class-cloud.jpg
 category: lab
