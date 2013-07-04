@@ -218,6 +218,14 @@
           box-shadow: 0 7px 9px -6px rgba(0, 0, 0, .7);
 }
 
+@media (min-width: 660px) {
+  .post img.portrait {
+    float: left;
+    margin-right: 50px;
+    width: 200px;
+  }
+}
+
 .post .details,
 .post .details p {
   color: #888;
