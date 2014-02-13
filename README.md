@@ -1,3 +1,3 @@
-# ngoldman.github.com
+# ngoldman.github.io
 
-Nate Goldman's portfolio site.
+Nate Goldman's ancient portfolio site.
