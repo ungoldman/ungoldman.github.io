@@ -25,17 +25,26 @@ jQuery.fn.loadRepositories = function(username) {
 
     target.empty();
     $(repos).each(function(i) {
-      if (i > 4) {
-        return;
-      }
+      if (i > 4) return;
+
       var el = tpl.clone();
-      var updated = new Date(this.updated_at).toLocaleDateString();
-      el.find('.repo-link').text(this.full_name);
-      if (this.homepage) {
-        el.find('.repo-link').attr('href', this.url)
-      }
+      var updated = new Date(this.updated_at);
+      updated = updated.toLocaleDateString() + ', ' + updated.toLocaleTimeString();
+
+      var details = [];
+
+      details.push('<small class="text-muted fa fa-clock-o"> ' + updated + '</small>');
+      details.push('<small class="text-muted fa fa-star"> ' + this.stargazers_count + '</small>');
+      details.push('<small class="text-muted fa fa-eye"> ' + this.watchers_count + '</small>');
+      details.push('<small class="text-muted fa fa-code-fork"> ' + this.forks_count + '</small>');
+
+      var deets = $('<p/>').append(details.join(' &nbsp;&nbsp; '));
+
+      console.log(this);
+
+      el.find('.repo-link').text(this.full_name).attr('href', this.html_url);
       el.find('.repo-desc').text(this.description);
-      el.find('.repo-title').after('<p><small class="text-muted">' + updated + '</small></p>');
+      el.find('.repo-title').after(deets);
       target.append(el);
     });
   });
