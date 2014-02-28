@@ -40,8 +40,6 @@ jQuery.fn.loadRepositories = function(username) {
 
       var deets = $('<p/>').append(details.join(' &nbsp;&nbsp; '));
 
-      console.log(this);
-
       el.find('.repo-link').text(this.full_name).attr('href', this.html_url);
       el.find('.repo-desc').text(this.description);
       el.find('.repo-title').after(deets);
