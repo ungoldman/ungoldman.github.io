@@ -3,94 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>👻</title>
-  <link rel="shortcut icon" href="favicon.ico">
+  <title>ungoldman</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>">
+  <link rel="stylesheet" href="https://unpkg.com/style.css">
+  <link rel="stylesheet" href="./site.css">
   <style>
     html {
-      background: #000 url(/holodeck-tile.png) repeat center center;
-      box-shadow: inset 0 0 250px #000000;
+      background: #111;
       color: #fff;
-      font-family: 'Muli',
-                   'Lucida Grande',
-                   'Segoe UI',
-                   'Open Sans',
-                   'Helvetica Neue',
-                   'Helvetica',
-                   'Arial',
-                   sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
+    }
+    .header {
+      text-align: center;
+      padding-bottom: 2em;
+      /* position: relative; */
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2em;
     }
     .avatar {
-      display: block;
-      position: relative;
-    }
-    .avatar img {
-      height: 200px;
-      width: 200px;
-      display: block;
-      margin-bottom: .5rem;
       border-radius: 50%;
-      box-shadow: 0 0 6px 2px rgba(0,0,0,.3);
-      transition: all 0.5s ease;
+      /* padding: 4px; */
     }
-    .bubble {
-      position: relative;
-      padding: .2rem .5rem;
-      background: darkslategrey;
-      color: azure;
+    .top-bar a,
+    .top-bar a:hover { color: white }
+    .top-bar a:hover { text-decoration: underline; }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+    .pkgs {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: stretch;
+      justify-content: center;
+    }
+    .pkg {
+      margin: 2%;
+      background: #222;
+      border: 1px solid #333;
+      padding: 1em;
       border-radius: 4px;
-      border: lightslategrey solid 2px;
-      transition: opacity 1s;
-      font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
-      font-size: 12px;
-      font-weight: 100;
-      box-shadow: 0 1px 6px 2px rgba(0,0,0,.3);
-
-      /* harumph */
-      opacity: 0;
-      position: absolute;
-      right: -80px;
-      top: 49%;
-      transition: opacity .3s;
+      width: 46%;
+      display: inline-block;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
     }
-    .bubble:after {
-      content: '';
-      position: absolute;
-      border-style: solid;
-      border-width: 4px 4px 4px 0;
-      border-color: transparent darkslategrey;
-      display: block;
-      width: 0;
-      z-index: 1;
-      margin-top: -4px;
-      left: -4px;
-      top: 50%;
+    .pkg > :first-child {margin-top: 0}
+    .pkg > :last-child {margin-bottom: 0}
+    pre, code {
+      background-color: #111;
+      border-radius: 3px;
+      border: 1px solid #333;
     }
-    .bubble:before {
-      content: '';
-      position: absolute;
-      border-style: solid;
-      border-width: 5px 5px 5px 0;
-      border-color: transparent lightslategrey;
-      display: block;
-      width: 0;
-      z-index: 0;
-      margin-top: -5px;
-      left: -7px;
-      top: 50%;
+    main {
+      max-width: 1200px;
     }
-    .avatar:hover .bubble { opacity: 1 }
   </style>
 </head>
-<body>
-  <div class="avatar">
-    <a href="https://github.com/ungoldman">
-      <img src="http://s.gravatar.com/avatar/97c8db2d2bd598103f47599f7af8c825?s=200">
-    </a>
-    <div class="bubble">Hello!</div>
+<body class="serif">
+  <nav class="top-bar">
+    <div class="top-bar-title">
+      <span>🍕</span>
+      <a href="/">ungoldman</a>
+    </div>
+    <div class="top-bar-right">
+      <a class="top-bar-link" href="https://twitter.com/ungoldman">🦆 twitter</a>
+      <a class="top-bar-link" href="https://github.com/ungoldman">🐈 github</a>
+    </div>
+  </nav>
+  <div class="header">
+    <div class="hero">
+      <img loading="auto" class="avatar" src="https://ungoldman.com/assets/images/pizza.jpg" alt="avatar" width="128" height="128">
+      <h1 class="title">Nate Goldman</h1>
+      <p class="subtitle">Designer • Developer • Organizer</p>
+    </div>
+    <canvas id="canvas"></canvas>
   </div>
+
+  <main class="markdown-body">
+    <div class="pkgs">
+      <div class="pkg" draggable="true">
+        <h3>
+          <a href="https://github.com/hypermodules/gh-release">gh-release</a>
+        </h3>
+        <p>
+          <a href="https://www.npmjs.com/package/gh-release"><img alt="npm" src="https://img.shields.io/npm/v/gh-release.svg"></a>
+          <a href="https://travis-ci.org/hypermodules/gh-release"><img alt="travis" src="https://img.shields.io/travis/hypermodules/gh-release/master.svg"></a>
+          <a href="https://www.npmjs.com/package/gh-release"><img alt="downloads" src="https://img.shields.io/npm/dm/gh-release.svg"></a>
+          <a href="https://www.github.com/hypermodules/gh-release/issues"><img alt="issues" src="https://img.shields.io/github/issues/hypermodules/gh-release"></a>
+        </p>
+        <p>Create a github release for a node package.</p>
+      </div>
+      <div class="pkg" draggable="true">
+        <h3>
+          <a href="https://github.com/ungoldman/changelog-parser">changelog-parser</a>
+        </h3>
+        <p>
+          <a href="https://www.npmjs.com/package/changelog-parser"><img alt="npm" src="https://img.shields.io/npm/v/changelog-parser.svg"></a>
+          <a href="https://travis-ci.org/ungoldman/changelog-parser"><img alt="travis" src="https://img.shields.io/travis/ungoldman/changelog-parser/master.svg"></a>
+          <a href="https://www.npmjs.com/package/changelog-parser"><img alt="downloads" src="https://img.shields.io/npm/dm/changelog-parser.svg"></a>
+          <a href="https://www.github.com/ungoldman/changelog-parser/issues"><img alt="issues" src="https://img.shields.io/github/issues/ungoldman/changelog-parser"></a>
+        </p>
+        <p>Create a github release for a node package.</p>
+      </div>
+
+      <div class="pkg" draggable="true">
+        <h3>
+          <a href="https://github.com/ungoldman/format-duration">format-duration</a>
+        </h3>
+        <p>
+          <a href="https://www.npmjs.com/package/format-duration"><img alt="npm" src="https://img.shields.io/npm/v/format-duration.svg"></a>
+          <a href="https://travis-ci.org/hypermodules/format-duration"><img alt="travis" src="https://img.shields.io/travis/hypermodules/format-duration/master.svg"></a>
+          <a href="https://www.npmjs.com/package/format-duration"><img alt="downloads" src="https://img.shields.io/npm/dm/format-duration.svg"></a>
+          <a href="https://www.github.com/ungoldman/format-duration/issues"><img alt="issues" src="https://img.shields.io/github/issues/ungoldman/format-duration"></a>
+        </p>
+        <p>Convert a number in milliseconds to a standard duration string.</p>
+      </div>
+
+      <div class="pkg" draggable="true">
+        <h3>
+          <a href="https://github.com/css-pkg/style.css">style.css</a>
+        </h3>
+        <p>
+          <a href="https://www.npmjs.com/package/style.css"><img alt="npm" src="https://img.shields.io/npm/v/style.css.svg"></a>
+          <a href="https://travis-ci.org/css-pkg/style.css"><img alt="travis" src="https://img.shields.io/travis/css-pkg/style.css/master.svg"></a>
+          <a href="https://www.npmjs.com/package/style.css"><img alt="downloads" src="https://img.shields.io/npm/dm/style.css.svg"></a>
+          <a href="https://www.github.com/css-pkg/style.css/issues"><img alt="issues" src="https://img.shields.io/github/issues/css-pkg/style.css"></a>
+        </p>
+        <p>A classless stylesheet for HTML documents.</p>
+      </div>
+
+      <div class="pkg" draggable="true">
+        <h3>
+          <a href="https://github.com/ungoldman/sitedown">sitedown</a>
+        </h3>
+        <p>
+          <a href="https://www.npmjs.com/package/sitedown"><img alt="npm" src="https://img.shields.io/npm/v/sitedown.svg"></a>
+          <a href="https://travis-ci.org/ungoldman/sitedown"><img alt="travis" src="https://img.shields.io/travis/ungoldman/sitedown/master.svg"></a>
+          <a href="https://www.npmjs.com/package/sitedown"><img alt="downloads" src="https://img.shields.io/npm/dm/sitedown.svg"></a>
+          <a href="https://www.github.com/ungoldman/sitedown/issues"><img alt="issues" src="https://img.shields.io/github/issues/ungoldman/sitedown"></a>
+        </p>
+        <p>Turn some markdown files into a website.</p>
+      </div>
+
+      <div class="pkg" draggable="true">
+        <h3>
+          <a href="https://github.com/ungoldman/hyperaxe">hyperaxe</a>
+        </h3>
+        <p>
+          <a href="https://www.npmjs.com/package/hyperaxe"><img alt="npm" src="https://img.shields.io/npm/v/hyperaxe.svg"></a>
+          <a href="https://travis-ci.org/ungoldman/hyperaxe"><img alt="travis" src="https://img.shields.io/travis/ungoldman/hyperaxe/master.svg"></a>
+          <a href="https://www.npmjs.com/package/hyperaxe"><img alt="downloads" src="https://img.shields.io/npm/dm/hyperaxe.svg"></a>
+          <a href="https://www.github.com/ungoldman/hyperaxe/issues"><img alt="issues" src="https://img.shields.io/github/issues/ungoldman/hyperaxe"></a>
+        </p>
+        <p>An enchanted hyperscript weapon.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer><small>🎉</small></footer>
+
+  <script src="particles.js"></script>
 </body>
 </html>
