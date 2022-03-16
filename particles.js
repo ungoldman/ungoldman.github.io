@@ -105,16 +105,16 @@ function particleGeneratorFactory () {
     let d, distance, p, p2, xd, yd, _i, _j, _len, _len1
     // const alf = typeof options.drawAlpha === 'function' ? options.drawAlpha() : options.drawAlpha
     ctx.globalCompositeOperation = 'source-over'
-    ctx.fillStyle = '#111'
+    ctx.fillStyle = '#fff'
     ctx.fillRect(0, 0, W, H)
-    ctx.globalCompositeOperation = 'lighter'
+    // ctx.globalCompositeOperation = 'lighter'
     for (_i = 0, _len = particles.length; _i < _len; _i++) {
       p = particles[_i]
-      ctx.fillStyle = 'rgba(255,255,255,.5)'
-      ctx.fillRect(p.location.x, p.location.y, p.radius, p.radius)
+      // ctx.fillStyle = 'rgba(0,0,0,.5)'
+      // ctx.fillRect(p.location.x, p.location.y, p.radius, p.radius)
 
       ctx.beginPath()
-      ctx.strokeStyle = '#fff3'
+      ctx.strokeStyle = '#0003'
       ctx.lineWidth = 1
 
       ctx.arc(p.location.x, p.location.y, 5, 0, 2 * Math.PI, false)
@@ -174,7 +174,7 @@ function generate () {
     b: function () { return r(255) },
     a: 0.3,
     // particles: 100,
-    distance: 42,
+    distance: 64,
     speed: 0.4
   })
 }

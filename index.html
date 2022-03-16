@@ -5,29 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ungoldman</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>">
-  <link rel="stylesheet" href="https://unpkg.com/style.css">
-  <link rel="stylesheet" href="./site.css">
+  <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <style>
-    html {
+    /* html {
       background: #111;
       color: #fff;
-    }
+    } */
     .header {
       text-align: center;
-      padding-bottom: 2em;
+      padding: 0.5rem 0;
       /* position: relative; */
     }
     .header h1 {
       margin: 0;
       font-size: 2em;
     }
+    .hero p {
+      margin: 0;
+    }
     .avatar {
       border-radius: 50%;
       /* padding: 4px; */
     }
-    .top-bar a,
-    .top-bar a:hover { color: white }
-    .top-bar a:hover { text-decoration: underline; }
     #canvas {
       position: fixed;
       top: 0;
@@ -36,6 +35,11 @@
       bottom: 0;
       z-index: -1;
     }
+    .section-title {
+      text-align: center;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
     .pkgs {
       display: flex;
       flex-wrap: wrap;
@@ -43,25 +47,37 @@
       justify-content: center;
     }
     .pkg {
-      margin: 2%;
-      background: #222;
-      border: 1px solid #333;
+      margin: 1%;
+      background: #fffc;
+      border: 1px solid #ddd;
       padding: 1em;
       border-radius: 4px;
       width: 46%;
       display: inline-block;
       box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
     }
-    .pkg > :first-child {margin-top: 0}
-    .pkg > :last-child {margin-bottom: 0}
+    .pkg > :first-child {
+      font-size: 1.25em;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: .5rem;
+      margin: 0 0 0.75rem;
+    }
+    .pkg p { margin-bottom: 0 }
+    .pkg > :last-child { margin-bottom: 0 }
     pre, code {
       background-color: #111;
       border-radius: 3px;
       border: 1px solid #333;
     }
     main {
-      max-width: 1200px;
+      max-width: 1000px;
+      margin: 1em auto;
     }
+    footer {
+      margin: 1em 0;
+    }
+    .right { float: right }
+    .bye { cursor: help }
     @media screen and (max-width: 800px) {
       .pkg {
         width: 100%;
@@ -90,11 +106,13 @@
     <canvas id="canvas"></canvas>
   </div>
 
-  <main class="markdown-body">
+  <main>
+    <h2 class="section-title">Active Open Source Projects</h2>
     <div class="pkgs">
-      <div class="pkg" draggable="true">
+      <div class="pkg">
         <h3>
-          <a href="https://ungoldman.github.io/gh-release">📦 gh-release</a>
+          <a title="website" href="https://ungoldman.github.io/gh-release">📦 gh-release</a>
+          <a class="right" title="github repo" href="https://github.com/ungoldman/gh-release">🐈</a>
         </h3>
         <p>
           <a href="https://www.npmjs.com/package/gh-release"><img alt="npm" src="https://img.shields.io/npm/v/gh-release.svg"></a>
@@ -103,9 +121,10 @@
         </p>
         <p>Create a github release for a node package.</p>
       </div>
-      <div class="pkg" draggable="true">
+      <div class="pkg">
         <h3>
-          <a href="https://github.com/ungoldman/changelog-parser">🧩 changelog-parser</a>
+          <a title="website" href="https://github.com/ungoldman/changelog-parser">🧩 changelog-parser</a>
+          <a class="right" title="github repo" href="https://github.com/ungoldman/changelog-parser">🐈</a>
         </h3>
         <p>
           <a href="https://www.npmjs.com/package/changelog-parser"><img alt="npm" src="https://img.shields.io/npm/v/changelog-parser.svg"></a>
@@ -115,9 +134,10 @@
         <p>Change log parser for node.</p>
       </div>
 
-      <div class="pkg" draggable="true">
+      <div class="pkg">
         <h3>
-          <a href="https://ungoldman.github.io/style.css">🔰 style.css</a>
+          <a title="website" href="https://ungoldman.github.io/style.css">🔰 style.css</a>
+          <a class="right" title="github repo" href="https://github.com/ungoldman/style.css">🐈</a>
         </h3>
         <p>
           <a href="https://www.npmjs.com/package/style.css"><img alt="npm" src="https://img.shields.io/npm/v/style.css.svg"></a>
@@ -127,9 +147,10 @@
         <p>A classless stylesheet for HTML documents.</p>
       </div>
 
-      <div class="pkg" draggable="true">
+      <div class="pkg">
         <h3>
-          <a href="https://ungoldman.github.io/sitedown">📝 sitedown</a>
+          <a title="website" href="https://ungoldman.github.io/sitedown">📝 sitedown</a>
+          <a class="right" title="github repo" href="https://github.com/ungoldman/sitedown">🐈</a>
         </h3>
         <p>
           <a href="https://www.npmjs.com/package/sitedown"><img alt="npm" src="https://img.shields.io/npm/v/sitedown.svg"></a>
@@ -141,7 +162,7 @@
     </div>
   </main>
 
-  <footer><small>🎉</small></footer>
+  <footer><p class="bye" title="Thanks for visiting!"><small>🎉</small></p></footer>
 
   <script src="particles.js"></script>
 </body>
