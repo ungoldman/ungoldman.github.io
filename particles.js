@@ -12,20 +12,17 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
-const magicNumber = 20000
+const magicNumber = 18000
+const bg = document.querySelector('html')
+const bgFillStyle = getComputedStyle(bg).backgroundColor
 
 function particleGeneratorFactory () {
-  let H, W, ctx, options, particles
-
-  ctx = null
-
-  particles = null
-
-  H = null
-
-  W = null
-
-  options = null
+  const canvas = document.getElementById('canvas')
+  let ctx = canvas.getContext('2d')
+  let particles = null
+  let options = null
+  let H = null
+  let W = null
 
   const defaults = {
     r: function () {
@@ -46,15 +43,26 @@ function particleGeneratorFactory () {
     speed: 3
   }
 
+  // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
+  function setCanvasDimensions () {
+    // Get the device pixel ratio, falling back to 1.
+    const dpr = window.devicePixelRatio || 1
+    // Get the size of the canvas in CSS pixels.
+    const rect = canvas.getBoundingClientRect()
+    // Give the canvas pixel dimensions of their CSS
+    // size * the device pixel ratio.
+    canvas.width = rect.width * dpr
+    canvas.height = rect.height * dpr
+
+    ctx.scale(dpr, dpr)
+  }
+
   function eb (opts) {
     let num
     options = Object.assign({}, defaults, opts)
-    const canvas = document.getElementById('canvas')
-    ctx = canvas.getContext('2d')
+    setCanvasDimensions()
     W = window.innerWidth
     H = window.innerHeight
-    canvas.width = W
-    canvas.height = H
     particles = []
     num = Math.round(W * H / magicNumber) // options.particles
     while (num--) {
@@ -64,8 +72,7 @@ function particleGeneratorFactory () {
     function handleResize () {
       W = window.innerWidth
       H = window.innerHeight
-      canvas.width = W
-      canvas.height = H
+      setCanvasDimensions()
       let next = Math.round(W * H / magicNumber)
       if (next > particles.length) {
         while (next-- > particles.length) {
@@ -78,10 +85,8 @@ function particleGeneratorFactory () {
       }
       console.log('particle count', particles.length)
     }
-    const debouncedResize = debounce(() => { handleResize() })
-    window.addEventListener('resize', function () {
-      debouncedResize()
-    })
+    const onResize = throttle(handleResize, 300)
+    window.addEventListener('resize', onResize)
     if (window.ebDraw != null) clearInterval(window.ebDraw)
     window.ebDraw = setInterval(draw, 50)
   }
@@ -105,7 +110,7 @@ function particleGeneratorFactory () {
     let d, distance, p, p2, xd, yd, _i, _j, _len, _len1
     // const alf = typeof options.drawAlpha === 'function' ? options.drawAlpha() : options.drawAlpha
     ctx.globalCompositeOperation = 'source-over'
-    ctx.fillStyle = '#fff'
+    ctx.fillStyle = bgFillStyle
     ctx.fillRect(0, 0, W, H)
     // ctx.globalCompositeOperation = 'lighter'
     for (_i = 0, _len = particles.length; _i < _len; _i++) {
@@ -114,11 +119,16 @@ function particleGeneratorFactory () {
       // ctx.fillRect(p.location.x, p.location.y, p.radius, p.radius)
 
       ctx.beginPath()
-      ctx.strokeStyle = '#0003'
+      ctx.strokeStyle = this.rgba
       ctx.lineWidth = 1
 
-      ctx.arc(p.location.x, p.location.y, 5, 0, 2 * Math.PI, false)
+      ctx.arc(p.location.x, p.location.y, 4, 0, 2 * Math.PI, false)
       ctx.stroke()
+
+      ctx.beginPath()
+      ctx.arc(p.location.x, p.location.y, 1, 0, 2 * Math.PI, false)
+      ctx.fillStyle = '#0003'
+      ctx.fill()
 
       for (_j = 0, _len1 = particles.length; _j < _len1; _j++) {
         p2 = particles[_j]
@@ -167,6 +177,52 @@ function debounce (fn) {
   }
 }
 
+function now () {
+  return new Date().getTime()
+}
+
+// https://underscorejs.org/docs/modules/throttle.html
+function throttle(func, wait, options) {
+  var timeout, context, args, result
+  var previous = 0
+  if (!options) options = {}
+
+  var later = function() {
+    previous = options.leading === false ? 0 : now()
+    timeout = null
+    result = func.apply(context, args)
+    if (!timeout) context = args = null
+  }
+
+  var throttled = function() {
+    var _now = now()
+    if (!previous && options.leading === false) previous = _now
+    var remaining = wait - (_now - previous)
+    context = this
+    args = arguments
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout)
+        timeout = null
+      }
+      previous = _now
+      result = func.apply(context, args)
+      if (!timeout) context = args = null
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining)
+    }
+    return result
+  }
+
+  throttled.cancel = function() {
+    clearTimeout(timeout)
+    previous = 0
+    timeout = context = args = null
+  }
+
+  return throttled
+}
+
 function generate () {
   eb({
     r: function () { return r(255) },
@@ -174,7 +230,7 @@ function generate () {
     b: function () { return r(255) },
     a: 0.3,
     // particles: 100,
-    distance: 64,
+    distance: 72,
     speed: 0.4
   })
 }
