@@ -1,3 +1,14 @@
+html {
+  background: #eee;
+  color: #111;
+}
+
+.top-bar { top: 0 }
+
+main > :first-child {
+  margin-top: unset !important;
+}
+
 .header {
   text-align: center;
   padding: 0.5rem 0;
@@ -25,30 +36,41 @@
 .section-title {
   text-align: center;
   font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  font-weight: 300;
+  margin: 1em auto;
 }
 .pkgs {
   display: flex;
   flex-wrap: wrap;
   align-content: stretch;
-  justify-content: center;
+  justify-content: space-evenly;
+}
+.pkg,
+.proj {
+  margin: 1%;
+  display: inline-block;
 }
 .pkg {
-  margin: 1%;
   background: #fffc;
   border: 1px solid #ddd;
+  font-size: 14px;
   padding: 1em;
   width: 48%;
-  display: inline-block;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
 }
-.pkg > :first-child {
+.proj {
+  width: 420px;
+  max-width: 48%;
+}
+.proj > h3 {
+  margin: 0 0 0.75rem;
+}
+.pkg > h3 {
   font-size: 1.25em;
   border-bottom: 1px solid #ddd;
   padding-bottom: .5rem;
   margin: 0 0 0.75rem;
 }
-.pkg p { margin-bottom: 0 }
+.pkg p { margin-bottom: 0.5em }
 .pkg > :last-child { margin-bottom: 0 }
 pre, code {
   background-color: #111;
@@ -60,7 +82,7 @@ main {
   margin: 1em auto;
 }
 footer {
-  margin: 1em 0;
+  margin: 3em 0 1em;
 }
 .right { float: right }
 .bye { cursor: help }
@@ -68,5 +90,29 @@ footer {
 @media screen and (max-width: 800px) {
   .pkg {
     width: 100%;
+  }
+  .proj {
+    /* width: 100%; */
+    max-width: 100%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #111;
+    color: #eee;
+  }
+  a {
+    color: #1da;
+  }
+  /* .proj > h3 { color: #999 } */
+  .pkg { background: #222c }
+  .pkg, .pkg > h3 { border-color: #333 }
+  .pkg p {
+    color: #ccc;
+  }
+  figure img {
+    background: #222c;
+    border: 1px solid #333;
   }
 }

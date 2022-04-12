@@ -12,9 +12,8 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
-const magicNumber = 18000
+const magicNumber = 40000
 const bg = document.querySelector('html')
-const bgFillStyle = getComputedStyle(bg).backgroundColor
 
 function particleGeneratorFactory () {
   const canvas = document.getElementById('canvas')
@@ -108,15 +107,10 @@ function particleGeneratorFactory () {
 
   function draw () {
     let d, distance, p, p2, xd, yd, _i, _j, _len, _len1
-    // const alf = typeof options.drawAlpha === 'function' ? options.drawAlpha() : options.drawAlpha
-    ctx.globalCompositeOperation = 'source-over'
-    ctx.fillStyle = bgFillStyle
-    ctx.fillRect(0, 0, W, H)
-    // ctx.globalCompositeOperation = 'lighter'
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
     for (_i = 0, _len = particles.length; _i < _len; _i++) {
       p = particles[_i]
-      // ctx.fillStyle = 'rgba(0,0,0,.5)'
-      // ctx.fillRect(p.location.x, p.location.y, p.radius, p.radius)
 
       ctx.beginPath()
       ctx.strokeStyle = this.rgba
