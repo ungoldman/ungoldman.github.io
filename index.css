@@ -102,10 +102,7 @@ footer {
     background: #111;
     color: #eee;
   }
-  a {
-    color: #1da;
-  }
-  /* .proj > h3 { color: #999 } */
+  a { color: #18e }
   .pkg { background: #222c }
   .pkg, .pkg > h3 { border-color: #333 }
   .pkg p {
