@@ -55,7 +55,8 @@ main > :first-child {
   border: 1px solid #ddd;
   font-size: 14px;
   padding: 1em;
-  width: 48%;
+  width: 420px;
+  max-width: 48%;
 }
 .proj {
   width: 420px;
@@ -89,7 +90,7 @@ footer {
 
 @media screen and (max-width: 800px) {
   .pkg {
-    width: 100%;
+    max-width: 100%;
   }
   .proj {
     /* width: 100%; */
