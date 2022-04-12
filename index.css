@@ -99,7 +99,7 @@ footer {
 
 @media (prefers-color-scheme: dark) {
   html {
-    background: #111;
+    background: #060606;
     color: #eee;
   }
   a { color: #18e }
