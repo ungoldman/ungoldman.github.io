@@ -94,12 +94,12 @@ function startRendering () {
 
   this.handleEvent(null)
 
-  canvas.addEventListener('mousedown', () => {
-    canvas.addEventListener('mousemove', this.handleEvent)
+  canvas.addEventListener('pointerdown', () => {
+    canvas.addEventListener('pointermove', this.handleEvent)
   })
 
-  canvas.addEventListener('mouseup', () => {
-    canvas.removeEventListener('mousemove', this.handleEvent)
+  canvas.addEventListener('pointerup', () => {
+    canvas.removeEventListener('pointermove', this.handleEvent)
   })
 
   setInterval(() => renderLoop(points, canvas, ctx), 50)
