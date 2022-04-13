@@ -1,4 +1,5 @@
-const dpr = window.devicePixelRatio || 1
+const DPR = window.devicePixelRatio || 1
+const CANCEL_EVENTS = ['pointerup', 'pointerout', 'pointerleave', 'pointercancel']
 
 // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
 // mutates canvas & ctx
@@ -8,10 +9,10 @@ function setCanvasDimensions (canvas, ctx) {
   const rect = canvas.getBoundingClientRect()
   // Give the canvas pixel dimensions of their CSS
   // size * the device pixel ratio.
-  canvas.width = rect.width * dpr
-  canvas.height = rect.height * dpr
+  canvas.width = rect.width * DPR
+  canvas.height = rect.height * DPR
 
-  ctx.scale(dpr, dpr)
+  ctx.scale(DPR, DPR)
 }
 
 function Point3D (x, y, z) {
@@ -50,9 +51,9 @@ function Point3D (x, y, z) {
   }
 
   this.project = function (viewWidth, viewHeight, fieldOfView, viewDistance) {
-    const factor = (fieldOfView / dpr) / (viewDistance + this.z)
-    const x = this.x * factor + (viewWidth / dpr) / 2
-    const y = this.y * factor + (viewHeight / dpr) / 2
+    const factor = (fieldOfView / DPR) / (viewDistance + this.z)
+    const x = this.x * factor + (viewWidth / DPR) / 2
+    const y = this.y * factor + (viewHeight / DPR) / 2
     return new Point3D(x, y, this.z)
   }
 }
@@ -94,12 +95,16 @@ function startRendering () {
 
   this.handleEvent(null)
 
-  canvas.addEventListener('pointerdown', () => {
+  canvas.addEventListener('pointerdown', event => {
+    event.preventDefault()
     canvas.addEventListener('pointermove', this.handleEvent)
   })
 
-  canvas.addEventListener('pointerup', () => {
-    canvas.removeEventListener('pointermove', this.handleEvent)
+  CANCEL_EVENTS.forEach(ce => {
+    canvas.addEventListener(ce, event => {
+      event.preventDefault()
+      canvas.removeEventListener('pointermove', this.handleEvent)
+    })
   })
 
   setInterval(() => renderLoop(points, canvas, ctx), 50)
