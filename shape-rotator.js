@@ -126,8 +126,6 @@ const ops = Array(6).fill(0).map(_ => {
   return COMPOSITE_OPS[n]
 })
 
-console.log(lastn)
-
 function startRendering () {
   const { canvas, ctx } = state
   setCanvasDimensions(canvas, ctx)
