@@ -4,6 +4,9 @@ html {
   font-size: 16px;
 }
 
+body { pointer-events: none; }
+body > * { pointer-events: auto; }
+
 main {
   max-width: 42em;
   margin: 10vh auto 1em;

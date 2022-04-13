@@ -15,6 +15,8 @@
 const magicNumber = 20000
 const bg = document.querySelector('html')
 
+console.log('👋')
+
 function particleGeneratorFactory () {
   const canvas = document.getElementById('canvas')
   let ctx = canvas.getContext('2d')
@@ -67,7 +69,7 @@ function particleGeneratorFactory () {
     while (num--) {
       particles.push(new Particle(options))
     }
-    console.log('particle count', particles.length)
+    // console.log('particle count', particles.length)
     function handleResize () {
       W = window.innerWidth
       H = window.innerHeight
@@ -82,12 +84,31 @@ function particleGeneratorFactory () {
           particles.pop()
         }
       }
-      console.log('particle count', particles.length)
+      // console.log('particle count', particles.length)
     }
     const onResize = throttle(handleResize, 300)
     window.addEventListener('resize', onResize)
     if (window.ebDraw != null) clearInterval(window.ebDraw)
     window.ebDraw = setInterval(draw, 50)
+
+    function addParticle (event) {
+      particles.push(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
+    }
+
+    const addParticleThrottled = throttle(addParticle, 50)
+
+    canvas.addEventListener('mousedown', e => {
+      addParticleThrottled(e)
+      canvas.addEventListener('mousemove', addParticleThrottled)
+    })
+
+    canvas.addEventListener('mouseup', e => {
+      canvas.removeEventListener('mousemove', addParticleThrottled)
+    })
+
+    canvas.addEventListener('mouseleave', e => {
+      canvas.removeEventListener('mousemove', addParticleThrottled)
+    })
   }
 
   function Particle (opts) {
@@ -96,8 +117,8 @@ function particleGeneratorFactory () {
     const b = typeof opts.b === 'function' ? opts.b() : opts.b
     const a = typeof opts.a === 'function' ? opts.a() : opts.a
     this.location = {
-      x: Math.random() * W,
-      y: Math.random() * H
+      x: opts.x || Math.random() * W,
+      y: opts.y || Math.random() * H
     }
     this.radius = 0
     this.speed = options.speed
