@@ -1,27 +1,22 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <title>Spinning Cube</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shape Rotator</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
-  <style>
-    body {
-      background-color: rgb(0, 0, 0);
-    }
-
-    #canvas {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      image-rendering: optimizeQuality;
-      /* image-rendering: optimizeSpeed; */
-    }
-  </style>
+  <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
+  <link rel="stylesheet" href="./index.css">
 </head>
 <body>
+  <nav class="top-bar">
+    <div class="top-bar-title">
+      <span>🍕</span>
+      <a href="/">ungoldman</a>
+      <span>/</span>
+      <a href="./">🔄 shape rotator</a>
+    </div>
+  </nav>
   <canvas id="canvas">
   <script src="./shape-rotator.js"></script>
 </body>

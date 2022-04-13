@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ungoldman</title>
+  <title>Nate Goldman</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
   <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <link rel="stylesheet" href="./index.css">
@@ -37,20 +37,27 @@
 
     <article>
       <h3>🛰 Satellites</h3>
-      <p>Experiments with imagery from various geostationary satellites.</p>
+      <p>Fiddling with satellite imagery from <a href="https://en.wikipedia.org/wiki/Geostationary_Operational_Environmental_Satellite">GOES</a>.</p>
       <ul>
-        <li><a href="https://github.com/ungoldman/goes-bg">🌎 goes-bg</a></li>
+        <li><a href="https://github.com/ungoldman/goes-bg#readme">🌎 goes-bg</a></li>
         <li><a href="https://ungoldman.github.io/satellites">🛰 satellites</a></li>
-        <li><a href="https://github.com/ungoldman/himawari-bg">🌏 himawari-bg</a> (defunct)</li>
-        <li><a href="https://github.com/ungoldman/hi8">🌻 hi8</a> (defunct)</li>
       </ul>
     </article>
 
     <article>
       <h3>🤖 Artificial Intelligence</h3>
-      <p>Generative creative writing with OpenAI's GPT-3 Transformer language model.</p>
+      <p>Generative creative writing with OpenAI's <a href="https://en.wikipedia.org/wiki/GPT-3">GPT-3</a> Transformer language model.</p>
       <ul>
-        <li><a href="https://github.com/ungoldman/eternal-recurrence">✍️ eternal recurrence</a></li>
+        <li><a href="https://github.com/ungoldman/eternal-recurrence#readme">✍️ eternal recurrence</a></li>
+      </ul>
+    </article>
+
+    <article>
+      <h3>🎨 Canvas</h3>
+      <p>Drawing interactive art experiments with <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas</a>.</p>
+      <ul>
+        <li><a href="./particles.html">🌈 particles</a></li>
+        <li><a href="./shape-rotator.html">🔄 shape rotator</a></li>
       </ul>
     </article>
 
@@ -75,7 +82,7 @@
     </article>
     <article>
       <h3>
-        <a title="website" href="https://github.com/ungoldman/changelog-parser">🪵 changelog-parser</a>
+        <a title="website" href="https://github.com/ungoldman/changelog-parser#readme">🪵 changelog-parser</a>
         <a class="right" title="github repo" href="https://github.com/ungoldman/changelog-parser">🐈</a>
       </h3>
       <p>Change log parser for node.</p>
@@ -88,7 +95,7 @@
 
     <article>
       <h3>
-        <a title="website" href="https://github.com/ungoldman/format-duration">⏱ format-duration</a>
+        <a title="website" href="https://github.com/ungoldman/format-duration#readme">⏱ format-duration</a>
         <a class="right" title="github repo" href="https://github.com/ungoldman/format-duration">🐈</a>
       </h3>
       <p>Convert milliseconds to a duration string.</p>
@@ -114,7 +121,7 @@
 
     <article>
       <h3>
-        <a title="website" href="https://github.com/ungoldman/hyperaxe">🪓 hyperaxe</a>
+        <a title="website" href="https://github.com/ungoldman/hyperaxe#readme">🪓 hyperaxe</a>
         <a class="right" title="github repo" href="https://github.com/ungoldman/hyperaxe">🐈</a>
       </h3>
       <p>An enchanted hyperscript weapon.</p>
@@ -152,5 +159,16 @@
   <canvas id="canvas"></canvas>
 
   <script src="particles.js"></script>
+  <script>
+    renderParticles({
+      r: function () { return r(255) },
+      g: function () { return r(255) },
+      b: function () { return r(255) },
+      a: 0.15,
+      // particles: 100,
+      distance: 72,
+      speed: 0.4
+    })
+  </script>
 </body>
 </html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nate Goldman</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
+  <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <nav class="top-bar">
+    <div class="top-bar-title">
+      <span>🍕</span>
+      <a href="/">ungoldman</a>
+      <span>/</span>
+      <a href="./">🌈 particles</a>
+    </div>
+    <div class="top-bar-right">
+      <a class="top-bar-link" title="twitter" href="https://twitter.com/ungoldman">🦆</a>
+      <a class="top-bar-link" title="github" href="https://github.com/ungoldman">🐈</a>
+    </div>
+  </nav>
+
+  <canvas id="canvas"></canvas>
+
+  <script src="particles.js"></script>
+  <script>
+    renderParticles({
+      r: function () { return r(255) },
+      g: function () { return r(255) },
+      b: function () { return r(255) },
+      a: 1,
+      lineWidth: 1,
+      distance: 72,
+      speed: 0.4
+    })
+  </script>
+</body>
+</html>

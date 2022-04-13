@@ -53,13 +53,14 @@ function particleGeneratorFactory () {
     a: function () {
       return Math.random()
     },
+    lineWidth: 1,
     drawAlpha: 0.05,
     particles: 25,
     distance: 200,
     speed: 3
   }
 
-  function eb (opts) {
+  function renderParticles (opts) {
     let num
     options = Object.assign({}, defaults, opts)
     setCanvasDimensions(window, canvas, ctx)
@@ -89,8 +90,12 @@ function particleGeneratorFactory () {
     }
     const onResize = throttle(handleResize, 300)
     window.addEventListener('resize', onResize)
-    if (window.ebDraw != null) clearInterval(window.ebDraw)
-    window.ebDraw = setInterval(draw, 50)
+
+    if (window.particleRenderLoop != null) {
+      clearInterval(window.particleRenderLoop)
+    }
+
+    window.particleRenderLoop = setInterval(draw, 50)
 
     function addParticle (event) {
       particles.unshift(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
@@ -120,8 +125,9 @@ function particleGeneratorFactory () {
     this.radius = 0
     this.speed = options.speed
     this.angle = Math.random() * 360
-    this.hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}33`
+    this.hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}${numToHex(a * 255)}`
     this.rgba = `rgba(${r}, ${g}, ${b},${a})`
+    console.log('this.hex', this.hex)
   }
 
   function draw () {
@@ -133,10 +139,10 @@ function particleGeneratorFactory () {
 
       ctx.beginPath()
       ctx.strokeStyle = p.rgba
-      ctx.lineWidth = 1
+      ctx.lineWidth = options.lineWidth
 
       // circle
-      ctx.arc(p.location.x, p.location.y, 4, 0, 2 * Math.PI, false)
+      ctx.arc(p.location.x, p.location.y, Math.round((options.lineWidth * 1.4) + 3), 0, 2 * Math.PI, false)
       ctx.stroke()
 
       // lines between points
@@ -148,7 +154,7 @@ function particleGeneratorFactory () {
         d = typeof options.distance === 'function' ? options.distance() : options.distance
         if (distance < d) {
           ctx.beginPath()
-          ctx.lineWidth = 1
+          ctx.lineWidth = options.lineWidth
           ctx.moveTo(p.location.x, p.location.y)
           ctx.lineTo(p2.location.x, p2.location.y)
           ctx.strokeStyle = p.rgba
@@ -158,7 +164,7 @@ function particleGeneratorFactory () {
 
       // center point (fill after lines)
       ctx.beginPath()
-      ctx.arc(p.location.x, p.location.y, 1, 0, 2 * Math.PI, false)
+      ctx.arc(p.location.x, p.location.y, options.lineWidth, 0, 2 * Math.PI, false)
       ctx.fillStyle = p.hex
       ctx.fill()
 
@@ -179,10 +185,8 @@ function particleGeneratorFactory () {
     }
   }
 
-  return eb
+  return renderParticles
 }
-
-const eb = particleGeneratorFactory()
 
 function r (n) { return Math.round(Math.random() * n) }
 
@@ -193,6 +197,11 @@ function debounce (fn) {
     timer = setTimeout(() => { fn.apply(this, args) }, 300)
   }
 }
+
+function numToHex (int) {
+  var str = Math.round(int).toString(16)
+  return str.length === 1 ? '0' + str : str
+};
 
 function now () {
   return new Date().getTime()
@@ -240,16 +249,4 @@ function throttle(func, wait, options) {
   return throttled
 }
 
-function generate () {
-  eb({
-    r: function () { return r(255) },
-    g: function () { return r(255) },
-    b: function () { return r(255) },
-    a: 0.15,
-    // particles: 100,
-    distance: 72,
-    speed: 0.4
-  })
-}
-
-generate()
+const renderParticles = particleGeneratorFactory()
