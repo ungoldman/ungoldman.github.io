@@ -7,6 +7,17 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
   <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <link rel="stylesheet" href="./index.css">
+  <style>
+    html.light {
+      background: #fff;
+    }
+    html.dark {
+      background: #000;
+    }
+    .light-switch {
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
   <nav class="top-bar">
@@ -16,8 +27,25 @@
       <span>/</span>
       <a href="./">🔄 shape rotator</a>
     </div>
+    <div class="top-bar-right">
+      <a class="top-bar-link light-switch" title="light switch">💡</a>
+    </div>
   </nav>
   <canvas id="canvas">
   <script src="./shape-rotator.js"></script>
+  <script>
+    const h = document.querySelector('html')
+    const l = document.querySelector('.light-switch')
+    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches
+
+    function lightSwitch (event) {
+      event.preventDefault()
+      console.log('hi')
+      if (dark) h.classList.toggle('light')
+      else h.classList.toggle('dark')
+    }
+
+    l.addEventListener('click', lightSwitch)
+  </script>
 </body>
 </html>
