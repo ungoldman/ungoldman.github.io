@@ -90,7 +90,7 @@ function startRendering () {
 
   setCanvasDimensions(canvas, ctx)
 
-  this.handleEvent = rotate.bind(this)
+  this.handleEvent = handleEvent.bind(this)
 
   this.handleEvent(null)
 
@@ -140,7 +140,8 @@ let lastY = 0
 let dirX = 0.1
 let dirY = -0.1
 
-function rotate (event, drift) {
+function handleEvent (event, drift) {
+  if (event) event.preventDefault()
   let { clientX, clientY } = event || {}
   let x = 0
   let y = 0
