@@ -1,3 +1,8 @@
+// Much of the code is adapted from this gist:
+// https://gist.github.com/thomasdarimont/8c694b4522c6cb10d85c
+// I mostly added pointer interactivity to allow the user to rotate,
+// then spent time fiddling with colors and and composite ops.
+
 const DPR = window.devicePixelRatio || 1
 const CANCEL_EVENTS = ['pointerup', 'pointerout', 'pointerleave', 'pointercancel']
 const COMPOSITE_OPS = [
