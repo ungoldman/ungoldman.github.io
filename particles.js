@@ -120,7 +120,7 @@ function particleGeneratorFactory () {
     this.radius = 0
     this.speed = options.speed
     this.angle = Math.random() * 360
-    this.hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+    this.hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}33`
     this.rgba = `rgba(${r}, ${g}, ${b},${a})`
   }
 
@@ -133,17 +133,13 @@ function particleGeneratorFactory () {
 
       ctx.beginPath()
       ctx.strokeStyle = p.rgba
-      ctx.lineWidth = 2
+      ctx.lineWidth = 1
 
-      ctx.arc(p.location.x, p.location.y, 6, 0, 2 * Math.PI, false)
+      // circle
+      ctx.arc(p.location.x, p.location.y, 4, 0, 2 * Math.PI, false)
       ctx.stroke()
 
-      ctx.beginPath()
-      ctx.arc(p.location.x, p.location.y, 2, 0, 2 * Math.PI, false)
-      ctx.fillStyle = p.hex
-      console.log('this.hex', this.hex)
-      ctx.fill()
-
+      // lines between points
       for (_j = 0, _len1 = particles.length; _j < _len1; _j++) {
         p2 = particles[_j]
         yd = p2.location.y - p.location.y
@@ -152,13 +148,20 @@ function particleGeneratorFactory () {
         d = typeof options.distance === 'function' ? options.distance() : options.distance
         if (distance < d) {
           ctx.beginPath()
-          ctx.lineWidth = 2
+          ctx.lineWidth = 1
           ctx.moveTo(p.location.x, p.location.y)
           ctx.lineTo(p2.location.x, p2.location.y)
           ctx.strokeStyle = p.rgba
           ctx.stroke()
         }
       }
+
+      // center point (fill after lines)
+      ctx.beginPath()
+      ctx.arc(p.location.x, p.location.y, 1, 0, 2 * Math.PI, false)
+      ctx.fillStyle = p.hex
+      ctx.fill()
+
       p.location.x = p.location.x + p.speed * Math.cos(p.angle * Math.PI / 180)
       p.location.y = p.location.y + p.speed * Math.sin(p.angle * Math.PI / 180)
       if (p.location.x < 0) {
@@ -242,7 +245,7 @@ function generate () {
     r: function () { return r(255) },
     g: function () { return r(255) },
     b: function () { return r(255) },
-    a: 0.25,
+    a: 0.15,
     // particles: 100,
     distance: 72,
     speed: 0.4
