@@ -5,12 +5,12 @@ html {
 }
 
 main {
-  max-width: 46em;
-  margin: 1em auto;
+  max-width: 42em;
+  margin: 10vh auto 1em;
   overflow: unset;
 }
 
-h2 {
+h1, h2 {
   font-size: 2em;
 }
 
@@ -28,8 +28,8 @@ article > h3 {
 }
 article > :last-child { margin-bottom: 0 }
 /* hack for badges */
-article > p > a { opacity: 0.75 }
-article > p > a:hover { opacity: 0.9 }
+article > p > a > img { opacity: 0.75 }
+article > p > a:hover > img { opacity: 0.9 }
 
 pre, code {
   background-color: #111;
@@ -60,12 +60,12 @@ footer {
   border-radius: 50%;
 }
 
-h2 .section-icon {
+.section-icon {
   opacity: 0.75;
 }
-h2 .section-icon:hover,
-h2 .section-icon:active,
-h2 .section-icon:focus {
+.section-icon:hover,
+.section-icon:active,
+.section-icon:focus {
   opacity: 1;
   text-decoration: none;
 }
@@ -94,7 +94,7 @@ h2 .section-icon:focus {
 }
 
 @media screen and (min-width: 50em) {
-  h2 .section-icon {
+  .section-icon {
     position: absolute;
     text-align: right;
     margin-right: 0;
@@ -119,7 +119,7 @@ h2 .section-icon:focus {
   article > p {
     color: #bbb;
   }
-  article > p > a { opacity: 0.5 }
+  article > p > a > img { opacity: 0.5 }
   figure img {
     background: #222c;
     border: 1px solid #333;
@@ -131,7 +131,7 @@ h2 .section-icon:focus {
     font-size: 1.4em;
   }
   /* badge hack */
-  article > p > a { opacity: 0.8 }
+  article > p > a > img { opacity: 0.8 }
   article > p > a > img {
     height: 18px;
   }
