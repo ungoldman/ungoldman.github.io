@@ -76,13 +76,12 @@ footer {
 }
 
 /* hack for badges */
-article > p > a { opacity: 0.5 }
+article > p > a { opacity: 0.75 }
 article > p > a:hover { opacity: 0.9 }
 
 .bye {
   cursor: help;
 }
-
 
 @media (prefers-color-scheme: dark) {
   html {
@@ -100,6 +99,7 @@ article > p > a:hover { opacity: 0.9 }
   article > p {
     color: #bbb;
   }
+  article > p > a { opacity: 0.5 }
   figure img {
     background: #222c;
     border: 1px solid #333;
