@@ -12,7 +12,7 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
-const magicNumber = 40000
+const magicNumber = 20000
 const bg = document.querySelector('html')
 
 function particleGeneratorFactory () {

@@ -69,15 +69,6 @@ h2 .section-icon:focus {
   opacity: 1;
   text-decoration: none;
 }
-@media screen and (min-width: 50em) {
-  h2 .section-icon {
-    position: absolute;
-    text-align: right;
-    margin-right: 0;
-    width: 1.25em;
-    left: -1.75em;
-  }
-}
 .right {
   float: right;
 }
@@ -102,6 +93,16 @@ h2 .section-icon:focus {
   cursor: help;
 }
 
+@media screen and (min-width: 50em) {
+  h2 .section-icon {
+    position: absolute;
+    text-align: right;
+    margin-right: 0;
+    width: 1.25em;
+    left: -1.75em;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     background: #060606;
@@ -122,5 +123,16 @@ h2 .section-icon:focus {
   figure img {
     background: #222c;
     border: 1px solid #333;
+  }
+}
+
+@media screen and (max-width: 50em) {
+  h2 {
+    font-size: 1.4em;
+  }
+  /* badge hack */
+  article > p > a { opacity: 0.8 }
+  article > p > a > img {
+    height: 18px;
   }
 }
