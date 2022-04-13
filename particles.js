@@ -17,6 +17,21 @@ const bg = document.querySelector('html')
 
 console.log('👋')
 
+// adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
+// mutates canvas & ctx
+function setCanvasDimensions (window, canvas, ctx) {
+  // Get the device pixel ratio, falling back to 1.
+  const dpr = window.devicePixelRatio || 1
+  // Get the size of the canvas in CSS pixels.
+  const rect = canvas.getBoundingClientRect()
+  // Give the canvas pixel dimensions of their CSS
+  // size * the device pixel ratio.
+  canvas.width = rect.width * dpr
+  canvas.height = rect.height * dpr
+
+  ctx.scale(dpr, dpr)
+}
+
 function particleGeneratorFactory () {
   const canvas = document.getElementById('canvas')
   let ctx = canvas.getContext('2d')
@@ -44,24 +59,10 @@ function particleGeneratorFactory () {
     speed: 3
   }
 
-  // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-  function setCanvasDimensions () {
-    // Get the device pixel ratio, falling back to 1.
-    const dpr = window.devicePixelRatio || 1
-    // Get the size of the canvas in CSS pixels.
-    const rect = canvas.getBoundingClientRect()
-    // Give the canvas pixel dimensions of their CSS
-    // size * the device pixel ratio.
-    canvas.width = rect.width * dpr
-    canvas.height = rect.height * dpr
-
-    ctx.scale(dpr, dpr)
-  }
-
   function eb (opts) {
     let num
     options = Object.assign({}, defaults, opts)
-    setCanvasDimensions()
+    setCanvasDimensions(window, canvas, ctx)
     W = window.innerWidth
     H = window.innerHeight
     particles = []
@@ -95,7 +96,7 @@ function particleGeneratorFactory () {
       particles.unshift(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
     }
 
-    const addParticleThrottled = throttle(addParticle, 50)
+    const addParticleThrottled = throttle(addParticle, 40)
 
     canvas.addEventListener('mousedown', e => {
       addParticleThrottled(e)
@@ -119,7 +120,8 @@ function particleGeneratorFactory () {
     this.radius = 0
     this.speed = options.speed
     this.angle = Math.random() * 360
-    this.rgba = 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')'
+    this.hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+    this.rgba = `rgba(${r}, ${g}, ${b},${a})`
   }
 
   function draw () {
@@ -130,15 +132,16 @@ function particleGeneratorFactory () {
       p = particles[_i]
 
       ctx.beginPath()
-      ctx.strokeStyle = this.rgba
-      ctx.lineWidth = 1
+      ctx.strokeStyle = p.rgba
+      ctx.lineWidth = 2
 
-      ctx.arc(p.location.x, p.location.y, 4, 0, 2 * Math.PI, false)
+      ctx.arc(p.location.x, p.location.y, 6, 0, 2 * Math.PI, false)
       ctx.stroke()
 
       ctx.beginPath()
-      ctx.arc(p.location.x, p.location.y, 1, 0, 2 * Math.PI, false)
-      ctx.fillStyle = '#0003'
+      ctx.arc(p.location.x, p.location.y, 2, 0, 2 * Math.PI, false)
+      ctx.fillStyle = p.hex
+      console.log('this.hex', this.hex)
       ctx.fill()
 
       for (_j = 0, _len1 = particles.length; _j < _len1; _j++) {
@@ -149,7 +152,7 @@ function particleGeneratorFactory () {
         d = typeof options.distance === 'function' ? options.distance() : options.distance
         if (distance < d) {
           ctx.beginPath()
-          ctx.lineWidth = 1
+          ctx.lineWidth = 2
           ctx.moveTo(p.location.x, p.location.y)
           ctx.lineTo(p2.location.x, p2.location.y)
           ctx.strokeStyle = p.rgba
@@ -239,7 +242,7 @@ function generate () {
     r: function () { return r(255) },
     g: function () { return r(255) },
     b: function () { return r(255) },
-    a: 0.3,
+    a: 0.25,
     // particles: 100,
     distance: 72,
     speed: 0.4
