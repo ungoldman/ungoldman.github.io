@@ -78,7 +78,7 @@ var cubeFaces = [
 
 function r (n) { return Math.round(Math.random() * n) }
 
-const colors = Array(18).fill(0).map(c => {
+const colors = Array(24).fill(0).map(c => {
   return `rgba(${r(255)},${r(255)},${r(255)}, 0.5)`
 })
 
@@ -120,14 +120,16 @@ function renderLoop (points, canvas, ctx) {
   cubeFaces.map((cubeFace, i) => {
     ctx.beginPath()
     ctx.moveTo(points[cubeFace[0]].x, points[cubeFace[0]].y)
-    ctx.strokeStyle = colors[i++ % 18]
+    ctx.strokeStyle = colors[i++ % 24]
     ctx.lineTo(points[cubeFace[1]].x, points[cubeFace[1]].y)
-    ctx.strokeStyle = colors[i++ % 18]
+    ctx.strokeStyle = colors[i++ % 24]
     ctx.lineTo(points[cubeFace[2]].x, points[cubeFace[2]].y)
-    ctx.strokeStyle = colors[i++ % 18]
+    ctx.strokeStyle = colors[i++ % 24]
     ctx.lineTo(points[cubeFace[3]].x, points[cubeFace[3]].y)
     ctx.closePath()
     ctx.stroke()
+    ctx.fillStyle = colors[i++ % 24]
+    ctx.fill()
   })
 }
 
