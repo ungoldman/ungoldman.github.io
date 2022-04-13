@@ -5,7 +5,10 @@ html {
 }
 
 body { pointer-events: none; }
-body > * { pointer-events: auto; }
+#canvas,
+.top-bar *,
+main *,
+.bye small { pointer-events: auto; }
 
 main {
   max-width: 42em;

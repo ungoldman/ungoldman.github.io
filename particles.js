@@ -12,7 +12,7 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
-const magicNumber = 20000
+const magicNumber = 18000
 const bg = document.querySelector('html')
 
 console.log('👋')
@@ -67,7 +67,7 @@ function particleGeneratorFactory () {
     particles = []
     num = Math.round(W * H / magicNumber) // options.particles
     while (num--) {
-      particles.push(new Particle(options))
+      particles.unshift(new Particle(options))
     }
     // console.log('particle count', particles.length)
     function handleResize () {
@@ -77,7 +77,7 @@ function particleGeneratorFactory () {
       let next = Math.round(W * H / magicNumber)
       if (next > particles.length) {
         while (next-- > particles.length) {
-          particles.push(new Particle(options))
+          particles.unshift(new Particle(options))
         }
       } else if (next < particles.length) {
         while (next++ < particles.length) {
@@ -92,7 +92,7 @@ function particleGeneratorFactory () {
     window.ebDraw = setInterval(draw, 50)
 
     function addParticle (event) {
-      particles.push(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
+      particles.unshift(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
     }
 
     const addParticleThrottled = throttle(addParticle, 50)
@@ -103,10 +103,6 @@ function particleGeneratorFactory () {
     })
 
     canvas.addEventListener('mouseup', e => {
-      canvas.removeEventListener('mousemove', addParticleThrottled)
-    })
-
-    canvas.addEventListener('mouseleave', e => {
       canvas.removeEventListener('mousemove', addParticleThrottled)
     })
   }
