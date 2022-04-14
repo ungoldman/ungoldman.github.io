@@ -4,12 +4,6 @@ html {
   font-size: 16px;
 }
 
-body { pointer-events: none; }
-#canvas,
-.top-bar *,
-main *,
-.bye small { pointer-events: auto; }
-
 main {
   max-width: 42em;
   margin: 10vh auto 1em;
