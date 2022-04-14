@@ -4,7 +4,6 @@
 // then spent time fiddling with colors and and composite ops.
 
 // note: will currently break if window is moved to display w/ different DPR
-const DPR = window.devicePixelRatio || 1
 const CANCEL_EVENTS = ['pointerup', 'pointerout', 'pointerleave', 'pointercancel']
 const COMPOSITE_OPS = [
   'source-over',
@@ -73,9 +72,9 @@ class Point3D {
   }
 
   project (viewWidth, viewHeight, fieldOfView, viewDistance) {
-    const factor = (fieldOfView / DPR) / (viewDistance + this.z)
-    const x = this.x * factor + (viewWidth / DPR) / 2
-    const y = this.y * factor + (viewHeight / DPR) / 2
+    const factor = (fieldOfView / state.DPR) / (viewDistance + this.z)
+    const x = this.x * factor + (viewWidth / state.DPR) / 2
+    const y = this.y * factor + (viewHeight / state.DPR) / 2
     return new Point3D(x, y, this.z)
   }
 }
@@ -154,6 +153,10 @@ function startRendering () {
     })
   })
 
+  window.addEventListener('resize', event => {
+    setCanvasDimensions(canvas, ctx)
+  })
+
   setInterval(() => renderLoop(canvas, ctx), 50)
 }
 
@@ -230,15 +233,17 @@ function handleEvent (event, drift) {
 function r (n) { return Math.round(Math.random() * n) }
 
 // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
-// mutates canvas & ctx
+// mutates canvas & ctx, side effect on state
 function setCanvasDimensions (canvas, ctx) {
   // Get the device pixel ratio, falling back to 1.
+  const DPR = window.devicePixelRatio || 1
   // Get the size of the canvas in CSS pixels.
   const rect = canvas.getBoundingClientRect()
   // Give the canvas pixel dimensions of their CSS
   // size * the device pixel ratio.
   canvas.width = rect.width * DPR
   canvas.height = rect.height * DPR
+  state.DPR = DPR
 
   ctx.scale(DPR, DPR)
 }

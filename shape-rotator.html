@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <link rel="stylesheet" href="./index.css">
   <style>
+    html, body {
+      height: 100vh;
+      width: 100vw;
+    }
     html.light {
       background: #fff;
     }
@@ -17,6 +21,8 @@
     .light-switch {
       user-select: none;
     }
+    #canvas { z-index: 0 }
+    .top-bar { z-index: 1 }
   </style>
 </head>
 <body>
@@ -31,20 +37,39 @@
       <a class="top-bar-link light-switch" title="light switch">💡</a>
     </div>
   </nav>
-  <canvas id="canvas">
+  <canvas id="canvas"></canvas>
   <script src="./shape-rotator.js"></script>
   <script>
     const h = document.querySelector('html')
     const l = document.querySelector('.light-switch')
     const dark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    let bg = localStorage.getItem('shape-rotator-bg')
+
+    if (bg) h.classList.add(bg)
 
     function lightSwitch (event) {
       event.preventDefault()
-      if (dark) h.classList.toggle('light')
-      else h.classList.toggle('dark')
+      if (bg === 'light') night()
+      else day()
+    }
+
+    function day () {
+      h.classList.remove('dark')
+      h.classList.add('light')
+      localStorage.setItem('shape-rotator-bg', 'light')
+      bg = 'light'
+    }
+
+    function night () {
+      h.classList.remove('light')
+      h.classList.add('dark')
+      localStorage.setItem('shape-rotator-bg', 'dark')
+      bg = 'dark'
     }
 
     l.addEventListener('click', lightSwitch)
+
+
   </script>
 </body>
 </html>
