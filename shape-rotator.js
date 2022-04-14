@@ -168,12 +168,10 @@ function startRendering () {
   window.shapeRotatorLoop = setInterval(() => renderLoop(canvas, ctx), 50)
 }
 
-let drifting = true
-
 function renderLoop (canvas, ctx) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  this.handleEvent(null, drifting)
+  this.handleEvent(null, true)
 
   const points = state.vertices.map(vertex => {
     return vertex.project(canvas.width, canvas.height, canvas.height, 6)
@@ -208,15 +206,13 @@ function handleEvent (event, drift) {
   // let z = 0
 
   if (clientX != null && state.lastX != null) {
-    drifting = true
     // clientX = Math.round(clientX / 20) * 20
     // clientY = Math.round(clientY / 20) * 20
     // console.log(clientX - lastX, clientY - lastY)
     x = (clientY - state.lastY)
     y = (state.lastX - clientX)
-    state.dirX = x ? 0.1 : -0.1
-    state.dirY = y ? 0.1 : -0.1
-    // z++
+    state.dirX = x / 2
+    state.dirY = y / 2
   } else if (drift) {
     // console.log(dirX, dirY)
     x += state.dirX
@@ -236,12 +232,13 @@ function handleEvent (event, drift) {
 }
 
 function keyRotate (x, y) {
-  drifting = false
   state.vertices = state.vertices.map((vertex, i) => {
     return vertex
-      .rotateX(-y * 3)
-      .rotateY(-x * 3)
+      .rotateX(-x * 3)
+      .rotateY(-y * 3)
   })
+  state.dirX = -x / 3
+  state.dirY = -y / 3
 }
 
 // helper fns
@@ -315,10 +312,10 @@ function controls () {
 
     let x = 0
     let y = 0
-    if (keys.w) y = -2
-    if (keys.s) y = 2
-    if (keys.a) x = -2
-    if (keys.d) x = 2
+    if (keys.w) x = 2
+    if (keys.s) x = -2
+    if (keys.a) y = -2
+    if (keys.d) y = 2
 
     if ([x,y].some(n => n !== 0)) keyRotate(x, y)
   })
