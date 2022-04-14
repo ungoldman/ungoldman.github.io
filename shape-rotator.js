@@ -239,8 +239,8 @@ function keyRotate (x, y) {
   drifting = false
   state.vertices = state.vertices.map((vertex, i) => {
     return vertex
-      .rotateX(y * 3)
-      .rotateY(x * 3)
+      .rotateX(-y * 3)
+      .rotateY(-x * 3)
   })
 }
 
