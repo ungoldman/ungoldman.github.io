@@ -86,6 +86,9 @@ const state = {
   canvas,
   ctx,
 
+  colors: rollColors(),
+  ops: rollOps(),
+
   lastX: 0,
   lastY: 0,
 
@@ -113,17 +116,22 @@ const cubeFaces = [
   [3, 2, 6, 7]
 ]
 
-const colors = Array(24).fill(0).map(_ => {
-  return `rgba(${r(255)},${r(255)},${r(255)}, 0.9)`
-})
 
-const lastn = []
-const ops = Array(6).fill(0).map(_ => {
-  let n = r(25)
-  while (lastn.includes(n)) n = r(25) // ensure unique op for every face
-  lastn.push(n)
-  return COMPOSITE_OPS[n]
-})
+function rollColors () {
+  return Array(24).fill(0).map(_ => {
+    return `rgba(${r(255)},${r(255)},${r(255)}, 0.9)`
+  })
+}
+
+function rollOps () {
+  const lastn = []
+  return Array(6).fill(0).map(_ => {
+    let n = r(25)
+    while (lastn.includes(n)) n = r(25) // ensure unique op for every face
+    lastn.push(n)
+    return COMPOSITE_OPS[n]
+  })
+}
 
 function startRendering () {
   const { canvas, ctx } = state
@@ -157,13 +165,15 @@ function startRendering () {
     setCanvasDimensions(canvas, ctx)
   })
 
-  setInterval(() => renderLoop(canvas, ctx), 50)
+  window.shapeRotatorLoop = setInterval(() => renderLoop(canvas, ctx), 50)
 }
+
+let drifting = true
 
 function renderLoop (canvas, ctx) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  this.handleEvent(null, true)
+  this.handleEvent(null, drifting)
 
   const points = state.vertices.map(vertex => {
     return vertex.project(canvas.width, canvas.height, canvas.height, 6)
@@ -174,29 +184,31 @@ function renderLoop (canvas, ctx) {
   cubeFaces.forEach((cubeFace, j) => {
     ctx.beginPath()
     ctx.moveTo(points[cubeFace[0]].x, points[cubeFace[0]].y)
-    ctx.strokeStyle = colors[i++]
+    ctx.strokeStyle = state.colors[i++]
     ctx.lineTo(points[cubeFace[1]].x, points[cubeFace[1]].y)
-    ctx.strokeStyle = colors[i++]
+    ctx.strokeStyle = state.colors[i++]
     ctx.lineTo(points[cubeFace[2]].x, points[cubeFace[2]].y)
-    ctx.strokeStyle = colors[i++]
+    ctx.strokeStyle = state.colors[i++]
     ctx.lineTo(points[cubeFace[3]].x, points[cubeFace[3]].y)
     ctx.closePath()
     ctx.stroke()
-    ctx.globalCompositeOperation = ops[j]
-    ctx.fillStyle = colors[i++]
+    ctx.globalCompositeOperation = state.ops[j]
+    ctx.fillStyle = state.colors[i++]
     ctx.fill()
     ctx.globalCompositeOperation = 'source-over'
   })
 }
 
 function handleEvent (event, drift) {
-  if (event) event.preventDefault()
+  if (event && event.preventDefault) event.preventDefault()
   const { clientX, clientY } = event || {}
+  // const change = Math.abs(clientX + clientY) > 0
   let x = 0
   let y = 0
   // let z = 0
 
   if (clientX != null && state.lastX != null) {
+    drifting = true
     // clientX = Math.round(clientX / 20) * 20
     // clientY = Math.round(clientY / 20) * 20
     // console.log(clientX - lastX, clientY - lastY)
@@ -221,6 +233,15 @@ function handleEvent (event, drift) {
 
   state.lastX = clientX
   state.lastY = clientY
+}
+
+function keyRotate (x, y) {
+  drifting = false
+  state.vertices = state.vertices.map((vertex, i) => {
+    return vertex
+      .rotateX(y * 3)
+      .rotateY(x * 3)
+  })
 }
 
 // helper fns
@@ -248,4 +269,66 @@ function setCanvasDimensions (canvas, ctx) {
   ctx.scale(DPR, DPR)
 }
 
-window.onload = startRendering
+function reroll () {
+  state.colors = rollColors()
+  state.ops = rollOps()
+}
+
+function controls () {
+  const h = document.querySelector('html')
+  const lightSwitch = document.querySelector('.bulb')
+  const dice = document.querySelector('.dice')
+  const dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  let bg = localStorage.getItem('shape-rotator-bg')
+
+  if (bg) h.classList.add(bg)
+
+  function toggleLight () {
+    if (bg === 'light') night()
+    else day()
+  }
+
+  function day () {
+    h.classList.remove('dark')
+    h.classList.add('light')
+    localStorage.setItem('shape-rotator-bg', 'light')
+    bg = 'light'
+  }
+
+  function night () {
+    h.classList.remove('light')
+    h.classList.add('dark')
+    localStorage.setItem('shape-rotator-bg', 'dark')
+    bg = 'dark'
+  }
+
+  lightSwitch.addEventListener('click', toggleLight)
+  dice.addEventListener('click', reroll)
+
+  const keys = {}
+
+  document.addEventListener('keydown', event => {
+    keys[event.key] = true
+
+    if (event.key === 'q') reroll()
+    if (event.key === 'e') toggleLight()
+
+    let x = 0
+    let y = 0
+    if (keys.w) y = -2
+    if (keys.s) y = 2
+    if (keys.a) x = -2
+    if (keys.d) x = 2
+
+    if ([x,y].some(n => n !== 0)) keyRotate(x, y)
+  })
+
+  document.addEventListener('keyup', event => {
+    delete keys[event.key]
+ })
+}
+
+document.addEventListener('DOMContentLoaded', _ => {
+  startRendering()
+  controls()
+})
