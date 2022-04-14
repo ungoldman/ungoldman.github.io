@@ -7,6 +7,26 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
   <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <link rel="stylesheet" href="./index.css">
+  <style>
+    .top-bar {
+      pointer-events: none;
+      z-index: 1;
+    }
+    .top-bar > * {
+      pointer-events: auto;
+    }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      image-rendering: optimizeQuality;
+      /* image-rendering: optimizeSpeed; */
+    }
+  </style>
 </head>
 <body>
   <nav class="top-bar">
