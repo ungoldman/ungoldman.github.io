@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nate Goldman</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <title>PARTICLES</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
   <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <link rel="stylesheet" href="./index.css">
   <style>
     .top-bar {
       pointer-events: none;
-      z-index: 1;
     }
-    .top-bar > * {
+    .top-bar-title {
+      position: relative;
       pointer-events: auto;
+      z-index: 1;
     }
     #canvas {
       position: fixed;
@@ -34,11 +35,7 @@
       <span>🍕</span>
       <a href="/">ungoldman</a>
       <span>/</span>
-      <a href="./">🌈 particles</a>
-    </div>
-    <div class="top-bar-right">
-      <a class="top-bar-link" title="twitter" href="https://twitter.com/ungoldman">🦆</a>
-      <a class="top-bar-link" title="github" href="https://github.com/ungoldman">🐈</a>
+      <a onclick="location.reload()">🌈 particles</a>
     </div>
   </nav>
 
@@ -48,7 +45,7 @@
   <script>
     particles({
       a: 1,
-      distance: 128,
+      distance: 96,
       speed: 1
     })
   </script>
