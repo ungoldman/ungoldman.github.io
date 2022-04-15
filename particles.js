@@ -12,8 +12,8 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
-const magicNumber = 18000
-const bg = document.querySelector('html')
+const MAGIC_NUMBER = 18000
+const CANCEL_EVENTS = ['pointerup', 'pointerout', 'pointerleave', 'pointercancel']
 
 // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
 // mutates canvas & ctx
@@ -26,8 +26,6 @@ function setCanvasDimensions (canvas, ctx) {
   // size * the device pixel ratio.
   canvas.width = rect.width * dpr
   canvas.height = rect.height * dpr
-
-  console.log({ w: canvas.width, h: canvas.height, dpr })
 
   ctx.scale(dpr, dpr)
 }
@@ -60,16 +58,16 @@ function particleGeneratorFactory () {
     W = canvas.width
     H = canvas.height
     particles = []
-    num = options.particles || Math.round(W * H / magicNumber)
+    num = options.particles || Math.round(W * H / MAGIC_NUMBER)
     while (num--) {
       particles.unshift(new Particle(options))
     }
     console.log('particle count', particles.length)
     function handleResize () {
+      setCanvasDimensions(canvas, ctx)
       W = canvas.width
       H = canvas.height
-      setCanvasDimensions(canvas, ctx)
-      let next = Math.round(W * H / magicNumber)
+      let next = Math.round(W * H / MAGIC_NUMBER)
 
       if (next > particles.length) {
         while (next-- > particles.length) {
@@ -82,7 +80,7 @@ function particleGeneratorFactory () {
       }
       console.log('particle count', particles.length)
     }
-    const onResize = throttle(handleResize, 300)
+    const onResize = throttle(handleResize, 300, { trailing: true })
     window.addEventListener('resize', onResize)
 
     if (window.particleRenderLoop != null) {
@@ -95,15 +93,28 @@ function particleGeneratorFactory () {
       particles.unshift(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
     }
 
-    const addParticleThrottled = throttle(addParticle, 40)
+    const addParticleThrottled = throttle(addParticle, 30)
 
-    canvas.addEventListener('mousedown', e => {
-      addParticleThrottled(e)
-      canvas.addEventListener('mousemove', addParticleThrottled)
+    // prevent all touch events
+    // note: still need to handle touch* when using pointer*
+    canvas.addEventListener('touchstart', event => event.preventDefault())
+    canvas.addEventListener('touchmove', event => event.preventDefault())
+    canvas.addEventListener('touchend', event => event.preventDefault())
+    canvas.addEventListener('touchcancel', event => event.preventDefault())
+
+    // capture & handle pointer events (should cover mouse & touch)
+    canvas.addEventListener('pointerdown', event => {
+      event.preventDefault()
+      addParticleThrottled(event)
+      canvas.addEventListener('pointermove', addParticleThrottled)
     })
 
-    canvas.addEventListener('mouseup', e => {
-      canvas.removeEventListener('mousemove', addParticleThrottled)
+    CANCEL_EVENTS.forEach(ce => {
+      canvas.addEventListener(ce, event => {
+        event.preventDefault()
+        addParticleThrottled(event)
+        canvas.removeEventListener('pointermove', addParticleThrottled)
+      })
     })
   }
 
