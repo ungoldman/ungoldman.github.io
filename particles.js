@@ -112,7 +112,6 @@ function particleGeneratorFactory () {
     CANCEL_EVENTS.forEach(ce => {
       canvas.addEventListener(ce, event => {
         event.preventDefault()
-        addParticleThrottled(event)
         canvas.removeEventListener('pointermove', addParticleThrottled)
       })
     })
