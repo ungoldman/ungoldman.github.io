@@ -15,11 +15,9 @@
 const magicNumber = 18000
 const bg = document.querySelector('html')
 
-console.log('👋')
-
 // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
 // mutates canvas & ctx
-function setCanvasDimensions (window, canvas, ctx) {
+function setCanvasDimensions (canvas, ctx) {
   // Get the device pixel ratio, falling back to 1.
   const dpr = window.devicePixelRatio || 1
   // Get the size of the canvas in CSS pixels.
@@ -28,6 +26,8 @@ function setCanvasDimensions (window, canvas, ctx) {
   // size * the device pixel ratio.
   canvas.width = rect.width * dpr
   canvas.height = rect.height * dpr
+
+  console.log({ w: canvas.width, h: canvas.height, dpr })
 
   ctx.scale(dpr, dpr)
 }
@@ -41,21 +41,14 @@ function particleGeneratorFactory () {
   let W = null
 
   const defaults = {
-    r: function () {
-      return Math.round(Math.random() * 255)
-    },
-    g: function () {
-      return Math.round(Math.random() * 255)
-    },
-    b: function () {
-      return Math.round(Math.random() * 255)
-    },
-    a: function () {
-      return Math.random()
-    },
+    r: () => r(255),
+    g: () => r(255),
+    b: () => r(255),
+    a: () => Math.random(),
+    fade: true,
     lineWidth: 1,
-    drawAlpha: 0.05,
-    particles: 25,
+    // drawAlpha: 0.05, // not currently in use
+    // particles: 25,
     distance: 200,
     speed: 3
   }
@@ -63,20 +56,21 @@ function particleGeneratorFactory () {
   function renderParticles (opts) {
     let num
     options = Object.assign({}, defaults, opts)
-    setCanvasDimensions(window, canvas, ctx)
-    W = window.innerWidth
-    H = window.innerHeight
+    setCanvasDimensions(canvas, ctx)
+    W = canvas.width
+    H = canvas.height
     particles = []
-    num = Math.round(W * H / magicNumber) // options.particles
+    num = options.particles || Math.round(W * H / magicNumber)
     while (num--) {
       particles.unshift(new Particle(options))
     }
-    // console.log('particle count', particles.length)
+    console.log('particle count', particles.length)
     function handleResize () {
-      W = window.innerWidth
-      H = window.innerHeight
-      setCanvasDimensions()
+      W = canvas.width
+      H = canvas.height
+      setCanvasDimensions(canvas, ctx)
       let next = Math.round(W * H / magicNumber)
+
       if (next > particles.length) {
         while (next-- > particles.length) {
           particles.unshift(new Particle(options))
@@ -86,7 +80,7 @@ function particleGeneratorFactory () {
           particles.pop()
         }
       }
-      // console.log('particle count', particles.length)
+      console.log('particle count', particles.length)
     }
     const onResize = throttle(handleResize, 300)
     window.addEventListener('resize', onResize)
@@ -122,12 +116,15 @@ function particleGeneratorFactory () {
       x: opts.x || Math.random() * W,
       y: opts.y || Math.random() * H
     }
+    this.r = r
+    this.g = g
+    this.b = b
+    this.a = a
     this.radius = 0
     this.speed = options.speed
     this.angle = Math.random() * 360
     this.hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}${numToHex(a * 255)}`
-    this.rgba = `rgba(${r}, ${g}, ${b},${a})`
-    console.log('this.hex', this.hex)
+    this.rgba = `rgba(${r},${g},${b},${a})`
   }
 
   function draw () {
@@ -151,13 +148,26 @@ function particleGeneratorFactory () {
         yd = p2.location.y - p.location.y
         xd = p2.location.x - p.location.x
         distance = Math.sqrt(xd * xd + yd * yd)
-        d = typeof options.distance === 'function' ? options.distance() : options.distance
+        d = typeof options.distance === 'function'
+          ? options.distance()
+          : options.distance
+
         if (distance < d) {
+          const r = Math.abs(p.r, p2.r)
+          const g = Math.abs(p.g, p2.g)
+          const b = Math.abs(p.b, p2.b)
+          const a = options.fade
+            ? Math.min((1 - (distance / d)).toFixed(2), p.a)
+            : p.a
+
           ctx.beginPath()
           ctx.lineWidth = options.lineWidth
           ctx.moveTo(p.location.x, p.location.y)
           ctx.lineTo(p2.location.x, p2.location.y)
-          ctx.strokeStyle = p.rgba
+
+          // TODO: blend colors from two points
+
+          ctx.strokeStyle = `rgba(${r},${g},${b},${a})`
           ctx.stroke()
         }
       }
@@ -249,4 +259,4 @@ function throttle(func, wait, options) {
   return throttled
 }
 
-const renderParticles = particleGeneratorFactory()
+const particles = particleGeneratorFactory()
