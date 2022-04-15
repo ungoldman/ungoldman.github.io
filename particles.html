@@ -9,12 +9,12 @@
   <link rel="stylesheet" href="./index.css">
   <style>
     .top-bar {
+      position: sticky;
       pointer-events: none;
-    }
-    .top-bar-title {
-      position: relative;
-      pointer-events: auto;
       z-index: 1;
+    }
+    .top-bar > * {
+      pointer-events: auto;
     }
     #canvas {
       position: fixed;
@@ -25,7 +25,6 @@
       width: 100vw;
       height: 100vh;
       image-rendering: optimizeQuality;
-      /* image-rendering: optimizeSpeed; */
     }
   </style>
 </head>
