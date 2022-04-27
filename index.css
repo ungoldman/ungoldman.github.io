@@ -6,7 +6,7 @@ html {
 
 main {
   max-width: 42em;
-  margin: 10vh auto 1em;
+  margin: 2em auto 1em;
   overflow: unset;
 }
 
@@ -69,6 +69,7 @@ footer {
 }
 .right {
   float: right;
+  font-size: 1rem;
 }
 .right { opacity: 0.5 }
 .right:hover {
@@ -81,6 +82,9 @@ footer {
 }
 
 @media screen and (min-width: 50em) {
+  main {
+    margin-top: 10vh;
+  }
   .section-icon {
     position: absolute;
     text-align: right;

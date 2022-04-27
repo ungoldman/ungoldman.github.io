@@ -80,7 +80,7 @@ function particleGeneratorFactory () {
       }
       console.log('particle count', particles.length)
     }
-    const onResize = throttle(handleResize, 300, { trailing: true })
+    const onResize = throttle(handleResize, 500, { trailing: true })
     window.addEventListener('resize', onResize)
 
     if (window.particleRenderLoop != null) {
