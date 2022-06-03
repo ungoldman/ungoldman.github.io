@@ -1,3 +1,5 @@
-# [ungoldman.github.io](https://ungoldman.github.io)
+source for [ungoldman.com](https://ungoldman.com)
 
-No longer in use..?
+---
+
+© 2022 Nate Goldman. All Rights Reserved. Mine!!! Hissss
