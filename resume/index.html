@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,48 +11,71 @@
     main {
       max-width: 56em;
     }
+
     header {
       text-align: center;
     }
+
     header p {
       margin: 0;
     }
+
     header h1 {
       margin: 0;
       margin-bottom: 0.5rem;
     }
+
     .summary {
       margin: 1rem 0;
     }
+
     h1 {
-      font-size: 2em;
-      font-weight: 700;
-    }
-    h2 {
       font-size: 1.75em;
-      font-weight: 700;
-      margin: 2rem 0 1rem;
+      font-weight: 600;
     }
-    h3 {
+
+    h2 {
       font-size: 1.5em;
-      margin: 1rem 0 0.5rem;
-      font-weight: 700;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
     }
-    h4 {
-      color: #888;
+
+    h1, h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h3 {
       font-size: 1.25em;
+      margin: 1rem 0 0.5rem;
+      font-weight: 600;
+    }
+
+    h4 {
+      color: #666;
+      font-size: 1.15em;
       margin: 0 0 0.5rem;
       font-weight: 500;
     }
-    @media (prefers-color-scheme: dark) {
-      h4 { color: #aaa }
+
+    @media screen and (prefers-color-scheme: dark) {
+      h1, h2 {
+        border-color: #666;
+      }
+      h4 {
+        color: #bbb;
+      }
     }
+
     h4 b {
-      font-weight: 700;
+      font-weight: 600;
     }
+
     @page {
       margin: 1in 0.5in;
     }
+
     @media print {
       html {
         background: #fff;
@@ -60,77 +84,102 @@
         font-size: 12px;
         print-color-adjust: exact;
       }
+
       main {
         margin: 0 auto;
         max-width: 7.5in;
       }
     }
+
   </style>
 </head>
+
 <body>
-  <main class="markdown-body"><header>
-<h1>Nate Goldman</h1>
-<p><a href="mailto:ungoldman@gmail.com">ungoldman@gmail.com</a> • <a href="https://github.com/ungoldman">github.com/ungoldman</a> • <a href="tel:+1-503-206-1279">503-206-1279</a></p>
-</header>
-<p class="summary">
-Web developer with over a decade of professional experience based in Portland, Oregon.<br>
-Strong background in Web Fundamentals (HTML, CSS, JavaScript), Node.js (since 0.4), and open source (since 2012).<br>
-I like working on good problems with good people. Looking for a healthy environment and a worthy mission.
-</p>
-<h2>Experience</h2>
-<h3>Developer, Lead Developer, Director of Engineering</h3>
-<h4><b>Scripto (Remote)</b> — March 2018 to August 2021 (~3.5 years)</h4>
-<ul>
-<li>Hired as a Developer, worked on a prototype real-time collaborative document editing platform for screenwriters.</li>
-<li>Promoted to Lead Developer, led software architecture and development of the platform from closed alpha to public beta. Hired, trained, and led a small team of developers. Collaborated closely with Product Director and Lead Designer.</li>
-<li>Promoted to Director of Engineering, took over responsibilities of outgoing CTO, continued to lead software development. Got the product out of beta and in daily use by The Daily Show. Helped hire and train a new CTO.</li>
-</ul>
-<h3>Senior Software Engineer</h3>
-<h4><b>ZHealth (Portland, OR)</b> — October 2016 to December 2017 (~1.5 years)</h4>
-<ul>
-<li>Built EtchCV, a React/Electron desktop app for medical documentation used by heart surgeons and hospital staff.</li>
-<li>Trained and supported the professional development of junior engineers.</li>
-</ul>
-<h3>Software Developer</h3>
-<h4><b>Freelance (Portland, OR)</b> — October 2015 to September 2016 (1 year)</h4>
-<ul>
-<li>Provided web application development services for a variety of startups in Portland. Worked primarily with Node, React, and Electron, both in front-end and back-end roles. Active open source maintainer, contributor, &amp; mentor.</li>
-</ul>
-<h3>Web Application Developer</h3>
-<h4><b>ESRI (Portland, OR)</b> — March 2013 to October 2015 (~2.5 years)</h4>
-<ul>
-<li>Worked on emerging web mapping technology projects at the ESRI Portland R&amp;D Center.</li>
-<li>Built and maintained ArcGIS for Developers, a major resource for ArcGIS web platform developers.</li>
-<li>Became primary open source maintainer for Koop, the Spatial ETL engine powering ArcGIS Open Data.</li>
-</ul>
-<h3>Web Developer</h3>
-<h4><b>FINE Design Group (Portland, OR)</b> — July 2012 to February 2013 (8 months)</h4>
-<ul>
-<li>Built custom CMS web applications for clients like Symantec, TY Lin, Anchor Brewing, and Kimpton. Worked primarily as a back end developer building Ruby on Rails applications. Assisted with DevOps, mentored junior developers.</li>
-</ul>
-<h3>Front End Developer</h3>
-<h4><b>Dachis Group (Portland, OR)</b> — May 2011 to February 2012 (10 months)</h4>
-<ul>
-<li>Built social web apps for big brands like Disney, Discover, &amp; Marriott. Learned a great deal from a very talented team.</li>
-</ul>
-<h2>Education</h2>
-<h3>University of California, Santa Cruz</h3>
-<h4>B.A., Philosophy, minor in Linguistics (2008)</h4>
-<h3>Art Institute of Portland</h3>
-<h4>B.S., Web Design and Interactive Media (2012)</h4>
-<h2>Organizations</h2>
-<h3>PDXNode</h3>
-<h4>Organizer, Instructor (2017)</h4>
-<h3>Code for Portland</h3>
-<h4>Founder, Organizer (2014-2015)</h4>
-<h2>Languages</h2>
-<ul>
-<li><strong>English</strong> - Fluent (native)</li>
-<li><strong>French</strong> - Fluent (native)</li>
-<li><strong>Spanish</strong> - Intermediate (4 years, High School)</li>
-<li><strong>Italian</strong> - Elementary (2 years, University)</li>
-</ul>
-</main>
+  <main class="markdown-body">
+    <header>
+      <h1>Nate Goldman</h1>
+      <p><a href="mailto:ungoldman@gmail.com">ungoldman@gmail.com</a> • <a
+          href="https://ungoldman.com">ungoldman.com</a> • <a
+          href="https://github.com/ungoldman">github.com/ungoldman</a></p>
+    </header>
+    <p class="summary">
+      Web developer with over a decade of professional experience based in Portland, Oregon.<br>
+      Strong background in Node.js (since 0.4), Web Fundamentals (HTML, CSS, JavaScript), and Open Source (since 2012).<br>
+      I like working on good problems with good people. Looking for a healthy environment and a worthy mission.
+    </p>
+    <h2>Experience</h2>
+    <h3>Developer, Lead Developer, Director of Engineering</h3>
+    <h4><b>Scripto</b> — March 2018 to August 2021 (~3.5 years)</h4>
+    <ul>
+      <li>Hired as a Developer, worked on a prototype real-time collaborative document editing platform for
+        screenwriters.</li>
+      <li>Promoted to Lead Developer, led software architecture and development of the platform from closed alpha to
+        public beta. Hired, trained, and led a small team of developers. Collaborated closely with Product Director and
+        Lead Designer.</li>
+      <li>Promoted to Director of Engineering, took over responsibilities of outgoing CTO, continued to lead software
+        development. Got the product out of beta and in daily use by The Daily Show. Helped hire and train a new CTO.
+      </li>
+    </ul>
+    <h3>Senior Software Engineer</h3>
+    <h4><b>ZHealth</b> — October 2016 to December 2017 (~1.5 years)</h4>
+    <ul>
+      <li>Built a medical documentation desktop app (React/Electron) for heart surgeons and hospitals.</li>
+      <li>Trained and supported the professional development of junior engineers.</li>
+    </ul>
+    <h3>Software Developer</h3>
+    <h4><b>Freelance</b> — October 2015 to September 2016 (1 year)</h4>
+    <ul>
+      <li>Provided web application development services for a variety of startups in Portland. Worked primarily with
+        Node, React, and Electron, both in front-end and back-end roles. Active open source maintainer, contributor,
+        & mentor.</li>
+    </ul>
+    <h3>Web Application Developer</h3>
+    <h4><b>ESRI</b> — March 2013 to October 2015 (~2.5 years)</h4>
+    <ul>
+      <li>Worked on emerging web mapping technology projects at the ESRI Portland R&D Center.</li>
+      <li>Built and maintained ArcGIS for Developers, a major resource for ArcGIS web platform developers.</li>
+      <li>Became primary open source maintainer for Koop, the Spatial ETL engine powering ArcGIS Open Data.</li>
+    </ul>
+    <h3>Web Developer</h3>
+    <h4><b>FINE Design Group</b> — July 2012 to February 2013 (8 months)</h4>
+    <ul>
+      <li>Built custom CMS web applications for clients like Symantec, TY Lin, Anchor Brewing, and Kimpton. Worked
+        primarily as a back end developer building Ruby on Rails applications. Mentored junior developers, assisted with DevOps.</li>
+    </ul>
+    <h3>Front End Developer</h3>
+    <h4><b>Dachis Group</b> — May 2011 to February 2012 (10 months)</h4>
+    <ul>
+      <li>Built social web apps for big brands like Disney, Discover, & Marriott. Learned a great deal from a very talented team.</li>
+    </ul>
+    <h2>Education</h2>
+    <h3>Art Institute of Portland</h3>
+    <h4>B.S., Web Design and Interactive Media (2012)</h4>
+    <h3>University of California, Santa Cruz</h3>
+    <h4>B.A., Philosophy, minor in Linguistics (2008)</h4>
+    <h2>Volunteer Work</h2>
+    <h3>PDXNode</h3>
+    <h4>Organizer, Instructor (2017)</h4>
+    <p>A Node.js user group featuring monthly talks and workshops.</p>
+    <h3>csv,conf</h3>
+    <h4>Organizer (2017)</h4>
+    <p>A community conference for data makers everywhere.</p>
+    <h3>CascadiaJS Conference</h3>
+    <h4>Volunteer (2016)</h4>
+    <p>A conference for web developers in the Pacific Northwest.</p>
+    <h3>Code for Portland</h3>
+    <h4>Founder, Organizer (2014-2015)</h4>
+    <p>A Code for America brigade working to connect volunteer technologists with local governments and non-profits.</p>
+    <h2>Languages</h2>
+    <ul>
+      <li><strong>English</strong> - Fluent (native)</li>
+      <li><strong>French</strong> - Fluent (native)</li>
+      <li><strong>Spanish</strong> - Intermediate (4 years, High School)</li>
+      <li><strong>Italian</strong> - Elementary (2 years, University)</li>
+    </ul>
+    <p><br><i>References available upon request.</i></p>
+  </main>
 
 
-</body></html>
+</body>
+
+</html>
