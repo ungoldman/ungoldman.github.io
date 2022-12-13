@@ -21,6 +21,17 @@
       justify-content: center;
       height: 100%;
     }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      image-rendering: optimizeQuality;
+      cursor: crosshair;
+    }
   </style>
 </head>
 <body>
@@ -29,6 +40,18 @@
   <h1>404 / nope</h1>
   <a href="/"><img src="http://gifrific.com/wp-content/uploads/2012/10/Sad-Zoidberg-Goes-Into-Garbage.gif" alt="sad zoidberg"></a>
 </main>
+
+<canvas id="canvas"></canvas>
+
+<script src="particles.js"></script>
+<script>
+  particles({
+    a: 1,
+    distance: 256,
+    particles: 42,
+    speed: 1
+  })
+</script>
 
 </body>
 </html>
