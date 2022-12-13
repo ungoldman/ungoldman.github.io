@@ -93,7 +93,7 @@ function particleGeneratorFactory () {
       particles.unshift(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
     }
 
-    const addParticleThrottled = throttle(addParticle, 30)
+    const addParticleThrottled = throttle(addParticle, 25)
 
     // prevent all touch events
     // note: still need to handle touch* when using pointer*
