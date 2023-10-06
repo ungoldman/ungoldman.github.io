@@ -5,22 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Primary Meta Tags -->
-  <title>U.N. Goldman — Existential Detective</title>
-  <meta name="title" content="U.N. Goldman — Existential Detective">
-  <meta name="description" content="Why? Why? Why?">
+  <title>Nathaniel Goldman</title>
+  <meta name="title" content="Nathaniel Goldman">
+  <meta name="description" content="Software Engineer">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ungoldman.com/">
-  <meta property="og:title" content="U.N. Goldman — Existential Detective">
-  <meta property="og:description" content="Why? Why? Why?">
+  <meta property="og:title" content="Nathaniel Goldman">
+  <meta property="og:description" content="Software Engineer">
   <meta property="og:image" content="https://ungoldman.com/assets/gssn.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://ungoldman.com/">
-  <meta property="twitter:title" content="U.N. Goldman — Existential Detective">
-  <meta property="twitter:description" content="Why? Why? Why?">
+  <meta property="twitter:title" content="Nathaniel Goldman">
+  <meta property="twitter:description" content="Software Engineer">
   <meta property="twitter:image" content="https://ungoldman.com/assets/gssn.png">
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
@@ -28,7 +28,9 @@
   <link rel="stylesheet" href="/index.css">
   <style>
     /* styles for bg canvas interaction */
-    body { pointer-events: none; }
+    body {
+      pointer-events: none;
+    }
     #canvas,
     .top-bar *,
     main *,
@@ -62,73 +64,19 @@
         font-size: 1rem;
       }
     }
-    h1 { font-size: 1.8em }
-    h2 { font-size: 1.4em }
-    h1, h2 {
-      color: #f009;
-      font-weight: 200;
-      font-family: 'Comic Sans MS', 'comic sans', system-ui;
-    }
-    .links {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-    .links a {
-      display: block;
-      padding: 1em;
-      border: 1px solid #f006;
-      margin: 0.5em;
-      background: #f003;
-    }
-    .social a {
-      background: #06f3;
-      border-color: #06f6;
-    }
   </style>
 </head>
 <body>
 
   <main>
-    <h1>nate's graveyard of ideas</h1>
+    <h1>Nathaniel Goldman</h1>
+    <p>Software Engineer</p>
 
-    <h2>interactives</h2>
-    <div class="links">
-      <a href="/particles.html">particles</a>
-      <a href="/shape-rotator">shape rotator</a>
-      <a href="/boing">boing</a>
-    </div>
-
-    <h2>old open source stuff</h2>
-    <div class="links">
-      <a href="/latest-earth">latest earth</a>
-      <a href="/himawari-bg">himawari bg</a>
-      <a href="/style.css">style.css</a>
-      <a href="/sitedown">sitedown</a>
-      <a href="/css-units">css units</a>
-      <a href="/hype-html">hype html</a>
-    </div>
-
-    <h2>live sites</h2>
-    <div class="links">
-      <a href="https://coolgifs.neocities.org">coolgifs.neocities.org</a>
-      <a href="https://decent.digital">decent.digital</a>
-    </div>
-
-    <h2>dead sites</h2>
-    <div class="links">
-      <a href="https://ungoldman.com/meowl.party">meowl.party</a>
-      <a href="/bagel.technology">bagel.technology</a>
-      <a href="/dmca.party">dmca.party</a>
-      <a href="/donothing.online">donothing.online</a>
-    </div>
-
-    <h2>social</h2>
-    <div class="social links">
-      <a rel="me" title="github" href="https://github.com/ungoldman">github: ungoldman</a>
-      <a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">bluesky: @ungoldman.com</a>
-      <a rel="me" title="mastodon" href="https://pdx.social/@ungoldman">mastodon: @ungoldman@pdx.social</a>
-    </div>
+    <ul class="social links">
+      <li>github: <a rel="me" title="github" href="https://github.com/ungoldman">ungoldman</a></li>
+      <li>bluesky: <a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">@ungoldman.com</a></li>
+      <li>mastodon: <a rel="me" title="mastodon" href="https://pdx.social/@ungoldman">@ungoldman@pdx.social</a></li>
+    </ul>
   </main>
 
   <canvas id="canvas"></canvas>
