@@ -13,7 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Primary Meta Tags -->
-  <title>Nathaniel Goldman</title>
+  <title>Nate Goldman</title>
   <meta name="title" content="Nathaniel Goldman">
   <meta name="description" content="Software Engineer">
 
@@ -54,6 +54,17 @@
       image-rendering: optimizeQuality;
       cursor: crosshair;
     }
+    header {
+      text-align: center;
+    }
+    header h1 {
+      margin-top: 0;
+    }
+    .avatar {
+      padding: 4px;
+      border-radius: 50%;
+      background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
+    }
     @media screen and (max-width: 50em) {
       main {
         padding: 0.75em;
@@ -77,8 +88,11 @@
 <body>
 
   <main>
-    <h1>Nathaniel Goldman</h1>
-    <p>Software Engineer</p>
+    <header>
+      <img src="/pizza.jpg" alt="pixel art pizza floating in space" class="avatar" height="96" width="96">
+      <h1>Nate Goldman</h1>
+      <p>dev for hire</p>
+    </header>
 
     <h2>social</h2>
     <ul class="social links">
