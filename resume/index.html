@@ -1,19 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nate Goldman</title>
-  <link rel="stylesheet" href="https://unpkg.com/style.css@next">
+  <title>Nathaniel Goldman | Resume</title>
+  <link rel="stylesheet" href="https://unpkg.com/style.css">
   <style>
+    html {
+      font-size: 14px;
+    }
     main {
       max-width: 56em;
+      margin: 10vh auto;
+      padding: 0 1em;
+      word-wrap: break-word;
     }
 
     header {
-      text-align: center;
+      margin: 0 0 1.25rem;
+      padding: 0 0 1.25rem 8.5rem;
+      border-bottom: 3px solid #0001;
     }
 
     header p {
@@ -22,7 +28,9 @@
 
     header h1 {
       margin: 0;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0rem;
+      padding: 0;
+      font-weight: 300;
     }
 
     .summary {
@@ -41,7 +49,6 @@
     }
 
     h1, h2 {
-      border-bottom: 1px solid #ccc;
       padding-bottom: 0.5rem;
       margin-bottom: 0.5rem;
     }
@@ -49,31 +56,95 @@
     h3 {
       font-size: 1.25em;
       margin: 1rem 0 0.5rem;
-      font-weight: 600;
+      font-weight: 300;
     }
 
     h4 {
       color: #666;
-      font-size: 1.15em;
-      margin: 0 0 0.5rem;
-      font-weight: 500;
+      font-size: .8em;
+      margin: 0 0 0.3rem;
+      font-weight: 300;
+    }
+    .event h4:before {
+      content: 'Skills: '
     }
 
-    @media screen and (prefers-color-scheme: dark) {
-      h1, h2 {
-        border-color: #666;
-      }
-      h4 {
-        color: #bbb;
-      }
+    /*.group {
+      border-left: .2rem solid #0001;
+      padding: 0 0 0 1rem;
+    }*/
+
+    .group:not(:last-child) {
+      margin-bottom: 1.5rem;
     }
 
-    h4 b {
-      font-weight: 600;
+    .group {
+      position: relative;
     }
 
-    @page {
-      margin: 1in 0.5in;
+    .org {
+      position: absolute;
+      color: #0009;
+      left: 0;
+      top: 0;
+      width: 8.5rem;
+    }
+    .org h3 {
+      margin: 0;
+      padding: 0 1rem 0 0;
+      text-align: right;
+    }
+
+    .event {
+      border-left: 2px solid #0001;
+      padding: 0 1rem;
+      margin-left: 8.5rem;
+    }
+
+    .event time {
+      font-size: .8em;
+      color: #0009;
+    }
+
+    .event h3 {
+      margin: 0 0 .25rem;
+      padding-top: 0;
+      font-weight: 400;
+    }
+    .event:not(:nth-child(2)) h3 {
+      padding-top: 1rem;
+    }
+    .event h3:only-child {
+      margin-bottom: 0;
+    }
+    .volunteering.group .event:not(:nth-child(2)) h3,
+    .education.group .event:not(:nth-child(2)) h3 {
+      padding-top: .75rem;
+    }
+
+    .event h3 + p {
+      margin-top: -.25rem;
+      color: #000a;
+      font-size: .8rem;
+    }
+
+    .event ul {
+      font-size: .9rem;
+      padding-left: 1rem;
+      margin-bottom: 0;
+    }
+    .event p:last-child {
+      margin-bottom: 0;
+    }
+
+    hr {
+      height: 2px;
+      color: #0001;
+      margin: 1.25rem 0;
+    }
+
+    hr+h3 {
+      margin: -.5rem 0 1.5rem 0;
     }
 
     @media print {
@@ -90,96 +161,175 @@
         max-width: 7.5in;
       }
     }
-
   </style>
 </head>
-
 <body>
   <main class="markdown-body">
     <header>
-      <h1>Nate Goldman</h1>
-      <p><a href="mailto:ungoldman@gmail.com">ungoldman@gmail.com</a> • <a
-          href="https://ungoldman.com">ungoldman.com</a> • <a
-          href="https://github.com/ungoldman">github.com/ungoldman</a></p>
+      <h1 class="name">Nathaniel Goldman</h1>
+      <p>Portland, Oregon • <a href="mailto:ungoldman@gmail.com">ungoldman@gmail.com</a> • <a href="https://ungoldman.com">ungoldman.com</a> • <a href="tel:+1-503-206-1279">+1 503 206 1279</a></p>
     </header>
-    <p class="summary">
-      Web developer with over a decade of professional experience based in Portland, Oregon.<br>
-      Strong background in Node.js (since 0.4), Web Fundamentals (HTML, CSS, JavaScript), and Open Source (since 2012).<br>
-      I like working on good problems with good people. Looking for a healthy environment and a worthy mission.
-    </p>
-    <h2>Experience</h2>
-    <h3>Developer, Lead Developer, Director of Engineering</h3>
-    <h4><b>Scripto</b> — March 2018 to August 2021 (~3.5 years)</h4>
-    <ul>
-      <li>Hired as a Developer, worked on a prototype real-time collaborative document editing platform for
-        screenwriters.</li>
-      <li>Promoted to Lead Developer, led software architecture and development of the platform from closed alpha to
-        public beta. Hired, trained, and led a small team of developers. Collaborated closely with Product Director and
-        Lead Designer.</li>
-      <li>Promoted to Director of Engineering, took over responsibilities of outgoing CTO, continued to lead software
-        development. Got the product out of beta and in daily use by The Daily Show. Helped hire and train a new CTO.
-      </li>
-    </ul>
-    <h3>Senior Software Engineer</h3>
-    <h4><b>ZHealth</b> — October 2016 to December 2017 (~1.5 years)</h4>
-    <ul>
-      <li>Built a medical documentation desktop app (React/Electron) for heart surgeons and hospitals.</li>
-      <li>Trained and supported the professional development of junior engineers.</li>
-    </ul>
-    <h3>Software Developer</h3>
-    <h4><b>Freelance</b> — October 2015 to September 2016 (1 year)</h4>
-    <ul>
-      <li>Provided web application development services for a variety of startups in Portland. Worked primarily with
-        Node, React, and Electron, both in front-end and back-end roles. Active open source maintainer, contributor,
-        & mentor.</li>
-    </ul>
-    <h3>Web Application Developer</h3>
-    <h4><b>ESRI</b> — March 2013 to October 2015 (~2.5 years)</h4>
-    <ul>
-      <li>Worked on emerging web mapping technology projects at the ESRI Portland R&D Center.</li>
-      <li>Built and maintained ArcGIS for Developers, a major resource for ArcGIS web platform developers.</li>
-      <li>Became primary open source maintainer for Koop, the Spatial ETL engine powering ArcGIS Open Data.</li>
-    </ul>
-    <h3>Web Developer</h3>
-    <h4><b>FINE Design Group</b> — July 2012 to February 2013 (8 months)</h4>
-    <ul>
-      <li>Built custom CMS web applications for clients like Symantec, TY Lin, Anchor Brewing, and Kimpton. Worked
-        primarily as a back end developer building Ruby on Rails applications. Mentored junior developers, assisted with DevOps.</li>
-    </ul>
-    <h3>Front End Developer</h3>
-    <h4><b>Dachis Group</b> — May 2011 to February 2012 (10 months)</h4>
-    <ul>
-      <li>Built social web apps for big brands like Disney, Discover, & Marriott. Learned a great deal from a very talented team.</li>
-    </ul>
-    <h2>Education</h2>
-    <h3>Art Institute of Portland</h3>
-    <h4>B.S., Web Design and Interactive Media (2012)</h4>
-    <h3>University of California, Santa Cruz</h3>
-    <h4>B.A., Philosophy, minor in Linguistics (2008)</h4>
-    <h2>Volunteer Work</h2>
-    <h3>PDXNode</h3>
-    <h4>Organizer, Instructor (2017)</h4>
-    <p>A Node.js user group featuring monthly talks and workshops.</p>
-    <h3>csv,conf</h3>
-    <h4>Volunteer (2017)</h4>
-    <p>A community conference for data makers everywhere.</p>
-    <h3>CascadiaJS Conference</h3>
-    <h4>Volunteer (2016)</h4>
-    <p>A conference for web developers in the Pacific Northwest.</p>
-    <h3>Code for Portland</h3>
-    <h4>Founder, Organizer (2014-2015)</h4>
-    <p>A Code for America brigade working to connect volunteer technologists with local governments and non-profits.</p>
-    <h2>Languages</h2>
-    <ul>
-      <li><strong>English</strong> - Fluent (native)</li>
-      <li><strong>French</strong> - Fluent (native)</li>
-      <li><strong>Spanish</strong> - Intermediate (4 years, High School)</li>
-      <li><strong>Italian</strong> - Elementary (2 years, University)</li>
-    </ul>
-    <p><br><i>References available upon request.</i></p>
+
+    <section class="group">
+      <div class="org">
+        <h3>Optibus</h3>
+      </div>
+      <div class="event">
+        <h3>
+          Senior Software Engineer
+          <time>Oct 2022 to Present</time>
+        </h3>
+        <h4>Full Stack Dev, TypeScript, Node.js, Software Architecture, Infrastructure, Docker, AWS, Kubernetes</h4>
+        <ul>
+          <li>Maintained and improved an enterprise application serving transit data for hundreds of cities</li>
+          <li>Planned and led migration from legacy infrastructure to AWS and Kubernetes</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="org">
+        <h3>Scripto</h3>
+      </div>
+      <div class="event">
+        <h3>
+          Director of Engineering
+          <time>Jan 2021 to Aug 2021</time>
+        </h3>
+        <h4>Engineering Management, Product Development, DevOps</h4>
+        <ul>
+          <li>Led the product out of beta and in daily use by The Daily Show</li>
+        </ul>
+      </div>
+      <div class="event">
+        <h3>
+          Lead Developer
+          <time>Jan 2019 to Dec 2020</time>
+        </h3>
+        <h4>Software Architecture, Full Stack Development, Operational Transformation, Docker</h4>
+        <ul>
+          <li>Led software architecture and development from closed alpha to public beta</li>
+          <li>Hired, trained, and led a small team of developers</li>
+        </ul>
+      </div>
+      <div class="event">
+        <h3>
+          Developer
+          <time>Mar 2018 to Dec 2019</time>
+        </h3>
+        <h4>Web Application Development, Full Stack Development, JavaScript, Node.js</h4>
+        <ul>
+          <li>Built a real-time collaborative writing web app for screenwriters</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="org">
+        <h3>ZHealth</h3>
+      </div>
+      <div class="event">
+        <h3>
+          Senior Software Engineer
+          <time>Oct 2016 to Dec 2017</time>
+        </h3>
+        <h4>Desktop Application Development, Applied Linear Algebra, Node.js, React.js, Electron.js</h4>
+        <ul>
+          <li>Collaborated on a medical documentation desktop app for heart surgeons and hospitals</li>
+          <li>Trained and supported the professional development of junior engineers</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="org">
+        <h3>Freelance</h3>
+      </div>
+      <div class="event">
+        <h3>
+          Software Developer
+          <time>Oct 2015 to Sep 2016</time>
+        </h3>
+        <h4>Frontend, Backend, Mobile Development, IoT, Node.js, React.js, Electron.js</h4>
+        <ul>
+          <li>Provided web application development services for a variety of startups in Portland</li>
+          <li>Active maintainer, contributor, and mentor in the open source Node.js community</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="org">
+        <h3>ESRI</h3>
+      </div>
+      <div class="event">
+        <h3>
+          Web Application Developer
+          <time>Mar 2013 to Oct 2015</time>
+        </h3>
+        <h4>Application Development, UI Design, Open Source, GIS, Web Mapping, Documentation</h4>
+        <ul>
+          <li>Collaborated on open source web mapping R&D projects at the ESRI Portland R&D Center</li>
+          <li>Created and maintained ArcGIS for Developers, home of ArcGIS dev docs & services</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr>
+
+    <section class="education group">
+      <div class="org">
+        <h3>Education</h3>
+      </div>
+      <div class="event">
+        <h3>
+          Art Institute of Portland
+          <time>2012</time>
+        </h3>
+        <p>B.S., Web Design & Interactive Media</p>
+      </div>
+      <div class="event">
+        <h3>
+          University of California, Santa Cruz
+          <time>2008</time>
+        </h3>
+        <p>B.A., Philosophy, Linguistics</p>
+      </div>
+    </section>
+
+    <section class="volunteering group">
+      <div class="org">
+        <h3>Volunteering</h3>
+      </div>
+      <div class="event">
+        <h3>
+          PDXNode
+          <time>2017</time>
+        </h3>
+        <p>Organizer, Instructor - Node.js user group featuring monthly talks and workshops.</p>
+      </div>
+      <div class="event">
+        <h3>
+          csv,conf
+          <time>2017</time>
+        </h3>
+        <p>Volunteer - Community conference for data makers everywhere.</p>
+      </div>
+      <div class="event">
+        <h3>
+          CascadiaJS
+          <time>2016</time>
+        </h3>
+        <p>Volunteer - Conference for web developers in the Pacific Northwest.</p>
+      </div>
+      <div class="event">
+        <h3>
+          Code for Portland
+          <time>2014 to 2015</time>
+        </h3>
+        <p>Founder, Organizer - Code for America brigade connecting technologists with local governments and non-profits.</p>
+      </div>
+    </section>
   </main>
-
-
 </body>
-
 </html>

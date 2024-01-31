@@ -12,7 +12,7 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
-const MAGIC_NUMBER = 18000
+const MAGIC_NUMBER = 10000
 const CANCEL_EVENTS = ['pointerup', 'pointerout', 'pointerleave', 'pointercancel']
 
 // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/

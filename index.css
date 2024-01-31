@@ -6,8 +6,13 @@ html {
 
 main {
   max-width: 42em;
-  margin: 2em auto 1em;
+  margin: 0 auto;
   overflow: unset;
+  width: fit-content;
+  padding: 2rem;
+  backdrop-filter: blur(3px);
+  background-image: linear-gradient(to top, #30cfd011 0%, #33086711 100%);
+  min-height: 100vh;
 }
 
 h1, h2 {
@@ -81,9 +86,18 @@ footer {
   cursor: help;
 }
 
+main h1 {
+  margin-bottom: 0;
+}
+main h2 {
+  font-size: 1rem;
+  font-weight: inherit;
+  margin-bottom: 1rem;
+}
+
 @media screen and (min-width: 50em) {
   main {
-    margin-top: 10vh;
+    padding-top: 10vh;
   }
   .section-icon {
     position: absolute;
