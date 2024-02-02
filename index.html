@@ -1,19 +1,9 @@
 <!doctype html>
 <html lang="en">
-<!--
-██████╗  █████╗ ██████╗      ██████╗ ██████╗ ██████╗ ███████╗
-██╔══██╗██╔══██╗██╔══██╗    ██╔════╝██╔═══██╗██╔══██╗██╔════╝
-██████╔╝███████║██║  ██║    ██║     ██║   ██║██║  ██║█████╗
-██╔══██╗██╔══██║██║  ██║    ██║     ██║   ██║██║  ██║██╔══╝
-██████╔╝██║  ██║██████╔╝    ╚██████╗╚██████╔╝██████╔╝███████╗
-╚═════╝ ╚═╝  ╚═╝╚═════╝      ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝😎
--->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Primary Meta Tags -->
-  <title>Nate Goldman</title>
+  <title>Nathaniel Goldman</title>
   <meta name="title" content="Nathaniel Goldman">
   <meta name="description" content="Software Engineer">
 
@@ -35,7 +25,6 @@
   <link rel="stylesheet" href="https://ungoldman.com/style.css/site.css">
   <link rel="stylesheet" href="/index.css">
   <style>
-    /* styles for bg canvas interaction */
     body {
       pointer-events: none;
     }
@@ -67,8 +56,8 @@
     }
     @media screen and (max-width: 50em) {
       main {
-        padding: 0.75em;
-        margin: 0;
+        padding: 4em 0.75em;
+        margin: 0 auto;
       }
       article {
         margin-bottom: 0.75em;
@@ -90,19 +79,12 @@
   <main>
     <header>
       <img src="/pizza.jpg" alt="pixel art pizza floating in space" class="avatar" height="96" width="96">
-      <h1>Nate Goldman</h1>
+      <h1>Nathaniel Goldman</h1>
       <p>dev for hire</p>
     </header>
 
-    <h2>social</h2>
-    <ul class="social links">
-      <li>github: <a rel="me" title="github" href="https://github.com/ungoldman">ungoldman</a></li>
-      <li>bluesky: <a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">@ungoldman.com</a></li>
-      <li>mastodon: <a rel="me" title="mastodon" href="https://pdx.social/@ungoldman">@ungoldman@pdx.social</a></li>
-      <li>linkedin: <a rel="me" title="linkedin" href="https://linkedin.com/in/ungoldman">ungoldman</a></li>
-    </ul>
-
     <h2>old demos, sites, & projects</h2>
+
     <ul class="project links">
       <li><a href="/particles">particles</a></li>
       <li><a href="/shape-rotator">shape rotator</a></li>
@@ -117,6 +99,15 @@
       <li><a href="/latest-earth">latest-earth</a></li>
       <li><a href="/css-units">css-units</a></li>
     </ul>
+
+    <h2>social links</h2>
+
+    <ul class="social links">
+      <li>github: <a rel="me" title="github" href="https://github.com/ungoldman">ungoldman</a></li>
+      <li>bluesky: <a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">@ungoldman.com</a></li>
+      <li>mastodon: <a rel="me" title="mastodon" href="https://pdx.social/@ungoldman">@ungoldman@pdx.social</a></li>
+      <li>linkedin: <a rel="me" title="linkedin" href="https://linkedin.com/in/ungoldman">ungoldman</a></li>
+    </ul>
   </main>
 
   <canvas id="canvas"></canvas>
@@ -125,6 +116,7 @@
   <script>
     particles({
       a: 0.24,
+      particles: 1000,
       distance: 112,
       speed: 0.24
     })
