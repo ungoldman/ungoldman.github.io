@@ -30,7 +30,13 @@
     }
     #canvas,
     .top-bar *,
-    main { pointer-events: auto; }
+    main {
+      pointer-events: auto;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      background: #2222;
+      min-height: 100vh;
+    }
     #canvas {
       position: fixed;
       top: 0;
@@ -52,7 +58,7 @@
     .avatar {
       padding: 4px;
       border-radius: 50%;
-      background-image: linear-gradient(to top, #09203f 0%, #537895 100%);
+      border: 1px solid #333;
     }
     .social.links {
       list-style-type: none;
@@ -64,6 +70,7 @@
       main {
         padding: 4em 0.75em;
         margin: 0 auto;
+        width: 100%;
       }
       article {
         margin-bottom: 0.75em;
@@ -102,9 +109,9 @@
   <script src="particles.js"></script>
   <script>
     particles({
-      a: 0.3,
+      a: 0.33,
       distance: 123,
-      speed: 0.3
+      speed: 1
     })
   </script>
 </body>

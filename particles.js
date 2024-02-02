@@ -52,7 +52,6 @@ function particleGeneratorFactory () {
   }
 
   function renderParticles (opts) {
-    console.log(opts)
     let num
     options = Object.assign({}, defaults, opts)
     setCanvasDimensions(canvas, ctx)

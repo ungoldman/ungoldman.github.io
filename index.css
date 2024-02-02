@@ -10,9 +10,6 @@ main {
   overflow: unset;
   width: fit-content;
   padding: 2rem;
-  backdrop-filter: blur(3px);
-  background-image: linear-gradient(to top, #30cfd011 0%, #33086711 100%);
-  min-height: 100vh;
 }
 
 h1, h2 {
