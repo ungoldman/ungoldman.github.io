@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nathaniel Goldman | Resume</title>
   <link rel="stylesheet" href="https://unpkg.com/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/top-bar.css">
   <style>
     html {
       font-size: 14px;
@@ -147,6 +148,17 @@
       margin: -.5rem 0 1.5rem 0;
     }
 
+    .top-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+    }
+    .top-bar-link {
+      font-weight: 300;
+      color: #0074d9;
+    }
+
     @media print {
       html {
         background: #fff;
@@ -160,10 +172,18 @@
         margin: 0 auto;
         max-width: 7.5in;
       }
+
+      .top-bar { display: none }
     }
   </style>
 </head>
 <body>
+  <nav class="top-bar">
+    <div class="top-bar-right">
+      <a class="top-bar-link" href="/resume.pdf">📄 Download PDF</a>
+    </div>
+  </nav>
+
   <main class="markdown-body">
     <header>
       <h1 class="name">Nathaniel Goldman</h1>
@@ -252,7 +272,7 @@
         </h3>
         <h4>Frontend, Backend, Mobile Development, IoT, Node.js, React.js, Electron.js</h4>
         <ul>
-          <li>Provided application development services for startups in Portland</li>
+          <li>Provided web application development services for startups in Portland</li>
           <li>Created open source software and mentored others in the Node.js programming community</li>
         </ul>
       </div>
