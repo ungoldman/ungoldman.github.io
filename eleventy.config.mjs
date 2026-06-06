@@ -1,0 +1,34 @@
+export default function (eleventyConfig) {
+  // served as-is, untouched by templating
+  const passthrough = [
+    'assets',
+    'index.css',
+    'particles.js',
+    'favicon.svg',
+    'CNAME',
+    'cat.jpg',
+    'pizza.jpg',
+    'resume.pdf',
+    'resume',
+    'tmp',
+    '404.html',
+    'particles.html',
+    'shape-rotator.html'
+  ]
+  for (const path of passthrough) eleventyConfig.addPassthroughCopy(path)
+
+  // hand-authored standalone pages: copied above, not processed as templates
+  eleventyConfig.ignores.add('404.html')
+  eleventyConfig.ignores.add('particles.html')
+  eleventyConfig.ignores.add('shape-rotator.html')
+  eleventyConfig.ignores.add('resume/**')
+  eleventyConfig.ignores.add('README.md')
+
+  return {
+    dir: {
+      input: '.',
+      includes: '_includes',
+      output: '_site'
+    }
+  }
+}

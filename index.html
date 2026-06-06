@@ -1,115 +1,91 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nate Goldman</title>
-  <meta name="title" content="Nate Goldman">
-  <meta name="description" content="Software Engineer">
+---
+layout: layouts/base.html
+title: Nate Goldman
+description: Software Engineer
+stylesheets:
+  - /index.css
+styles: |
+  body {
+    pointer-events: none;
+  }
+  #canvas,
+  .top-bar *,
+  main { pointer-events: auto; }
+  #canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    image-rendering: optimizeQuality;
+    cursor: crosshair;
+  }
+  header {
+    text-align: center;
+  }
+  header h1 {
+    margin-top: 0;
+  }
+  .avatar {
+    padding: 4px;
+    border-radius: 50%;
+    border: 3px solid #fff3;
+  }
+  .social.links {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+    margin-top: 3rem;
+  }
+  @media screen and (max-width: 50em) {
+    main {
+      padding: 4em 0.75em;
+      margin: 0 auto;
+      width: 100%;
+    }
+    article {
+      margin-bottom: 0.75em;
+    }
+    article > h3 > a,
+    article > h3 > .right {
+      display: block;
+    }
+    article > h3 > .right {
+      margin-top: 0.5rem;
+      float: initial;
+      font-size: 1rem;
+    }
+  }
+---
+<main>
+  <header>
+    <p>
+      <u>Nate Goldman</u>
+      <br>
+      web developer
+    </p>
+  </header>
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ungoldman.com/">
-  <meta property="og:title" content="Nate Goldman">
-  <meta property="og:description" content="Software Engineer">
-  <meta property="og:image" content="https://ungoldman.com/assets/gssn.png">
+  <ul class="social links">
+    <li>␀</li>
+    <li><a rel="me" title="github" href="https://github.com/ungoldman">github</a></li>
+    <li><a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">bluesky</a></li>
+    <li><a rel="me" title="mastodon" style="display:none" href="https://pdx.social/@ungoldman">mastodon</a></li>
+    <li><a rel="me" title="npm" style="display:none" href="https://npmjs.com/~ungoldman">npm</a></li>
+    <li>␆</li>
+  </ul>
+</main>
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://ungoldman.com/">
-  <meta property="twitter:title" content="Nate Goldman">
-  <meta property="twitter:description" content="Software Engineer">
-  <meta property="twitter:image" content="https://ungoldman.com/assets/gssn.png">
+<canvas id="canvas"></canvas>
 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
-  <link rel="stylesheet" href="https://ungoldman.com/style.css/site.css">
-  <link rel="stylesheet" href="/index.css">
-  <style>
-    body {
-      pointer-events: none;
-    }
-    #canvas,
-    .top-bar *,
-    main { pointer-events: auto; }
-    #canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: -1;
-      width: 100vw;
-      height: 100vh;
-      image-rendering: optimizeQuality;
-      cursor: crosshair;
-    }
-    header {
-      text-align: center;
-    }
-    header h1 {
-      margin-top: 0;
-    }
-    .avatar {
-      padding: 4px;
-      border-radius: 50%;
-      border: 3px solid #fff3;
-    }
-    .social.links {
-      list-style-type: none;
-      padding: 0;
-      text-align: center;
-      margin-top: 3rem;
-    }
-    @media screen and (max-width: 50em) {
-      main {
-        padding: 4em 0.75em;
-        margin: 0 auto;
-        width: 100%;
-      }
-      article {
-        margin-bottom: 0.75em;
-      }
-      article > h3 > a,
-      article > h3 > .right {
-        display: block;
-      }
-      article > h3 > .right {
-        margin-top: 0.5rem;
-        float: initial;
-        font-size: 1rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <main>
-    <header>
-      <p>
-        <u>Nate Goldman</u>
-        <br>
-        web developer
-      </p>
-    </header>
-
-    <ul class="social links">
-      <li>␀</li>
-      <li><a rel="me" title="github" href="https://github.com/ungoldman">github</a></li>
-      <li><a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">bluesky</a></li>
-      <li><a rel="me" title="mastodon" style="display:none" href="https://pdx.social/@ungoldman">mastodon</a></li>
-      <li><a rel="me" title="npm" style="display:none" href="https://npmjs.com/~ungoldman">npm</a></li>
-      <li>␆</li>
-    </ul>
-  </main>
-
-  <canvas id="canvas"></canvas>
-
-  <script src="particles.js"></script>
-  <script>
-    particles({
-      a: 0.3,
-      distance: 123,
-      speed: 0.3
-    })
-  </script>
-</body>
-</html>
+<script src="particles.js"></script>
+<script>
+  particles({
+    a: 0.3,
+    distance: 123,
+    speed: 0.3
+  })
+</script>
