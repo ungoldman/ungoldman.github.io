@@ -4,61 +4,10 @@ title: Nate Goldman
 description: Software Engineer
 stylesheets:
   - /index.css
-styles: |
-  body {
-    pointer-events: none;
-  }
-  #canvas,
-  .top-bar *,
-  main { pointer-events: auto; }
-  #canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    width: 100vw;
-    height: 100vh;
-    image-rendering: optimizeQuality;
-    cursor: crosshair;
-  }
-  header {
-    text-align: center;
-  }
-  header h1 {
-    margin-top: 0;
-  }
-  .avatar {
-    padding: 4px;
-    border-radius: 50%;
-    border: 3px solid #fff3;
-  }
-  .social.links {
-    list-style-type: none;
-    padding: 0;
-    text-align: center;
-    margin-top: 3rem;
-  }
-  @media screen and (max-width: 50em) {
-    main {
-      padding: 4em 0.75em;
-      margin: 0 auto;
-      width: 100%;
-    }
-    article {
-      margin-bottom: 0.75em;
-    }
-    article > h3 > a,
-    article > h3 > .right {
-      display: block;
-    }
-    article > h3 > .right {
-      margin-top: 0.5rem;
-      float: initial;
-      font-size: 1rem;
-    }
-  }
+particles:
+  a: 0.3
+  distance: 123
+  speed: 0.3
 ---
 <main>
   <header>
@@ -71,10 +20,9 @@ styles: |
 
   <ul class="social links">
     <li>␀</li>
-    <li><a rel="me" title="github" href="https://github.com/ungoldman">github</a></li>
-    <li><a rel="me" title="bluesky" href="https://bsky.app/profile/ungoldman.com">bluesky</a></li>
-    <li><a rel="me" title="mastodon" style="display:none" href="https://pdx.social/@ungoldman">mastodon</a></li>
-    <li><a rel="me" title="npm" style="display:none" href="https://npmjs.com/~ungoldman">npm</a></li>
+    {%- for link in links %}
+    <li><a rel="me" title="{{ link.title }}"{% if link.hidden %} style="display:none"{% endif %} href="{{ link.url }}">{{ link.title }}</a></li>
+    {%- endfor %}
     <li>␆</li>
   </ul>
 </main>
@@ -84,8 +32,8 @@ styles: |
 <script src="particles.js"></script>
 <script>
   particles({
-    a: 0.3,
-    distance: 123,
-    speed: 0.3
+    a: {{ particles.a }},
+    distance: {{ particles.distance }},
+    speed: {{ particles.speed }}
   })
 </script>

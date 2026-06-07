@@ -1,0 +1,6 @@
+[
+  { "title": "github", "url": "https://github.com/ungoldman" },
+  { "title": "bluesky", "url": "https://bsky.app/profile/ungoldman.com" },
+  { "title": "mastodon", "url": "https://pdx.social/@ungoldman", "hidden": true },
+  { "title": "npm", "url": "https://npmjs.com/~ungoldman", "hidden": true }
+]

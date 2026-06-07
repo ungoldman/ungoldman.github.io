@@ -138,3 +138,59 @@ main h2 {
     height: 18px;
   }
 }
+
+/* home page */
+body {
+  pointer-events: none;
+}
+#canvas,
+.top-bar *,
+main { pointer-events: auto; }
+#canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  image-rendering: optimizeQuality;
+  cursor: crosshair;
+}
+header {
+  text-align: center;
+}
+header h1 {
+  margin-top: 0;
+}
+.avatar {
+  padding: 4px;
+  border-radius: 50%;
+  border: 3px solid #fff3;
+}
+.social.links {
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
+  margin-top: 3rem;
+}
+@media screen and (max-width: 50em) {
+  main {
+    padding: 4em 0.75em;
+    margin: 0 auto;
+    width: 100%;
+  }
+  article {
+    margin-bottom: 0.75em;
+  }
+  article > h3 > a,
+  article > h3 > .right {
+    display: block;
+  }
+  article > h3 > .right {
+    margin-top: 0.5rem;
+    float: initial;
+    font-size: 1rem;
+  }
+}
