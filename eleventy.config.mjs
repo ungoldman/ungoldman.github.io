@@ -1,10 +1,11 @@
 export default function (eleventyConfig) {
-  // served as-is, untouched by templating
   const passthrough = [
     'assets',
     'index.css',
-    'particles.js',
-    'galaxies.js',
+    'particles/particles.js',
+    'particles/particles-card.png',
+    'galaxies/galaxies.js',
+    'galaxies/galaxies-card.png',
     'favicon.svg',
     'CNAME',
     'cat.jpg',
@@ -16,9 +17,7 @@ export default function (eleventyConfig) {
   ]
   for (const path of passthrough) eleventyConfig.addPassthroughCopy(path)
 
-  // 404.html must stay at the root for GitHub Pages, so copy it verbatim.
-  // other hand-authored pages (particles.html, galaxies.html) are processed as
-  // templates -> pretty directory URLs (/particles/, /galaxies/).
+  // 404.html stays at root for GitHub Pages
   eleventyConfig.ignores.add('404.html')
   eleventyConfig.ignores.add('resume/**')
   eleventyConfig.ignores.add('README.md')

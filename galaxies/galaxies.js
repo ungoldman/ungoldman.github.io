@@ -1,9 +1,5 @@
-// 3D "toy galaxy": stars orbit a central black hole under softened gravity
-// (central pull + mutual N-body). A gentle drag decays orbits inward; a stronger
-// zone near the hole makes them linger. Stars merge on contact (emitting an
-// expelled newborn) and flare out when swallowed at the horizon. Drag orbits,
-// scroll/pinch zooms, space/middle-drag pans; the control panel (top-right)
-// tunes and randomizes it. Sibling of the original 2D particles.js.
+// GALAXIES is a toy galaxy generator: stars orbit a black hole under softened n-body gravity.
+// drag to orbit, scroll to zoom, poke at the panel top-right. sibling of particles.js.
 
 const MAGIC_NUMBER = 7000 // baseline star count = W*H / this, scaled by density
 // Firefox has heavier per-element canvas/GC cost: lower cap, stricter ring LOD
@@ -397,7 +393,7 @@ function galaxiesFactory () {
     })
     window.addEventListener('mousemove', event => {
       if (dragMode === 'orbit') {
-        yaw += (event.clientX - lastX) * DRAG_SENS
+        yaw -= (event.clientX - lastX) * DRAG_SENS // drag pulls the galaxy along
         pitch += (event.clientY - lastY) * DRAG_SENS
       } else if (dragMode === 'pan') {
         panBy(event.clientX - lastX, event.clientY - lastY)
@@ -439,7 +435,7 @@ function galaxiesFactory () {
       }
       const pts = touchArray()
       if (pts.length === 1) {
-        yaw -= (pts[0].x - lastX) * DRAG_SENS // inverted vs mouse (feels right on touch)
+        yaw -= (pts[0].x - lastX) * DRAG_SENS
         pitch += (pts[0].y - lastY) * DRAG_SENS
         lastX = pts[0].x; lastY = pts[0].y
       } else if (pts.length >= 2) {
