@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <title>PARTICLES</title>
+  <title>GALAXIES</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any">
   <link rel="stylesheet" href="https://ungoldman.github.io/style.css/site.css">
   <link rel="stylesheet" href="/index.css">
   <style>
+    html, body { background: #000; color: #ddd; }
     .top-bar {
       position: sticky;
       pointer-events: none;
@@ -34,19 +35,15 @@
     <div class="top-bar-title">
       <a href="/">ungoldman</a>
       <span>/</span>
-      <a onclick="location.reload()">particles</a>
+      <a onclick="location.reload()">galaxies</a>
     </div>
   </nav>
 
   <canvas id="canvas"></canvas>
 
-  <script src="/particles.js"></script>
+  <script src="/galaxies.js"></script>
   <script>
-    particles({
-      a: 1,
-      distance: 96,
-      speed: 1
-    })
+    galaxies()
   </script>
 </body>
 </html>

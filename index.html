@@ -4,36 +4,29 @@ title: Nate Goldman
 description: Software Engineer
 stylesheets:
   - /index.css
-particles:
-  a: 0.3
-  distance: 123
-  speed: 0.3
 ---
 <main>
-  <header>
-    <p>
-      <u>Nate Goldman</u>
-      <br>
-      software engineer
-    </p>
-  </header>
-
-  <ul class="social links">
-    <li>␀</li>
-    {%- for link in links %}
-    <li><a rel="me" title="{{ link.title }}"{% if link.hidden %} style="display:none"{% endif %} href="{{ link.url }}">{{ link.title }}</a></li>
-    {%- endfor %}
-    <li>␆</li>
-  </ul>
+  <div class="telemetry">
+    <div class="rail" aria-hidden="true">
+      <span class="glyph">␀</span>
+      <span class="line"></span>
+      <span class="glyph">␆</span>
+    </div>
+    <div class="readout">
+      <h1>Nate Goldman</h1>
+      <p class="role">software engineer</p>
+      <ul class="links">
+        {%- for link in links %}
+        <li{% if link.hidden %} style="display:none"{% endif %}><a rel="me" title="{{ link.title }}" href="{{ link.url }}">{{ link.title }}</a></li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </div>
 </main>
 
 <canvas id="canvas"></canvas>
 
-<script src="particles.js"></script>
+<script src="galaxies.js"></script>
 <script>
-  particles({
-    a: {{ particles.a }},
-    distance: {{ particles.distance }},
-    speed: {{ particles.speed }}
-  })
+  galaxies()
 </script>

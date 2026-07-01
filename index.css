@@ -1,18 +1,16 @@
 html {
-  background: #eee;
-  color: #111;
+  background: #000;
+  color: #eee;
   font-size: 16px;
 }
 
 main {
-  max-width: 42em;
-  margin: 0 auto;
-  overflow: unset;
-  width: fit-content;
-  padding: 2rem 3rem;
-  backdrop-filter: blur(3px);
-  background-image: linear-gradient(to top, #30cfd011 0%, #33086711 100%);
   min-height: 100vh;
+  margin: 0;
+  width: fit-content;
+  padding: 0 0 0 clamp(1.25rem, 5vw, 4rem);
+  display: flex;
+  align-items: center; /* vertically centre the readout over the galaxy */
 }
 
 h1, h2 {
@@ -96,9 +94,6 @@ main h2 {
 }
 
 @media screen and (min-width: 50em) {
-  main {
-    padding-top: 10vh;
-  }
   .section-icon {
     position: absolute;
     text-align: right;
@@ -109,10 +104,6 @@ main h2 {
 }
 
 @media (prefers-color-scheme: dark) {
-  html {
-    background: #060606;
-    color: #eee;
-  }
   a { color: #09f }
   blockquote { border-left: 6px solid #0006 }
   article {
@@ -142,6 +133,9 @@ main h2 {
 /* home page */
 body {
   pointer-events: none;
+  /* spawn-drags shouldn't accidentally select text; .telemetry opts back in */
+  -webkit-user-select: none;
+  user-select: none;
 }
 #canvas,
 .top-bar *,
@@ -157,29 +151,78 @@ main { pointer-events: auto; }
   height: 100vh;
   image-rendering: optimizeQuality;
   cursor: crosshair;
+  touch-action: none; /* we handle orbit/pinch/pan gestures ourselves */
 }
-header {
-  text-align: center;
+
+/* identity as a luminous telemetry readout over the galaxy */
+.telemetry {
+  display: flex;
+  gap: 0.9rem;
+  align-items: stretch;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  color: #e9eaee;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 18px rgba(0, 0, 0, 0.55);
+  -webkit-user-select: text; /* the identity stays selectable/copyable */
+  user-select: text;
 }
-header h1 {
-  margin-top: 0;
+.telemetry .rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1ch;
+  color: rgba(255, 255, 255, 0.5);
 }
-.avatar {
-  padding: 4px;
-  border-radius: 50%;
-  border: 3px solid #fff3;
+.telemetry .rail .line {
+  flex: 1;
+  width: 1px;
+  margin: 6px 0;
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.05));
 }
-.social.links {
-  list-style-type: none;
+.telemetry h1 {
+  margin: 0;
+  font-size: clamp(1.3rem, 4.5vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.telemetry .role {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: #9aa0ab;
+}
+.telemetry .links {
+  list-style: none;
   padding: 0;
-  text-align: center;
-  margin-top: 3rem;
+  margin: 1.4rem 0 0;
+  display: flex;
+  font-size: 0.95rem;
 }
+.telemetry .links a {
+  color: #c7ccd6;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+.telemetry .links a:hover,
+.telemetry .links a:focus {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+.telemetry .links li + li::before {
+  content: '·';
+  margin: 0 0.85ch;
+  color: rgba(255, 255, 255, 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .telemetry .links a { transition: none; }
+}
+
 @media screen and (max-width: 50em) {
+  /* anchor the readout top-left so it clears the centred black hole */
   main {
-    padding: 4em 0.75em;
-    margin: 0 auto;
-    width: 100%;
+    align-items: flex-start;
+    padding: 2.5rem 1rem 2.5rem 1.25rem;
   }
   article {
     margin-bottom: 0.75em;
