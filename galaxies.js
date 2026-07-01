@@ -40,17 +40,17 @@ const params = {
   brightness: 1, // overall opacity multiplier
   depthEffect: 0.55, // how strongly distance fades stars (0 = flat, 1 = strong)
   starSize: 1, // star size multiplier
-  colorVar: 1, // colour saturation (0 = greyscale, 1 = full colour, >1 = boosted)
+  colorVar: 1, // color saturation (0 = grayscale, 1 = full color, >1 = boosted)
   brightnessVar: 0.4, // per-star brightness spread (0 = uniform, 1 = wide)
   zoom: 1, // view magnification (scroll wheel); not part of randomization
   holeSize: 1, // event horizon radius multiplier
   holeGlow: 1, // black hole glow halo: scales both brightness and extent
-  palette: 'fire', // gas colouring: a PALETTES key, or 'spectrum' (random per star)
+  palette: 'fire', // gas coloring: a PALETTES key, or 'spectrum' (random per star)
   type: 'spiral' // galaxy structure (key into GALAXY_TYPES)
 }
 
-// gas colour ramps: inner edge (hot) -> outer edge (cool). 'spectrum' is a
-// special case handled in gasColor (each star keeps its own random colour).
+// gas color ramps: inner edge (hot) -> outer edge (cool). 'spectrum' is a
+// special case handled in gasColor (each star keeps its own random color).
 const PALETTES = {
   fire: [[0, [255, 248, 232]], [0.18, [255, 214, 130]], [0.42, [255, 142, 48]], [0.7, [222, 70, 22]], [1, [92, 22, 14]]],
   ice: [[0, [240, 250, 255]], [0.2, [170, 220, 255]], [0.5, [70, 140, 240]], [0.75, [30, 60, 175]], [1, [10, 18, 70]]],
@@ -103,7 +103,7 @@ function galaxiesFactory () {
   let rHorizonBase = null // horizon radius at holeSize 1 (before the size multiplier)
   let rCollide = null // merge distance: stars closer than this fuse
   let rCull = null // escapees beyond this are dropped
-  let epsCentre = null // softening for central gravity
+  let epsCenter = null // softening for central gravity
   let epsPair = null // softening for pair gravity
   let GM = null // central gravitational parameter (sets orbital speeds)
   let GPair = null // pair gravity strength per unit mass
@@ -120,7 +120,7 @@ function galaxiesFactory () {
   // #debug in the URL exposes window.galaxyStats { drawMs, stars } for profiling
   const DEBUG = typeof location !== 'undefined' && location.hash.indexOf('debug') !== -1
   let drawMs = 0
-  // black-hole accent colour (photon ring + glow halo), matched to the palette
+  // black-hole accent color (photon ring + glow halo), matched to the palette
   let accent = [255, 150, 60] // target accent
   // animated (eased) hole state, tweened toward the targets each frame
   let curHoleSize = 1
@@ -129,7 +129,7 @@ function galaxiesFactory () {
   function refreshAccent () {
     const stops = PALETTES[params.palette]
     accent = stops
-      ? rampColor(stops, 0.22) // a hot colour from the palette
+      ? rampColor(stops, 0.22) // a hot color from the palette
       : hslToRgb(Math.random(), 0.85, 0.6) // spectrum: a random vivid hue
   }
 
@@ -162,7 +162,7 @@ function galaxiesFactory () {
     rInner = rOuter * params.innerGap
     rHorizonBase = rOuter * 0.035
     rHorizon = rHorizonBase * curHoleSize // animated each frame in draw
-    epsCentre = rHorizon
+    epsCenter = rHorizon
     rCollide = rOuter * 0.01 // stars must be genuinely close to merge
     rCull = rOuter * 3
     epsPair = rCollide
@@ -443,7 +443,7 @@ function galaxiesFactory () {
     this.r = r
     this.g = g
     this.b = b
-    this.col = [r, g, b] // reused gas-colour buffer (written each frame, no alloc)
+    this.col = [r, g, b] // reused gas-color buffer (written each frame, no alloc)
     this.tw = Math.random() // per-star value driving brightness variation
     // per-star render variety
     this.sizeJitter = 0.6 + Math.random() * Math.random() * 3 // point size: mostly small, some large
@@ -526,7 +526,7 @@ function galaxiesFactory () {
       const d2 = p.x * p.x + p.y * p.y + p.z * p.z
       const d = Math.sqrt(d2)
       if (d < rHorizon) { p.die = 0; continue } // begin the swallow
-      const f = GM / ((d2 + epsCentre * epsCentre) * d) // accel magnitude / d
+      const f = GM / ((d2 + epsCenter * epsCenter) * d) // accel magnitude / d
       p.ax -= p.x * f
       p.ay -= p.y * f
       p.az -= p.z * f
@@ -620,8 +620,8 @@ function galaxiesFactory () {
     }
   }
 
-  // gas colour into the star's reused buffer: palette ramps by distance from
-  // the hole (hot -> cool); spectrum keeps the star's own random colour
+  // gas color into the star's reused buffer: palette ramps by distance from
+  // the hole (hot -> cool); spectrum keeps the star's own random color
   function gasColor (p) {
     const stops = PALETTES[params.palette]
     if (!stops) { p.col[0] = p.r; p.col[1] = p.g; p.col[2] = p.b; return p.col }
@@ -637,7 +637,7 @@ function galaxiesFactory () {
     return [x1, dy * cosX - z1 * sinX, dy * sinX + z1 * cosX]
   }
 
-  // rotate a centred point by the current yaw (Y axis) then pitch (X axis),
+  // rotate a centered point by the current yaw (Y axis) then pitch (X axis),
   // then project to screen space. returns null if behind the camera.
   function project (px, py, pz, cosY, sinY, cosX, sinX) {
     const x1 = px * cosY + pz * sinY
@@ -700,7 +700,7 @@ function galaxiesFactory () {
       const ringR = coreR + (p.ringInset + p.ringGap * (k - 1)) * pr.scale
       const SEG = ringR < 8 ? 12 : 24 // fewer segments for small rings
 
-      // orbit as a tilted ellipse: centre + ringR*(cos t * u + sin t * v)
+      // orbit as a tilted ellipse: center + ringR*(cos t * u + sin t * v)
       ctx.beginPath()
       for (let s = 0; s <= SEG; s++) {
         const t = s / SEG * 2 * Math.PI
@@ -779,7 +779,7 @@ function galaxiesFactory () {
     curAccent[1] += (accent[1] - curAccent[1]) * E
     curAccent[2] += (accent[2] - curAccent[2]) * E
     rHorizon = rHorizonBase * curHoleSize
-    epsCentre = rHorizon
+    epsCenter = rHorizon
 
     // ease pan + zoom toward their targets
     params.zoom += (zoomTarget - params.zoom) * 0.2
@@ -818,7 +818,7 @@ function galaxiesFactory () {
     const d = params.distance
     ctx.globalCompositeOperation = 'lighter' // gas blooms (additive)
 
-    // lines between near neighbours (true 3D distance, rotation-invariant).
+    // lines between near neighbors (true 3D distance, rotation-invariant).
     // behind-lines draw now; front-lines are deferred until after the hole.
     const frontLines = []
     function line (a, b, near) {
@@ -888,7 +888,7 @@ function galaxiesFactory () {
     { key: 'brightness', label: 'Brightness', min: 0.5, max: 5, step: 0.05 },
     { key: 'depthEffect', label: 'Depth', min: 0, max: 1, step: 0.05 },
     { key: 'starSize', label: 'Star size', min: 0.3, max: 3, step: 0.1 },
-    { key: 'colorVar', label: 'Colour', min: 0, max: 2, step: 0.05 },
+    { key: 'colorVar', label: 'Color', min: 0, max: 2, step: 0.05 },
     { key: 'brightnessVar', label: 'Brightness var', min: 0, max: 1, step: 0.05 },
     { key: 'holeSize', label: 'Hole size', min: 0.3, max: 3, step: 0.1, recompute: true },
     { key: 'holeGlow', label: 'Hole glow', min: 0, max: 3, step: 0.05 }
@@ -1171,7 +1171,7 @@ function rampColor (stops, f, out) {
   return out
 }
 
-// adjust colour saturation toward/away from its own grey (luminance preserved).
+// adjust color saturation toward/away from its own gray (luminance preserved).
 // writes to a shared scratch buffer (callers read it immediately) to avoid
 // allocating an array per star/line every frame.
 const _tint = [0, 0, 0]
@@ -1181,10 +1181,10 @@ function tint (cr, cg, cb) {
     _tint[0] = Math.round(cr); _tint[1] = Math.round(cg); _tint[2] = Math.round(cb)
     return _tint
   }
-  const grey = (cr + cg + cb) / 3
-  _tint[0] = clampByte(grey + (cr - grey) * cv)
-  _tint[1] = clampByte(grey + (cg - grey) * cv)
-  _tint[2] = clampByte(grey + (cb - grey) * cv)
+  const gray = (cr + cg + cb) / 3
+  _tint[0] = clampByte(gray + (cr - gray) * cv)
+  _tint[1] = clampByte(gray + (cg - gray) * cv)
+  _tint[2] = clampByte(gray + (cb - gray) * cv)
   return _tint
 }
 
