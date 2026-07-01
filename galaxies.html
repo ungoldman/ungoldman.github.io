@@ -9,14 +9,6 @@
   <link rel="stylesheet" href="/index.css">
   <style>
     html, body { background: #000; color: #ddd; }
-    .top-bar {
-      position: sticky;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .top-bar > * {
-      pointer-events: auto;
-    }
     #canvas {
       position: fixed;
       top: 0;
@@ -31,14 +23,6 @@
   </style>
 </head>
 <body>
-  <nav class="top-bar">
-    <div class="top-bar-title">
-      <a href="/">ungoldman</a>
-      <span>/</span>
-      <a onclick="location.reload()">galaxies</a>
-    </div>
-  </nav>
-
   <canvas id="canvas"></canvas>
 
   <script src="/galaxies.js"></script>

@@ -6,12 +6,13 @@
 // tunes and randomizes it. Sibling of the original 2D particles.js.
 
 const MAGIC_NUMBER = 7000 // baseline star count = W*H / this, scaled by density
-// Firefox has much higher per-element canvas/GC overhead than Chromium, so it
-// gets a lower population ceiling and a stricter ring level-of-detail.
+// Firefox has heavier per-element canvas/GC cost: lower cap, stricter ring LOD
 const IS_FIREFOX = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent)
 const MAX_STARS = IS_FIREFOX ? 380 : 700 // hard ceiling (bounds the O(n^2) loops)
 const RING_MIN_R = IS_FIREFOX ? 1.8 : 1.2 // min core radius (px) that gets orbital rings
 const DRAG_SENS = 0.005 // radians of rotation per pixel dragged
+const KEY_ROT = 0.045 // radians per frame for WASD rotation
+const KEY_PAN = 26 // px per frame for IJKL pan
 const LINE_WIDTH_SCALE = 0.4 // connection lines are thinner than the star dots
 
 // fixed physics (not exposed in the panel)
@@ -34,7 +35,7 @@ const params = {
   slowDrag: 0.15, // extra damping inside the hole's slow-down zone
   slowRadius: 15, // slow-down zone radius (* horizon radius)
   innerGap: 0.02, // inner edge of the disk (* rOuter)
-  armWind: 0.3, // spiral arm tightness (windings across the disk)
+  armWind: 1.5, // spiral arm tightness (turns from inner to outer edge)
   distance: 60, // connection-line length
   density: 2.5, // star-count multiplier
   brightness: 1, // overall opacity multiplier
@@ -62,15 +63,18 @@ const PALETTES = {
   spectrum: null
 }
 
-// Galaxy structures, selectable in the control panel.
 const GALAXY_TYPES = {
-  spiral: { disk: true, arms: 4, scatter: 1.0, flatten: 0.05 },
-  barred: { disk: true, arms: 2, scatter: 1.3, flatten: 0.05, bar: true },
+  spiral: { disk: true, arms: 2, scatter: 0.4, flatten: 0.05 },
+  barred: { disk: true, arms: 2, scatter: 0.5, flatten: 0.05, bar: true },
+  flocculent: { disk: true, arms: 6, scatter: 1.2, flatten: 0.05 }, // many short feathery arms
   lenticular: { disk: true, arms: 0, scatter: 0, flatten: 0.04, smooth: true }, // S0
   ring: { disk: true, arms: 0, scatter: 0.4, flatten: 0.04, ring: true },
-  elliptical: { disk: false, flatten: 0.6, dispersion: 0.55 },
-  irregular: { disk: false, flatten: 1, dispersion: 1 },
-  spherical: { disk: false, flatten: 1, dispersion: 0.2 } // globular cluster
+  active: { disk: true, arms: 0, smooth: true, flatten: 0.06, jets: true }, // AGN: disk + bipolar jets
+  // spheroids: concentration > 1 packs stars toward the centre; dispersion is
+  // the fraction of random (vs ordered) motion
+  elliptical: { disk: false, flatten: 0.6, dispersion: 0.8, concentration: 1.6 },
+  dwarf: { disk: false, flatten: 0.85, dispersion: 0.9, concentration: 1, countScale: 0.4 }, // sparse & diffuse
+  spherical: { disk: false, flatten: 1, dispersion: 0.9, concentration: 2.5 } // globular cluster
 }
 
 // adapted from https://www.html5rocks.com/en/tutorials/canvas/hidpi/
@@ -117,6 +121,8 @@ function galaxiesFactory () {
   let panYTarget = 0
   let zoomTarget = params.zoom
   let paused = false // 'x' toggles the ambient yaw/pitch spin
+  let lockView = false // when set, randomize leaves pan/zoom alone
+  const heldKeys = {} // WASD held-state for keyboard rotation
   let frame = 0 // advances each draw; drives the orbiting ring bodies
   // #debug in the URL exposes window.galaxyStats { drawMs, stars } for profiling
   const DEBUG = typeof location !== 'undefined' && location.hash.indexOf('debug') !== -1
@@ -127,6 +133,7 @@ function galaxiesFactory () {
   let curHoleSize = 1
   let curHoleGlow = 1
   const curAccent = [255, 150, 60]
+  const litAccent = [255, 202, 157] // curAccent toward white; horizon break-down tween target
   function refreshAccent () {
     const stops = PALETTES[params.palette]
     accent = stops
@@ -176,7 +183,8 @@ function galaxiesFactory () {
   }
 
   function targetCount () {
-    return options.particles || Math.min(MAX_STARS, Math.round(W * H / MAGIC_NUMBER * params.density))
+    const scale = GALAXY_TYPES[params.type].countScale || 1
+    return options.particles || Math.min(MAX_STARS, Math.round(W * H / MAGIC_NUMBER * params.density * scale))
   }
 
   // unit vector uniformly distributed on the sphere
@@ -201,6 +209,22 @@ function galaxiesFactory () {
   function initialState () {
     const t = GALAXY_TYPES[params.type]
     if (t.disk) {
+      // active nuclei fire bipolar jets out along the spin (Y) axis
+      if (t.jets && Math.random() < 0.35) {
+        const sign = Math.random() < 0.5 ? 1 : -1
+        const h = Math.random() * rOuter
+        const jr = Math.random() * (rOuter * 0.02 + h * 0.06) // narrow, slightly flaring
+        const ang = Math.random() * 2 * Math.PI
+        const jv = 4 + Math.random() * 5 // outward jet speed
+        return {
+          x: Math.cos(ang) * jr,
+          y: sign * (rHorizon * 3 + h),
+          z: Math.sin(ang) * jr,
+          vx: 0,
+          vy: sign * jv,
+          vz: 0
+        }
+      }
       // ring galaxies concentrate matter in an outer annulus
       const radius = t.ring
         ? rOuter * (0.7 + Math.random() * 0.3)
@@ -209,14 +233,14 @@ function galaxiesFactory () {
       if (t.smooth || t.arms === 0) {
         theta = Math.random() * 2 * Math.PI // featureless disk
       } else {
+        // logarithmic spiral: armWind = number of turns from inner to outer edge
         const arm = Math.floor(Math.random() * t.arms)
-        theta = arm * (2 * Math.PI / t.arms) +
-          (radius / rOuter) * params.armWind * 2 * Math.PI +
-          (Math.random() - 0.5) * t.scatter
+        const wind = params.armWind * 2 * Math.PI * (Math.log(radius / rInner) / Math.log(rOuter / rInner))
+        theta = arm * (2 * Math.PI / t.arms) + wind + (Math.random() - 0.5) * t.scatter
       }
       // a bar funnels inner stars into a central elongated structure
-      if (t.bar && radius < rOuter * 0.4) {
-        theta = (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 0.6
+      if (t.bar && radius < rOuter * 0.45) {
+        theta = (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 0.4
       }
       const v = Math.sqrt(GM / radius)
       return {
@@ -229,13 +253,13 @@ function galaxiesFactory () {
         vz: Math.cos(theta) * v + (Math.random() - 0.5) * v * 0.1
       }
     }
-    // spheroidal: oblate by `flatten`, with `dispersion` of random motion
-    const radius = rInner + (rOuter - rInner) * Math.cbrt(Math.random())
+    // spheroid: oblate by `flatten`, concentration > 1 packs toward the centre
+    const radius = rInner + (rOuter - rInner) * Math.pow(Math.random(), t.concentration || 1)
     const dir = randomDirection()
     const x = dir.x * radius
     const y = dir.y * radius * t.flatten
     const z = dir.z * radius
-    const v = Math.sqrt(GM / radius)
+    const v = Math.sqrt(GM / Math.max(radius, rInner))
     const tan = tangent(x, y, z)
     const disp = t.dispersion || 0
     return {
@@ -266,7 +290,7 @@ function galaxiesFactory () {
     const dims = setCanvasDimensions(canvas, ctx)
     computeGeometry(dims.W, dims.H)
     // random view on load (pan + zoom); applied instantly (no jarring ease-in)
-    zoomTarget = 0.35 + Math.random() * 1.45
+    zoomTarget = 0.25 + Math.random() * 1.05
     panXTarget = (Math.random() - 0.5) * W * 0.3
     panYTarget = (Math.random() - 0.5) * H * 0.3
     params.zoom = zoomTarget
@@ -325,19 +349,30 @@ function galaxiesFactory () {
       canvas.style.cursor = c || 'crosshair'
     }
 
+    // shortcuts work regardless of focus; preventDefault stops the focused
+    // control's native reaction (page scroll, slider jump, button activation)
     window.addEventListener('keydown', event => {
-      if (event.code === 'Space' && !isInteractive(event.target)) {
+      if (event.metaKey || event.ctrlKey || event.altKey) return // leave system/browser shortcuts alone
+      if (event.code === 'Space') {
         spaceHeld = true
         updateCursor()
-        event.preventDefault() // don't scroll the page
+        event.preventDefault()
       } else if (event.code === 'Home') {
         panXTarget = 0; panYTarget = 0; zoomTarget = 1
-      } else if (event.code === 'KeyX' && !isInteractive(event.target)) {
-        paused = !paused // pause/resume ambient rotation
+        event.preventDefault()
+      } else if (/^Key[WASDQEIJKL]$/.test(event.code)) {
+        heldKeys[event.code] = true // WASD rotate, Q/E zoom, IJKL pan
+        event.preventDefault()
       }
     })
     window.addEventListener('keyup', event => {
       if (event.code === 'Space') { spaceHeld = false; updateCursor() }
+      else heldKeys[event.code] = false
+    })
+    // don't leave keys/drag stuck if focus leaves the window mid-hold
+    window.addEventListener('blur', () => {
+      for (const k in heldKeys) heldKeys[k] = false
+      spaceHeld = false; dragMode = null; updateCursor()
     })
 
     window.addEventListener('wheel', event => {
@@ -448,12 +483,19 @@ function galaxiesFactory () {
     this.b = b
     this.col = [r, g, b] // reused gas-color buffer (written each frame, no alloc)
     this.tw = Math.random() // per-star value driving brightness variation
-    // per-star render variety
     this.sizeJitter = 0.6 + Math.random() * Math.random() * 3 // point size: mostly small, some large
     const rr = Math.random()
     this.rings = rr < 0.25 ? 0 : 1 + Math.floor(Math.random() * 4) // up to 4 tight rings
-    this.ringInset = 1 + Math.random() * 4 // distance from the star to the first ring
-    this.ringGap = 1 + Math.random() * 1.5 // tight ring-to-ring spacing
+    // per-ring radial distance (non-uniform spacing) and a brightness-dim factor
+    this.ringDist = []
+    this.ringDim = []
+    let acc = 1 + Math.random() * 4 // inset to the first ring
+    const gap = 1 + Math.random() * 1.5 // base ring-to-ring spacing
+    for (let k = 0; k < this.rings; k++) {
+      this.ringDist.push(acc)
+      acc += gap * (0.6 + Math.random() * 0.8) // jitter each gap
+      this.ringDim.push(Math.random())
+    }
     this.ringPhase = Math.random() * Math.PI * 2 // starting orbital angle
     this.ringSpin = (0.015 + Math.random() * 0.03) * (Math.random() < 0.5 ? -1 : 1) // rad/frame
     // a random orbital-plane basis (two orthonormal 3D vectors) for this system
@@ -518,29 +560,37 @@ function galaxiesFactory () {
     }
 
     // central gravity + event horizon (crossing starts a swallow animation)
+    const epsCenter2 = epsCenter * epsCenter
     for (let i = 0; i < n; i++) {
       const p = particles[i]
-      if (p.die != null) { // being swallowed: flare, get pulled in, then removed
+      if (p.die != null) { // being swallowed: flare out in place on the shell
         p.die += 1 / DIE_FRAMES
-        p.x *= 0.6; p.y *= 0.6; p.z *= 0.6
         if (p.die >= 1) swallowed.add(i)
         continue
       }
       const d2 = p.x * p.x + p.y * p.y + p.z * p.z
       const d = Math.sqrt(d2)
-      if (d < rHorizon) { p.die = 0; continue } // begin the swallow
-      const f = GM / ((d2 + epsCenter * epsCenter) * d) // accel magnitude / d
+      if (d < rHorizon) {
+        // snap onto the horizon shell so it's consumed at the hole's surface
+        const s = rHorizon / (d || 1)
+        p.x *= s; p.y *= s; p.z *= s
+        p.die = 0
+        continue
+      }
+      const f = GM / ((d2 + epsCenter2) * d) // accel magnitude / d
       p.ax -= p.x * f
       p.ay -= p.y * f
       p.az -= p.z * f
     }
 
-    // pairwise gravity + collision detection
+    // pairwise gravity + collision detection.
+    // a swallowed particle always has die != null, so that test alone covers both.
+    const epsPair2 = epsPair * epsPair
     for (let i = 0; i < n; i++) {
-      if (swallowed.has(i) || particles[i].die != null) continue
+      if (particles[i].die != null) continue
       const pi = particles[i]
       for (let j = i + 1; j < n; j++) {
-        if (swallowed.has(j) || particles[j].die != null) continue
+        if (particles[j].die != null) continue
         const pj = particles[j]
         const dx = pj.x - pi.x
         const dy = pj.y - pi.y
@@ -551,7 +601,7 @@ function galaxiesFactory () {
           if (pi.cooldown <= 0 && pj.cooldown <= 0) merges.push([i, j]) // else pass through
           continue
         }
-        const f = GPair / ((d2 + epsPair * epsPair) * d)
+        const f = GPair / ((d2 + epsPair2) * d)
         pi.ax += dx * f * pj.mass
         pi.ay += dy * f * pj.mass
         pi.az += dz * f * pj.mass
@@ -564,7 +614,7 @@ function galaxiesFactory () {
     // integrate (semi-implicit Euler) with drag and a speed cap
     const slowRadius = rHorizon * params.slowRadius
     for (let i = 0; i < n; i++) {
-      if (swallowed.has(i) || particles[i].die != null) continue
+      if (particles[i].die != null) continue
       const p = particles[i]
       p.vx += p.ax * DT
       p.vy += p.ay * DT
@@ -579,7 +629,7 @@ function galaxiesFactory () {
       p.vy *= damp
       p.vz *= damp
 
-      const sp = Math.hypot(p.vx, p.vy, p.vz)
+      const sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy + p.vz * p.vz)
       if (sp > V_MAX) { const k = V_MAX / sp; p.vx *= k; p.vy *= k; p.vz *= k }
       p.x += p.vx * DT
       p.y += p.vy * DT
@@ -590,7 +640,7 @@ function galaxiesFactory () {
     // headroom under the population cap, emit a newborn star (star birth).
     const merged = new Set()
     const additions = []
-    const cap = Math.min(MAX_STARS, Math.round(targetCount() * POP_CAP_FACTOR))
+    const cap = merges.length ? Math.min(MAX_STARS, Math.round(targetCount() * POP_CAP_FACTOR)) : 0
     let alive = n - swallowed.size
     for (const [i, j] of merges) {
       if (swallowed.has(i) || swallowed.has(j) || merged.has(i) || merged.has(j)) continue
@@ -624,12 +674,11 @@ function galaxiesFactory () {
   }
 
   // gas color into the star's reused buffer: palette ramps by distance from
-  // the hole (hot -> cool); spectrum keeps the star's own random color
-  function gasColor (p) {
-    const stops = PALETTES[params.palette]
+  // the hole (hot -> cool); spectrum keeps the star's own random color.
+  // `radius` (3D distance from the hole) is passed in, cached by the caller.
+  function gasColor (p, stops, radius, span) {
     if (!stops) { p.col[0] = p.r; p.col[1] = p.g; p.col[2] = p.b; return p.col }
-    const radius = Math.hypot(p.x, p.y, p.z)
-    return rampColor(stops, (radius - rHorizon) / (rOuter - rHorizon), p.col)
+    return rampColor(stops, (radius - rHorizon) / span, p.col)
   }
 
   // rotate a 3D direction by the camera; returns [screenX, screenY, depthZ]
@@ -664,14 +713,19 @@ function galaxiesFactory () {
   function drawStar (pr, cosY, sinY, cosX, sinX) {
     const p = pr.p
 
-    // being swallowed: a hot white flare that flashes then shrinks into the hole,
-    // sized relative to the hole so it stays proportional at any hole size
+    // being swallowed: shrink from the star's size down to a point while the
+    // color tweens from the star's color to the hole's ring color
     if (p.die != null) {
-      const flash = Math.sin(Math.min(1, p.die) * Math.PI)
-      const rad = rHorizon * pr.scale * (0.06 + 0.16 * flash) // small pinprick, hole-relative
+      const t = Math.min(1, p.die)
+      const pointMul = Math.cbrt(p.mass) * params.starSize * p.sizeJitter
+      const rad = Math.max(0.4, options.lineWidth * pr.scale * pointMul) * (1 - t)
+      const [scr, scg, scb] = tint(p.col[0], p.col[1], p.col[2])
+      const cr = Math.round(scr + (litAccent[0] - scr) * t)
+      const cg = Math.round(scg + (litAccent[1] - scg) * t)
+      const cb = Math.round(scb + (litAccent[2] - scb) * t)
       ctx.beginPath()
-      ctx.fillStyle = `rgba(255,240,220,${Math.min(1, 0.35 + flash)})`
-      ctx.arc(pr.sx, pr.sy, Math.max(1, rad), 0, 2 * Math.PI, false)
+      ctx.fillStyle = `rgba(${cr},${cg},${cb},${Math.min(1, params.brightness)})`
+      ctx.arc(pr.sx, pr.sy, rad, 0, 2 * Math.PI, false)
       ctx.fill()
       return
     }
@@ -682,7 +736,7 @@ function galaxiesFactory () {
     const [cr, cg, cb] = tint(pr.col[0], pr.col[1], pr.col[2])
     // point size jitter applies to the star itself, not the rings
     const pointMul = Math.cbrt(p.mass) * params.starSize * p.sizeJitter
-    const coreR = Math.max(0.4, options.lineWidth * pr.scale * pointMul)
+    const coreR = Math.max(0.85, options.lineWidth * pr.scale * pointMul) // floor keeps small stars solid, not faint sub-pixel specks
 
     // core point
     ctx.beginPath()
@@ -690,8 +744,7 @@ function galaxiesFactory () {
     ctx.arc(pr.sx, pr.sy, coreR, 0, 2 * Math.PI, false)
     ctx.fill()
 
-    // level of detail: only prominent (near/large) stars get orbital systems,
-    // which keeps the bulk of the per-frame draw calls off tiny far stars
+    // LOD: only prominent stars get orbital systems (keeps draw calls down)
     if (p.rings === 0 || coreR < RING_MIN_R) return
 
     // orbital-plane basis, rotated into the current view (unit vectors -> their
@@ -700,13 +753,15 @@ function galaxiesFactory () {
     const v = rotateDir(p.ov[0], p.ov[1], p.ov[2], cosY, sinY, cosX, sinX)
 
     for (let k = 1; k <= p.rings; k++) {
-      const ringR = coreR + (p.ringInset + p.ringGap * (k - 1)) * pr.scale
+      const ringR = coreR + p.ringDist[k - 1] * pr.scale
+      const rb = 1 - params.brightnessVar * p.ringDim[k - 1] // per-ring brightness variation
       const SEG = ringR < 8 ? 12 : 24 // fewer segments for small rings
 
       // orbit as a tilted ellipse: center + ringR*(cos t * u + sin t * v)
+      const dt = 2 * Math.PI / SEG
       ctx.beginPath()
       for (let s = 0; s <= SEG; s++) {
-        const t = s / SEG * 2 * Math.PI
+        const t = s * dt
         const ct = Math.cos(t)
         const st = Math.sin(t)
         const x = pr.sx + ringR * (ct * u[0] + st * v[0])
@@ -715,7 +770,7 @@ function galaxiesFactory () {
         else ctx.lineTo(x, y)
       }
       ctx.lineWidth = Math.max(0.4, pr.scale * 0.6)
-      ctx.strokeStyle = `rgba(${cr},${cg},${cb},${alpha * 0.5})`
+      ctx.strokeStyle = `rgba(${cr},${cg},${cb},${alpha * 0.5 * rb})`
       ctx.stroke()
 
       // orbiting body; divide spin by k so inner orbits are faster (Kepler-ish)
@@ -725,7 +780,7 @@ function galaxiesFactory () {
       const zc = ca * u[2] + sa * v[2] // + = far side, - = near side
       const bodyR = Math.max(0.5, coreR * 0.55 * (1 - 0.3 * zc))
       ctx.beginPath()
-      ctx.fillStyle = `rgba(${cr},${cg},${cb},${alpha})`
+      ctx.fillStyle = `rgba(${cr},${cg},${cb},${alpha * rb})`
       ctx.arc(pr.sx + ringR * (ca * u[0] + sa * v[0]), pr.sy + ringR * (ca * u[1] + sa * v[1]), bodyR, 0, 2 * Math.PI, false)
       ctx.fill()
     }
@@ -781,6 +836,9 @@ function galaxiesFactory () {
     curAccent[0] += (accent[0] - curAccent[0]) * E
     curAccent[1] += (accent[1] - curAccent[1]) * E
     curAccent[2] += (accent[2] - curAccent[2]) * E
+    litAccent[0] = curAccent[0] + (255 - curAccent[0]) * 0.5
+    litAccent[1] = curAccent[1] + (255 - curAccent[1]) * 0.5
+    litAccent[2] = curAccent[2] + (255 - curAccent[2]) * 0.5
     rHorizon = rHorizonBase * curHoleSize
     epsCenter = rHorizon
 
@@ -794,6 +852,17 @@ function galaxiesFactory () {
       yaw += params.spin
       pitch += params.spinPitch
     }
+    // WASD rotation (A/D yaw, W/S pitch), matching drag directions
+    if (heldKeys.KeyA) yaw -= KEY_ROT
+    if (heldKeys.KeyD) yaw += KEY_ROT
+    if (heldKeys.KeyW) pitch -= KEY_ROT
+    if (heldKeys.KeyS) pitch += KEY_ROT
+    if (heldKeys.KeyQ) zoomTarget = Math.min(8, zoomTarget * 1.04) // zoom in
+    if (heldKeys.KeyE) zoomTarget = Math.max(0.2, zoomTarget / 1.04) // zoom out
+    if (heldKeys.KeyJ) panXTarget -= KEY_PAN // pan (I/K vertical, J/L horizontal)
+    if (heldKeys.KeyL) panXTarget += KEY_PAN
+    if (heldKeys.KeyI) panYTarget -= KEY_PAN
+    if (heldKeys.KeyK) panYTarget += KEY_PAN
     const cosY = Math.cos(yaw)
     const sinY = Math.sin(yaw)
     const cosX = Math.cos(pitch)
@@ -802,13 +871,16 @@ function galaxiesFactory () {
     step()
 
     // project every star (carry source coords for 3D distance)
+    const stops = PALETTES[params.palette]
+    const span = rOuter - rHorizon // palette-ramp denominator (constant this frame)
     const projected = []
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i]
       const pr = project(p.x, p.y, p.z, cosY, sinY, cosX, sinX)
       if (pr != null) {
         pr.p = p
-        pr.col = gasColor(p)
+        pr.rr = Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z) // 3D distance from hole, reused by line()
+        pr.col = gasColor(p, stops, pr.rr, span)
         projected.push(pr)
       }
     }
@@ -826,11 +898,20 @@ function galaxiesFactory () {
     // lines between near neighbors (true 3D distance, rotation-invariant).
     // behind-lines draw now; front-lines are deferred until after the hole.
     const frontLines = []
-    function line (a, b, near) {
-      const proximity = options.fade ? 1 - Math.hypot(b.p.x - a.p.x, b.p.y - a.p.y, b.p.z - a.p.z) / d : 1
+    const holeSpan = rHorizon * 5 // (rHorizon*6 - rHorizon), line-fade denominator
+    function line (a, b, near, dist) {
+      const proximity = options.fade ? 1 - dist / d : 1
       const depthMul = (1 - params.depthEffect) + params.depthEffect * near.depth
-      const alpha = Math.min(1, proximity * depthMul * params.brightness)
-      const [cr, cg, cb] = tint((a.col[0] + b.col[0]) / 2, (a.col[1] + b.col[1]) / 2, (a.col[2] + b.col[2]) / 2)
+      // break down on contact with the hole: fade out and tween to ring color
+      // as the nearer endpoint approaches the horizon
+      const dc = Math.min(a.rr, b.rr) // 3D distance to hole, cached at projection
+      const f = Math.max(0, Math.min(1, (dc - rHorizon) / holeSpan))
+      const alpha = Math.min(1, proximity * depthMul * params.brightness) * f
+      const [tr, tg, tb] = tint((a.col[0] + b.col[0]) / 2, (a.col[1] + b.col[1]) / 2, (a.col[2] + b.col[2]) / 2)
+      const k = 1 - f
+      const cr = Math.round(tr + (litAccent[0] - tr) * k)
+      const cg = Math.round(tg + (litAccent[1] - tg) * k)
+      const cb = Math.round(tb + (litAccent[2] - tb) * k)
       ctx.beginPath()
       ctx.lineWidth = options.lineWidth * near.scale * LINE_WIDTH_SCALE
       ctx.strokeStyle = `rgba(${cr},${cg},${cb},${alpha})`
@@ -838,6 +919,7 @@ function galaxiesFactory () {
       ctx.lineTo(b.sx, b.sy)
       ctx.stroke()
     }
+    const d2 = d * d
     for (let i = 0; i < projected.length; i++) {
       const a = projected[i]
       const pa = a.p
@@ -847,10 +929,12 @@ function galaxiesFactory () {
         const xd = pb.x - pa.x
         const yd = pb.y - pa.y
         const zd = pb.z - pa.z
-        if (xd * xd + yd * yd + zd * zd >= d * d) continue
+        const dsq = xd * xd + yd * yd + zd * zd
+        if (dsq >= d2) continue
+        const dist = Math.sqrt(dsq)
         const near = a.depth > b.depth ? a : b // nearer (brighter) endpoint
-        if (near.depth > holeDepth) frontLines.push([a, b, near]) // in front of the hole
-        else line(a, b, near)
+        if (near.depth > holeDepth) frontLines.push([a, b, near, dist]) // in front of the hole
+        else line(a, b, near, dist)
       }
     }
 
@@ -864,7 +948,7 @@ function galaxiesFactory () {
 
     // in front of the hole, on top of the shadow: lines then stars
     ctx.globalCompositeOperation = 'lighter'
-    for (const [a, b, near] of frontLines) line(a, b, near)
+    for (const [a, b, near, dist] of frontLines) line(a, b, near, dist)
     for (let i = 0; i < projected.length; i++) {
       if (projected[i].depth > holeDepth) drawStar(projected[i], cosY, sinY, cosX, sinX)
     }
@@ -887,16 +971,16 @@ function galaxiesFactory () {
     { key: 'slowDrag', label: 'Hole slowdown', min: 0, max: 0.3, step: 0.005 },
     { key: 'slowRadius', label: 'Slow zone', min: 1, max: 30, step: 0.5 },
     { key: 'innerGap', label: 'Inner gap', min: 0.02, max: 0.5, step: 0.01, recompute: true },
-    { key: 'armWind', label: 'Arm tightness', min: 0, max: 2.5, step: 0.05, reseed: true },
+    { key: 'armWind', label: 'Arm tightness', min: 0.3, max: 3, step: 0.05, reseed: true },
     { key: 'distance', label: 'Link distance', min: 0, max: 150, step: 1 },
-    { key: 'density', label: 'Density', min: 0.3, max: 4, step: 0.1, reseed: true },
-    { key: 'brightness', label: 'Brightness', min: 0.5, max: 5, step: 0.05 },
-    { key: 'depthEffect', label: 'Depth', min: 0, max: 1, step: 0.05 },
-    { key: 'starSize', label: 'Star size', min: 0.3, max: 3, step: 0.1 },
+    { key: 'density', label: 'Density', min: 0.8, max: 4, step: 0.1, reseed: true },
+    { key: 'brightness', label: 'Brightness', min: 2.2, max: 5, step: 0.05 },
+    { key: 'depthEffect', label: 'Depth', min: 0, max: 0.7, step: 0.05 },
+    { key: 'starSize', label: 'Star size', min: 0.6, max: 3, step: 0.1 },
     { key: 'colorVar', label: 'Color', min: 0, max: 2, step: 0.05 },
     { key: 'brightnessVar', label: 'Brightness var', min: 0, max: 1, step: 0.05 },
     { key: 'holeSize', label: 'Hole size', min: 0.3, max: 3, step: 0.1, recompute: true },
-    { key: 'holeGlow', label: 'Hole glow', min: 0, max: 3, step: 0.05 }
+    { key: 'holeGlow', label: 'Hole glow', min: 0.25, max: 3, step: 0.05 }
   ]
 
   function buildControls () {
@@ -938,12 +1022,15 @@ function galaxiesFactory () {
     helpBox.style.cssText = 'display:none;font-size:0.85em;opacity:0.8;line-height:1.7;flex:0 0 auto'
     helpBox.innerHTML =
       '<span class="help-desktop">' + [
-        'drag — orbit',
-        'scroll — zoom',
-        'space + drag / middle-drag — pan',
+        'drag / wasd — orbit',
+        'scroll / q e — zoom',
+        'space/middle-drag, ijkl — pan',
         'home — reset view',
         'x — pause rotation',
-        'r or ⟳ — randomize'
+        'c — lock view on randomize', // help text can be explicit (no width limit)
+        'r or ⟳ — randomize',
+        'z — respawn galaxy',
+        '` — toggle panel'
       ].join('<br>') + '</span>' +
       '<span class="help-touch">' + [
         'drag — orbit',
@@ -975,6 +1062,7 @@ function galaxiesFactory () {
       '#galaxy-controls .gc-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;cursor:pointer;line-height:1;font-size:16px}' +
       '#galaxy-controls .gc-btn:hover{background:rgba(255,255,255,0.12)}' +
       '#galaxy-controls .gc-body{width:190px}' + // sets the open panel width
+      '#galaxy-controls input[type=checkbox]{width:16px;height:16px;accent-color:#bbb;cursor:pointer}' +
       '#galaxy-controls label{display:block;margin:8px 0}' +
       '#galaxy-controls select{background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit;padding:2px 4px}' +
       // custom range slider (thin track, round thumb) so it's draggable by touch
@@ -994,6 +1082,7 @@ function galaxiesFactory () {
         '#galaxy-controls .gc-btn{width:44px;height:44px;font-size:22px}' +
         '#galaxy-controls label{margin:16px 0}' +
         '#galaxy-controls select{font-size:16px;padding:8px 10px}' +
+        '#galaxy-controls input[type=checkbox]{width:22px;height:22px}' +
         '#galaxy-controls button{padding:15px;font-size:16px}' +
         '#galaxy-controls input[type=range]{margin:12px 0}' +
         '#galaxy-controls input[type=range]::-webkit-slider-runnable-track{height:6px}' +
@@ -1081,6 +1170,31 @@ function galaxiesFactory () {
       refs.push({ c, input, fmt })
     }
 
+    const pauseRow = document.createElement('label')
+    pauseRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer'
+    const pauseName = document.createElement('span')
+    pauseName.textContent = 'Pause rotation (x)'
+    const pauseBox = document.createElement('input')
+    pauseBox.type = 'checkbox'
+    pauseBox.checked = paused
+    pauseBox.addEventListener('change', () => { paused = pauseBox.checked })
+    pauseRow.appendChild(pauseName)
+    pauseRow.appendChild(pauseBox)
+    body.appendChild(pauseRow)
+
+    const lockRow = document.createElement('label')
+    lockRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer'
+    lockRow.title = 'keeps pan/zoom when randomizing'
+    const lockName = document.createElement('span')
+    lockName.textContent = 'Lock view (c)'
+    const lockBox = document.createElement('input')
+    lockBox.type = 'checkbox'
+    lockBox.checked = lockView
+    lockBox.addEventListener('change', () => { lockView = lockBox.checked })
+    lockRow.appendChild(lockName)
+    lockRow.appendChild(lockBox)
+    body.appendChild(lockRow)
+
     const btnStyle = 'width:100%;margin-top:8px;padding:4px;cursor:pointer;background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit'
 
     function randomizeAll () {
@@ -1097,9 +1211,11 @@ function galaxiesFactory () {
       params.palette = pals[Math.floor(Math.random() * pals.length)]
       palSelect.value = params.palette
       pitch = params.tilt
-      zoomTarget = 0.35 + Math.random() * 1.45
-      panXTarget = (Math.random() - 0.5) * W * 0.3
-      panYTarget = (Math.random() - 0.5) * H * 0.3
+      if (!lockView) {
+        zoomTarget = 0.25 + Math.random() * 1.05
+        panXTarget = (Math.random() - 0.5) * W * 0.3
+        panYTarget = (Math.random() - 0.5) * H * 0.3
+      }
       refreshAccent()
       computeGeometry(W, H)
       seedGalaxy()
@@ -1111,30 +1227,58 @@ function galaxiesFactory () {
     randomize.addEventListener('click', randomizeAll)
     body.appendChild(randomize)
 
-    // press "r" to randomize (ignore when typing in a field)
+    // r = randomize, v = toggle lock view (work even when a control has focus;
+    // modified combos like Cmd+R / Cmd+V are left to the browser)
     window.addEventListener('keydown', event => {
-      if (event.code === 'KeyR' && !/INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) {
+      if (event.metaKey || event.ctrlKey || event.altKey) return
+      if (event.code === 'KeyR') {
         randomizeAll()
+        event.preventDefault()
+      } else if (event.code === 'KeyC') {
+        lockView = !lockView
+        lockBox.checked = lockView
+        event.preventDefault()
+      } else if (event.code === 'KeyX') {
+        paused = !paused
+        pauseBox.checked = paused
+        event.preventDefault()
+      } else if (event.code === 'KeyZ') {
+        respawn()
+        event.preventDefault()
+      } else if (event.code === 'Backquote') {
+        togglePanel()
+        event.preventDefault()
       }
     })
 
+    function respawn () { refreshAccent(); computeGeometry(W, H); seedGalaxy() }
+
     const reset = document.createElement('button')
-    reset.textContent = 'reset galaxy'
+    reset.textContent = 'respawn galaxy (z)'
     reset.style.cssText = btnStyle
-    reset.addEventListener('click', () => { computeGeometry(W, H); seedGalaxy() })
+    reset.addEventListener('click', respawn)
     body.appendChild(reset)
 
-    // restore open/closed state (default collapsed)
+    // pull the action controls to the top: respawn(z), pause(x), lock(c), then randomize
+    body.prepend(randomize)
+    body.prepend(lockRow)
+    body.prepend(pauseRow)
+    body.prepend(reset)
+
+    // open/closed state (default collapsed), toggled by the header or backtick
     let collapsed = true
     try { collapsed = localStorage.getItem('galaxyPanelOpen') !== '1' } catch (e) {}
-    body.style.display = collapsed ? 'none' : 'block'
-    toggle.textContent = collapsed ? '+' : '−'
-    header.addEventListener('click', () => {
-      collapsed = !collapsed
+    function applyCollapsed () {
       body.style.display = collapsed ? 'none' : 'block'
       toggle.textContent = collapsed ? '+' : '−'
+    }
+    function togglePanel () {
+      collapsed = !collapsed
+      applyCollapsed()
       try { localStorage.setItem('galaxyPanelOpen', collapsed ? '0' : '1') } catch (e) {}
-    })
+    }
+    applyCollapsed()
+    header.addEventListener('click', togglePanel)
 
     document.body.appendChild(panel)
   }
@@ -1176,9 +1320,8 @@ function rampColor (stops, f, out) {
   return out
 }
 
-// adjust color saturation toward/away from its own gray (luminance preserved).
-// writes to a shared scratch buffer (callers read it immediately) to avoid
-// allocating an array per star/line every frame.
+// saturate/desaturate a color (luminance preserved) into a shared scratch
+// buffer read immediately by callers (avoids a per-star/line alloc each frame)
 const _tint = [0, 0, 0]
 function tint (cr, cg, cb) {
   const cv = params.colorVar
