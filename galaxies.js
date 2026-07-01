@@ -907,17 +907,14 @@ function galaxiesFactory () {
       'position:fixed', 'top:8px', 'right:8px', 'z-index:10',
       'background:rgba(0,0,0,0.55)', 'color:#ddd', 'pointer-events:auto',
       'font:12px/1.4 ui-monospace,Menlo,Consolas,monospace', 'padding:10px 12px',
-      'border-radius:8px', 'width:190px', 'backdrop-filter:blur(4px)',
+      'border-radius:8px', 'backdrop-filter:blur(4px)',
       'user-select:none', 'display:flex', 'flex-direction:column', 'gap:6px',
       'max-height:calc(100vh - 16px)'
-    ].join(';')
+    ].join(';') // no fixed width: shrinks to the buttons, grows to body when open
 
     const header = document.createElement('div')
     header.className = 'gc-header'
-    header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer;opacity:0.7;flex:0 0 auto'
-    const title = document.createElement('span')
-    title.className = 'gc-title'
-    title.textContent = 'galaxy'
+    header.style.cssText = 'display:flex;justify-content:flex-end;align-items:center;cursor:pointer;opacity:0.7;flex:0 0 auto'
     const right = document.createElement('span')
     right.style.cssText = 'display:flex;align-items:center;gap:4px'
     const rnd = document.createElement('span')
@@ -933,7 +930,6 @@ function galaxiesFactory () {
     right.appendChild(rnd)
     right.appendChild(help)
     right.appendChild(toggle)
-    header.appendChild(title)
     header.appendChild(right)
     panel.appendChild(header)
 
@@ -963,6 +959,7 @@ function galaxiesFactory () {
     })
 
     const body = document.createElement('div')
+    body.className = 'gc-body'
     body.style.cssText = 'overflow-y:auto;overflow-x:hidden;flex:1 1 auto;display:none;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.25) transparent'
     panel.appendChild(body)
 
@@ -977,6 +974,7 @@ function galaxiesFactory () {
       // header buttons: a real box so the tap target isn't just the glyph
       '#galaxy-controls .gc-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;cursor:pointer;line-height:1;font-size:16px}' +
       '#galaxy-controls .gc-btn:hover{background:rgba(255,255,255,0.12)}' +
+      '#galaxy-controls .gc-body{width:190px}' + // sets the open panel width
       '#galaxy-controls label{display:block;margin:8px 0}' +
       '#galaxy-controls select{background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit;padding:2px 4px}' +
       // custom range slider (thin track, round thumb) so it's draggable by touch
@@ -988,10 +986,11 @@ function galaxiesFactory () {
       '.help-touch{display:none}' + // desktop help by default
       // on mobile: pin to the bottom, show touch help, enlarge everything
       '@media (max-width:50em){' +
-        '#galaxy-controls{top:auto!important;bottom:8px!important;left:8px!important;right:8px!important;width:auto!important;max-height:60vh!important;font-size:15px!important;padding:14px 16px!important}' +
+        '#galaxy-controls{top:auto!important;bottom:8px!important;right:8px!important;max-height:60vh!important;font-size:15px!important;padding:14px 16px!important}' +
         '.help-desktop{display:none}.help-touch{display:block}' +
-        '.gc-title{display:none}' + // redundant with the + toggle on mobile
-        '.gc-header{font-size:20px!important;justify-content:flex-end!important}' +
+        // expanded panel fills the width (collapsed still hugs the buttons)
+        '#galaxy-controls .gc-body{width:calc(100vw - 48px)}' +
+        '.gc-header{font-size:20px!important}' +
         '#galaxy-controls .gc-btn{width:44px;height:44px;font-size:22px}' +
         '#galaxy-controls label{margin:16px 0}' +
         '#galaxy-controls select{font-size:16px;padding:8px 10px}' +
