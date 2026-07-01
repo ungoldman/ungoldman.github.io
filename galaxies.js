@@ -401,7 +401,7 @@ function galaxiesFactory () {
       }
       const pts = touchArray()
       if (pts.length === 1) {
-        yaw += (pts[0].x - lastX) * DRAG_SENS
+        yaw -= (pts[0].x - lastX) * DRAG_SENS // inverted vs mouse (feels right on touch)
         pitch += (pts[0].y - lastY) * DRAG_SENS
         lastX = pts[0].x; lastY = pts[0].y
       } else if (pts.length >= 2) {
@@ -911,6 +911,7 @@ function galaxiesFactory () {
     header.className = 'gc-header'
     header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer;opacity:0.7;flex:0 0 auto'
     const title = document.createElement('span')
+    title.className = 'gc-title'
     title.textContent = 'galaxy'
     const right = document.createElement('span')
     right.style.cssText = 'display:flex;align-items:center;gap:4px'
@@ -983,7 +984,8 @@ function galaxiesFactory () {
       '@media (max-width:50em){' +
         '#galaxy-controls{top:auto!important;bottom:8px!important;left:8px!important;right:8px!important;width:auto!important;max-height:60vh!important;font-size:15px!important;padding:14px 16px!important}' +
         '.help-desktop{display:none}.help-touch{display:block}' +
-        '.gc-header{font-size:20px!important}' +
+        '.gc-title{display:none}' + // redundant with the + toggle on mobile
+        '.gc-header{font-size:20px!important;justify-content:flex-end!important}' +
         '#galaxy-controls .gc-btn{width:44px;height:44px;font-size:22px}' +
         '#galaxy-controls label{margin:16px 0}' +
         '#galaxy-controls select{font-size:16px;padding:8px 10px}' +
