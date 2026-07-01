@@ -6,6 +6,11 @@
 // tunes and randomizes it. Sibling of the original 2D particles.js.
 
 const MAGIC_NUMBER = 7000 // baseline star count = W*H / this, scaled by density
+// Firefox has much higher per-element canvas/GC overhead than Chromium, so it
+// gets a lower population ceiling and a stricter ring level-of-detail.
+const IS_FIREFOX = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent)
+const MAX_STARS = IS_FIREFOX ? 380 : 700 // hard ceiling (bounds the O(n^2) loops)
+const RING_MIN_R = IS_FIREFOX ? 1.8 : 1.2 // min core radius (px) that gets orbital rings
 const DRAG_SENS = 0.005 // radians of rotation per pixel dragged
 const LINE_WIDTH_SCALE = 0.4 // connection lines are thinner than the star dots
 
@@ -112,6 +117,9 @@ function galaxiesFactory () {
   let panYTarget = 0
   let zoomTarget = params.zoom
   let frame = 0 // advances each draw; drives the orbiting ring bodies
+  // #debug in the URL exposes window.galaxyStats { drawMs, stars } for profiling
+  const DEBUG = typeof location !== 'undefined' && location.hash.indexOf('debug') !== -1
+  let drawMs = 0
   // black-hole accent colour (photon ring + glow halo), matched to the palette
   let accent = [255, 150, 60] // target accent
   // animated (eased) hole state, tweened toward the targets each frame
@@ -167,7 +175,7 @@ function galaxiesFactory () {
   }
 
   function targetCount () {
-    return options.particles || Math.round(W * H / MAGIC_NUMBER * params.density)
+    return options.particles || Math.min(MAX_STARS, Math.round(W * H / MAGIC_NUMBER * params.density))
   }
 
   // unit vector uniformly distributed on the sphere
@@ -435,6 +443,7 @@ function galaxiesFactory () {
     this.r = r
     this.g = g
     this.b = b
+    this.col = [r, g, b] // reused gas-colour buffer (written each frame, no alloc)
     this.tw = Math.random() // per-star value driving brightness variation
     // per-star render variety
     this.sizeJitter = 0.6 + Math.random() * Math.random() * 3 // point size: mostly small, some large
@@ -578,7 +587,7 @@ function galaxiesFactory () {
     // headroom under the population cap, emit a newborn star (star birth).
     const merged = new Set()
     const additions = []
-    const cap = Math.round(targetCount() * POP_CAP_FACTOR)
+    const cap = Math.min(MAX_STARS, Math.round(targetCount() * POP_CAP_FACTOR))
     let alive = n - swallowed.size
     for (const [i, j] of merges) {
       if (swallowed.has(i) || swallowed.has(j) || merged.has(i) || merged.has(j)) continue
@@ -611,13 +620,13 @@ function galaxiesFactory () {
     }
   }
 
-  // gas colour: palette ramps by distance from the hole (hot -> cool);
-  // spectrum keeps each star's own random colour
+  // gas colour into the star's reused buffer: palette ramps by distance from
+  // the hole (hot -> cool); spectrum keeps the star's own random colour
   function gasColor (p) {
     const stops = PALETTES[params.palette]
-    if (!stops) return [p.r, p.g, p.b] // spectrum: keep the star's own colour
+    if (!stops) { p.col[0] = p.r; p.col[1] = p.g; p.col[2] = p.b; return p.col }
     const radius = Math.hypot(p.x, p.y, p.z)
-    return rampColor(stops, (radius - rHorizon) / (rOuter - rHorizon))
+    return rampColor(stops, (radius - rHorizon) / (rOuter - rHorizon), p.col)
   }
 
   // rotate a 3D direction by the camera; returns [screenX, screenY, depthZ]
@@ -652,13 +661,14 @@ function galaxiesFactory () {
   function drawStar (pr, cosY, sinY, cosX, sinX) {
     const p = pr.p
 
-    // being swallowed: a hot white flare that flashes then shrinks into the hole
+    // being swallowed: a hot white flare that flashes then shrinks into the hole,
+    // sized relative to the hole so it stays proportional at any hole size
     if (p.die != null) {
       const flash = Math.sin(Math.min(1, p.die) * Math.PI)
-      const base = options.lineWidth * pr.scale * Math.cbrt(p.mass) * params.starSize
+      const rad = rHorizon * pr.scale * (0.06 + 0.16 * flash) // small pinprick, hole-relative
       ctx.beginPath()
       ctx.fillStyle = `rgba(255,240,220,${Math.min(1, 0.35 + flash)})`
-      ctx.arc(pr.sx, pr.sy, Math.max(1, base) * (0.6 + 1.8 * flash), 0, 2 * Math.PI, false)
+      ctx.arc(pr.sx, pr.sy, Math.max(1, rad), 0, 2 * Math.PI, false)
       ctx.fill()
       return
     }
@@ -677,16 +687,18 @@ function galaxiesFactory () {
     ctx.arc(pr.sx, pr.sy, coreR, 0, 2 * Math.PI, false)
     ctx.fill()
 
-    if (p.rings === 0) return
+    // level of detail: only prominent (near/large) stars get orbital systems,
+    // which keeps the bulk of the per-frame draw calls off tiny far stars
+    if (p.rings === 0 || coreR < RING_MIN_R) return
 
     // orbital-plane basis, rotated into the current view (unit vectors -> their
     // screen components foreshorten as the plane tilts toward edge-on)
     const u = rotateDir(p.ou[0], p.ou[1], p.ou[2], cosY, sinY, cosX, sinX)
     const v = rotateDir(p.ov[0], p.ov[1], p.ov[2], cosY, sinY, cosX, sinX)
-    const SEG = 28
 
     for (let k = 1; k <= p.rings; k++) {
       const ringR = coreR + (p.ringInset + p.ringGap * (k - 1)) * pr.scale
+      const SEG = ringR < 8 ? 12 : 24 // fewer segments for small rings
 
       // orbit as a tilted ellipse: centre + ringR*(cos t * u + sin t * v)
       ctx.beginPath()
@@ -757,6 +769,7 @@ function galaxiesFactory () {
   }
 
   function draw () {
+    const t0 = DEBUG ? performance.now() : 0
     frame++
     // ease the black hole toward its (possibly just-randomized) target (~0.25s)
     const E = 0.5
@@ -851,6 +864,11 @@ function galaxiesFactory () {
       if (projected[i].depth > holeDepth) drawStar(projected[i], cosY, sinY, cosX, sinX)
     }
     ctx.globalCompositeOperation = 'source-over'
+
+    if (DEBUG) {
+      drawMs += ((performance.now() - t0) - drawMs) * 0.1 // rolling average
+      window.galaxyStats = { drawMs: Math.round(drawMs * 100) / 100, stars: particles.length }
+    }
   }
 
   // live control panel, top-right
@@ -1131,34 +1149,41 @@ function hslToRgb (h, s, l) {
   return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)]
 }
 
-// interpolate an [pos,[r,g,b]] gradient at fraction f (0..1)
-function rampColor (stops, f) {
+// interpolate an [pos,[r,g,b]] gradient at fraction f (0..1) into `out` (optional)
+function rampColor (stops, f, out) {
+  out = out || [0, 0, 0]
   f = Math.max(0, Math.min(1, f))
   for (let i = 1; i < stops.length; i++) {
     if (f <= stops[i][0]) {
       const [p0, c0] = stops[i - 1]
       const [p1, c1] = stops[i]
       const t = (f - p0) / (p1 - p0 || 1)
-      return [
-        Math.round(c0[0] + (c1[0] - c0[0]) * t),
-        Math.round(c0[1] + (c1[1] - c0[1]) * t),
-        Math.round(c0[2] + (c1[2] - c0[2]) * t)
-      ]
+      out[0] = Math.round(c0[0] + (c1[0] - c0[0]) * t)
+      out[1] = Math.round(c0[1] + (c1[1] - c0[1]) * t)
+      out[2] = Math.round(c0[2] + (c1[2] - c0[2]) * t)
+      return out
     }
   }
-  return stops[stops.length - 1][1].slice()
+  const last = stops[stops.length - 1][1]
+  out[0] = last[0]; out[1] = last[1]; out[2] = last[2]
+  return out
 }
 
-// adjust colour saturation toward/away from its own grey (luminance preserved)
+// adjust colour saturation toward/away from its own grey (luminance preserved).
+// writes to a shared scratch buffer (callers read it immediately) to avoid
+// allocating an array per star/line every frame.
+const _tint = [0, 0, 0]
 function tint (cr, cg, cb) {
   const cv = params.colorVar
-  if (cv === 1) return [Math.round(cr), Math.round(cg), Math.round(cb)]
+  if (cv === 1) {
+    _tint[0] = Math.round(cr); _tint[1] = Math.round(cg); _tint[2] = Math.round(cb)
+    return _tint
+  }
   const grey = (cr + cg + cb) / 3
-  return [
-    clampByte(grey + (cr - grey) * cv),
-    clampByte(grey + (cg - grey) * cv),
-    clampByte(grey + (cb - grey) * cv)
-  ]
+  _tint[0] = clampByte(grey + (cr - grey) * cv)
+  _tint[1] = clampByte(grey + (cg - grey) * cv)
+  _tint[2] = clampByte(grey + (cb - grey) * cv)
+  return _tint
 }
 
 function now () {
