@@ -116,6 +116,7 @@ function galaxiesFactory () {
   let panXTarget = 0 // pan/zoom ease toward these targets each frame
   let panYTarget = 0
   let zoomTarget = params.zoom
+  let paused = false // 'x' toggles the ambient yaw/pitch spin
   let frame = 0 // advances each draw; drives the orbiting ring bodies
   // #debug in the URL exposes window.galaxyStats { drawMs, stars } for profiling
   const DEBUG = typeof location !== 'undefined' && location.hash.indexOf('debug') !== -1
@@ -331,6 +332,8 @@ function galaxiesFactory () {
         event.preventDefault() // don't scroll the page
       } else if (event.code === 'Home') {
         panXTarget = 0; panYTarget = 0; zoomTarget = 1
+      } else if (event.code === 'KeyX' && !isInteractive(event.target)) {
+        paused = !paused // pause/resume ambient rotation
       }
     })
     window.addEventListener('keyup', event => {
@@ -786,9 +789,11 @@ function galaxiesFactory () {
     panX += (panXTarget - panX) * 0.2
     panY += (panYTarget - panY) * 0.2
 
-    // ambient spin on both axes; drag adds via events
-    yaw += params.spin
-    pitch += params.spinPitch
+    // ambient spin on both axes (unless paused); drag adds via events
+    if (!paused) {
+      yaw += params.spin
+      pitch += params.spinPitch
+    }
     const cosY = Math.cos(yaw)
     const sinY = Math.sin(yaw)
     const cosX = Math.cos(pitch)
@@ -941,6 +946,7 @@ function galaxiesFactory () {
         'scroll — zoom',
         'space + drag / middle-drag — pan',
         'home — reset view',
+        'x — pause rotation',
         'r or ⟳ — randomize'
       ].join('<br>') + '</span>' +
       '<span class="help-touch">' + [
