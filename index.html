@@ -15,6 +15,27 @@ stylesheets:
     <div class="readout">
       <h1>Nate Goldman</h1>
       <p class="role">software engineer</p>
+
+      <nav class="manifest" aria-label="experiments">
+        <p class="manifest-label">experiments</p>
+        <ul>
+          <li>
+            <a href="/galaxies/">
+              <span class="caret" aria-hidden="true">&#9656;</span>
+              <span class="dest">galaxies</span>
+              <span class="desc">n-body black hole sim</span>
+            </a>
+          </li>
+          <li>
+            <a href="/particles/">
+              <span class="caret" aria-hidden="true">&#9656;</span>
+              <span class="dest">particles</span>
+              <span class="desc">linked particle field</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
       <ul class="links">
         {%- for link in links %}
         <li{% if link.hidden %} style="display:none"{% endif %}><a rel="me" title="{{ link.title }}" href="{{ link.url }}">{{ link.title }}</a></li>
