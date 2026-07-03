@@ -154,6 +154,46 @@ main { pointer-events: auto; }
   touch-action: none; /* we handle orbit/pinch/pan gestures ourselves */
 }
 
+/* back-to-index button on galaxies/particles, mirrors the control panel + .gc-btn */
+.home-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  pointer-events: auto; /* body sets pointer-events:none; opt this back in */
+  display: flex;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 10px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  color: #ddd;
+  text-decoration: none;
+  font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace;
+  opacity: 0.7;
+}
+.home-link .home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  line-height: 1;
+  font-size: 16px;
+}
+.home-link:hover .home-btn,
+.home-link:focus-visible .home-btn {
+  background: rgba(255, 255, 255, 0.12);
+}
+.home-link:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+@media screen and (max-width: 50em) {
+  .home-link { padding: 14px 16px; }
+  .home-link .home-btn { width: 44px; height: 44px; font-size: 22px; }
+}
+
 /* identity as a luminous telemetry readout over the galaxy */
 .telemetry {
   display: flex;
