@@ -1,0 +1,266 @@
+/* Static IBM Plex, self-hosted. Chrome's PDF writer embeds variable fonts as Type3 glyphs,
+   which ATS parsers read one word per line, and Google Fonts serves Chrome a variable Plex Sans. */
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("fonts/IBMPlexSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("fonts/IBMPlexSans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("fonts/IBMPlexSerif-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Serif";
+  src: url("fonts/IBMPlexSerif-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Plex has no star, and a system fallback embeds as Type3. Scoped to U+2605 only. */
+@font-face {
+  font-family: "Plex Star";
+  src: url("fonts/NotoSansSymbols2-Star.woff2") format("woff2");
+  unicode-range: U+2605;
+  font-display: block;
+}
+
+:root {
+  --paper: #fefefe;
+  --ink: #1b1b1a;
+  --muted: #6f6d67;
+  --rule: #e2e0d9;
+  --spine: #1f5c3d;
+  --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", "Plex Star", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  font-size: 15px;
+  background: #f3f2ee;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.5;
+  font-feature-settings: "tnum" 0;
+}
+
+.sheet {
+  max-width: 8.5in;
+  margin: 4vh auto;
+  padding: 0.5in 0.7in 0.65in;
+  background: var(--paper);
+  box-shadow: 0 1px 24px #0000001a;
+}
+
+/* ---- header ---- */
+
+header {
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0 0 0.5rem;
+}
+
+.contact {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.contact a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--spine);
+}
+.contact span[aria-hidden] {
+  margin: 0 0.5em;
+  color: var(--rule);
+}
+
+.summary {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  max-width: 62ch;
+}
+
+/* ---- timeline grid ---- */
+
+.track {
+  display: grid;
+  grid-template-columns: 5.9rem 1px 1fr;
+  column-gap: 0;
+  border-top: 2px solid var(--ink);
+  padding-top: 0.9rem;
+  margin-top: 1rem;
+}
+/* positioned boxes paint after static ones, so a static rail would put every
+   employer ahead of every role in the PDF's text order, which ATS parsers read */
+.track > * { position: relative; }
+
+.rail {
+  grid-column: 1;
+  text-align: right;
+  padding: 0 0.85rem 0 0;
+}
+.rail .org {
+  font-weight: 600;
+  font-size: 0.82rem;
+  display: block;
+}
+.rail .when {
+  font-size: 0.72rem;
+  color: var(--muted);
+  display: block;
+  margin-top: 0.1rem;
+}
+
+.spine {
+  grid-column: 2;
+  background: var(--rule);
+  position: relative;
+}
+
+.entry {
+  grid-column: 3;
+  padding: 0 0 0.85rem 1rem;
+  position: relative;
+}
+.entry::before {
+  content: "";
+  position: absolute;
+  left: -4.5px;
+  top: 0.34rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--spine);
+}
+.role {
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin: 0;
+}
+.role .track-note {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.context {
+  margin: 0.15rem 0 0.35rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+ul {
+  margin: 0.3rem 0 0;
+  padding-left: 1.05rem;
+  font-size: 0.86rem;
+}
+li { margin-bottom: 0.2rem; }
+li::marker { color: var(--muted); }
+
+/* section divider rows inside the same grid */
+.section-label {
+  grid-column: 1;
+  text-align: right;
+  padding: 0.75rem 0.9rem 0 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 0.82rem;
+}
+
+.track-divider {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--rule);
+  margin: 0.7rem 0 0.1rem;
+}
+
+.block {
+  grid-column: 3;
+  padding: 0.7rem 0 0 1rem;
+  position: relative;
+  font-size: 0.86rem;
+}
+.block dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0.6rem;
+  row-gap: 0.28rem;
+}
+.block dt { font-weight: 600; }
+.block dd { margin: 0; }
+
+.edu-item { margin-bottom: 0.3rem; }
+.edu-item b { font-weight: 600; }
+.edu-item span { color: var(--muted); }
+
+/* ---- print ---- */
+
+@page {
+  size: letter;
+  margin: 0.5in 0.7in 0.65in;
+}
+
+@media print {
+  html { background: #fff; font-size: 10.2pt; }
+  body { line-height: 1.4; }
+  .sheet {
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    box-shadow: none;
+  }
+  a { color: var(--ink); }
+  .entry, .block, .edu-item { break-inside: avoid; }
+  h1 { font-size: 26pt; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+@media (max-width: 40rem) {
+  .sheet { padding: 1.4rem 1.1rem; }
+  h1 { font-size: 2rem; }
+  .track { grid-template-columns: 1fr; }
+  .rail, .section-label {
+    text-align: left;
+    padding: 0.9rem 0 0.2rem;
+  }
+  .spine { display: none; }
+  .entry, .block { grid-column: 1; padding-left: 0; }
+  .entry::before, .block.node::before { display: none; }
+}
