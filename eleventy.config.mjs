@@ -6,6 +6,8 @@ export default function (eleventyConfig) {
     'particles/particles-card.png',
     'galaxies/galaxies.js',
     'galaxies/galaxies-card.png',
+    'router.js',
+    'router',
     'favicon.svg',
     'CNAME',
     'cat.jpg',
@@ -21,6 +23,7 @@ export default function (eleventyConfig) {
   eleventyConfig.ignores.add('404.html')
   eleventyConfig.ignores.add('resume/**')
   eleventyConfig.ignores.add('README.md')
+  eleventyConfig.ignores.add('AGENTS.md')
 
   return {
     dir: {

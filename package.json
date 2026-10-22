@@ -2,12 +2,20 @@
   "name": "ungoldman.github.io",
   "description": "Source for ungoldman.com",
   "devDependencies": {
-    "@11ty/eleventy": "^3.1.6"
+    "@11ty/eleventy": "^3.1.6",
+    "@biomejs/biome": "^2.6.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   },
   "private": true,
   "scripts": {
     "build": "eleventy",
-    "start": "eleventy --serve"
+    "coverage": "node --test --experimental-test-coverage --test-coverage-exclude='test/**' --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 test/*.test.js",
+    "format": "biome check --write .",
+    "lint": "biome check .",
+    "start": "eleventy --serve",
+    "test": "npm run lint && node --test test/*.test.js"
   },
   "type": "module"
 }
