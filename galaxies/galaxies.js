@@ -1,6 +1,8 @@
 // GALAXIES is a toy galaxy generator: stars orbit a black hole under softened n-body gravity.
 // drag to orbit, scroll to zoom, tune it from the settings card. sibling of particles.js.
 
+import { pageControls, winkControls } from '/router/controls.js'
+
 const MAGIC_NUMBER = 7000 // baseline star count = W*H / this, scaled by density
 // Firefox has heavier per-element canvas/GC cost: lower cap, stricter ring LOD
 const IS_FIREFOX = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent)
@@ -319,6 +321,8 @@ function galaxiesFactory () {
     const loop = setInterval(draw, 50)
 
     buildControls(on)
+    const controls = pageControls(document)
+    winkControls(controls, true)
 
     // don't hijack gestures over the control panel, the readout, or links
     function isInteractive (target) {
@@ -456,10 +460,11 @@ function galaxiesFactory () {
     on(window, 'touchend', endTouch)
     on(window, 'touchcancel', endTouch)
 
-    return () => {
+    return (event) => {
       teardown.abort()
       clearInterval(loop)
       document.body.style.cursor = ''
+      event?.waitUntil?.(winkControls(controls, false))
     }
   }
 

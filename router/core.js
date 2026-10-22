@@ -1,6 +1,10 @@
 // Event an app tears down on when the router swaps its page out.
 export const LEAVE = 'router:leave'
 
+// sessionStorage key for the transition playback rate, set by ?speed=
+export const SPEED = 'router:speed'
+export const speedIn = (storage) => Number(storage?.getItem(SPEED)) || 1
+
 // Locations that differ only by hash are the same page.
 export const samePage = (a, b) => a.pathname === b.pathname && a.search === b.search
 

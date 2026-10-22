@@ -32,6 +32,6 @@ Node 22.12+. Do not alter version. Push to `main` deploys https://ungoldman.com 
 
 - `mount()` can run again in the same document, and the function it returns removes every listener and stops every loop.
 - Owns its scene and controls. It may animate them in on mount, and out from its teardown, which gets the leave event. `event.waitUntil(promise)` keeps the outgoing page in place until the promise settles, for up to a second.
-- Looks up its elements by id at mount time. Incoming nodes precede outgoing ones, so ids resolve to the new page when both have them. Outgoing nodes are `inert`, so a lookup for an element the new page lacks should skip those.
+- Looks up its elements by id at mount time. Incoming nodes precede outgoing ones, so ids resolve to the new page when both have them. Outgoing nodes are `inert`, so a lookup for an element the new page lacks skips those (`router/controls.js` does).
 
 The router animates only the shared chrome. Fold plays between the index readout (`.telemetry`) and an experiment `header` holding `#home`, `h1`, and `.rule`. Other pairs swap without a transition.

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { backward, mirror, reverse, samePage, shouldIntercept } from '../router/core.js'
+import { backward, mirror, reverse, samePage, shouldIntercept, speedIn } from '../router/core.js'
 
 const here = new URL('https://ungoldman.com/')
 const click = { button: 0 }
@@ -85,4 +85,11 @@ test('reverses a whole step, mirroring per-keyframe easing', () => {
     keyframes: [{ opacity: 0, easing: 'cubic-bezier(0.8, 0, 0.8, 0.3)' }, { opacity: 1 }],
     timing: { delay: 200, duration: 100, easing: 'linear', direction: 'reverse' }
   })
+})
+
+test('reads the transition speed, defaulting to normal', () => {
+  assert.equal(speedIn({ getItem: () => '0.2' }), 0.2)
+  assert.equal(speedIn({ getItem: () => null }), 1)
+  assert.equal(speedIn({ getItem: () => 'fast' }), 1)
+  assert.equal(speedIn(undefined), 1)
 })

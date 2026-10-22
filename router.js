@@ -1,4 +1,4 @@
-import { LEAVE, routable, samePage, shouldIntercept } from './router/core.js'
+import { LEAVE, routable, SPEED, samePage, shouldIntercept, speedIn } from './router/core.js'
 import { fold } from './router/fold.js'
 
 // Swaps same-origin pages in place, with Fold between the index and an
@@ -14,10 +14,9 @@ let busy = false
 let shown = location.href
 
 // ?speed=0.2 plays transitions at a fifth of normal speed for this tab, ?speed=1 resets
-const SPEED = 'router:speed'
 const speedParam = new URLSearchParams(location.search).get('speed')
 if (speedParam) sessionStorage.setItem(SPEED, speedParam)
-const speed = Number(sessionStorage.getItem(SPEED)) || 1
+const speed = speedIn(sessionStorage)
 
 const linkOf = (event) => {
   const a = event.target.closest?.('a[href]')

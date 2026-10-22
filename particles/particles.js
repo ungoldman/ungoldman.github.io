@@ -12,6 +12,8 @@
 // a long time ago. despite a lot of weirdness, it's still interesting to read.
 // - nate from 2022
 
+import { pageControls, winkControls } from '/router/controls.js'
+
 const MAGIC_NUMBER = 18000
 const CANCEL_EVENTS = ['pointerup', 'pointerout', 'pointerleave', 'pointercancel']
 
@@ -105,10 +107,13 @@ function particleGeneratorFactory () {
     })
 
     buildControls(on)
+    const controls = pageControls(document)
+    winkControls(controls, true)
 
-    return () => {
+    return (event) => {
       teardown.abort()
       clearInterval(loop)
+      event?.waitUntil?.(winkControls(controls, false))
     }
   }
 
