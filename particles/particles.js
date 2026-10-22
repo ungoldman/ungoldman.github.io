@@ -178,114 +178,51 @@ function particleGeneratorFactory () {
     }
   }
 
+  // fills the page's #settings card and wires its header buttons
   function buildControls () {
-    if (document.getElementById('particles-controls')) return
-    const panel = document.createElement('div')
-    panel.id = 'particles-controls'
-    panel.style.cssText = [
-      'position:fixed', 'top:8px', 'right:8px', 'z-index:10',
-      'background:rgba(0,0,0,0.55)', 'color:#ddd', 'pointer-events:auto',
-      'font:12px/1.4 ui-monospace,Menlo,Consolas,monospace', 'padding:10px 12px',
-      'border-radius:8px', 'backdrop-filter:blur(4px)',
-      'user-select:none', 'display:flex', 'flex-direction:column', 'gap:6px',
-      'max-height:calc(100vh - 16px)'
-    ].join(';')
+    const panel = document.getElementById('settings')
+    if (!panel || panel.childElementCount) return
+    const toggle = document.getElementById('toggle')
 
-    const header = document.createElement('div')
-    header.className = 'pc-header'
-    header.style.cssText = 'display:flex;justify-content:flex-end;align-items:center;cursor:pointer;opacity:0.7;flex:0 0 auto'
-    const right = document.createElement('span')
-    right.style.cssText = 'display:flex;align-items:center;gap:4px'
-    const rnd = document.createElement('span')
-    rnd.textContent = '⟳'
-    rnd.title = 'randomize'
-    rnd.className = 'pc-btn'
-    const help = document.createElement('span')
-    help.textContent = '?'
-    help.className = 'pc-btn'
-    const toggle = document.createElement('span')
-    toggle.textContent = '+'
-    toggle.className = 'pc-btn'
-    right.appendChild(rnd)
-    right.appendChild(help)
-    right.appendChild(toggle)
-    header.appendChild(right)
-    panel.appendChild(header)
+    function button (text, onClick) {
+      const el = document.createElement('button')
+      el.textContent = text
+      el.addEventListener('click', onClick)
+      panel.appendChild(el)
+    }
+    function row (text, control) {
+      const label = document.createElement('label')
+      const name = document.createElement('span')
+      name.textContent = text
+      label.append(name, control)
+      panel.appendChild(label)
+      return label
+    }
+    function checkbox (text, checked, onChange) {
+      const box = document.createElement('input')
+      box.type = 'checkbox'
+      box.checked = checked
+      box.addEventListener('change', () => onChange(box.checked))
+      row(text, box)
+      return box
+    }
 
-    const helpBox = document.createElement('div')
-    helpBox.style.cssText = 'display:none;font-size:0.85em;opacity:0.8;line-height:1.7;flex:0 0 auto'
-    helpBox.innerHTML =
-      '<span class="help-desktop">' + [
-        'click / drag — add particles',
-        'r or ⟳ — randomize',
-        'x — pause',
-        '` — toggle panel'
-      ].join('<br>') + '</span>' +
-      '<span class="help-touch">' + [
-        'tap / drag — add particles',
-        '⟳ — randomize'
-      ].join('<br>') + '</span>'
-    panel.appendChild(helpBox)
-    rnd.addEventListener('click', event => { event.stopPropagation(); randomizeAll() })
-    help.addEventListener('click', event => {
-      event.stopPropagation()
-      helpBox.style.display = helpBox.style.display === 'none' ? 'block' : 'none'
-    })
-
-    const body = document.createElement('div')
-    body.className = 'pc-body'
-    body.style.cssText = 'overflow-y:auto;overflow-x:hidden;flex:1 1 auto;display:none;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.25) transparent'
-    panel.appendChild(body)
-
-    const sbStyle = document.createElement('style')
-    sbStyle.textContent =
-      '#particles-controls ::-webkit-scrollbar{width:8px}' +
-      '#particles-controls ::-webkit-scrollbar-track{background:transparent}' +
-      '#particles-controls ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.25);border-radius:4px}' +
-      '#particles-controls ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.4)}' +
-      '#particles-controls{touch-action:pan-y}' +
-      '#particles-controls .pc-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;cursor:pointer;line-height:1;font-size:16px}' +
-      '#particles-controls .pc-btn:hover{background:rgba(255,255,255,0.12)}' +
-      '#particles-controls .pc-body{width:190px}' +
-      '#particles-controls input[type=checkbox]{width:16px;height:16px;accent-color:#bbb;cursor:pointer}' +
-      '#particles-controls label{display:block;margin:8px 0}' +
-      '#particles-controls input[type=range]{-webkit-appearance:none;appearance:none;width:100%;background:transparent;margin:4px 0}' +
-      '#particles-controls input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:rgba(255,255,255,0.25)}' +
-      '#particles-controls input[type=range]::-moz-range-track{height:3px;border-radius:2px;background:rgba(255,255,255,0.25)}' +
-      '#particles-controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;margin-top:-6px;border-radius:50%;background:#e6e6e6;cursor:pointer}' +
-      '#particles-controls input[type=range]::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:#e6e6e6;cursor:pointer}' +
-      '.help-touch{display:none}' +
-      '@media (max-width:50em){' +
-        '#particles-controls{top:auto!important;bottom:8px!important;right:8px!important;max-height:60vh!important;font-size:15px!important;padding:14px 16px!important}' +
-        '.help-desktop{display:none}.help-touch{display:block}' +
-        '#particles-controls .pc-body{width:calc(100vw - 48px)}' +
-        '.pc-header{font-size:20px!important}' +
-        '#particles-controls .pc-btn{width:44px;height:44px;font-size:22px}' +
-        '#particles-controls label{margin:16px 0}' +
-        '#particles-controls input[type=checkbox]{width:22px;height:22px}' +
-        '#particles-controls button{padding:15px;font-size:16px}' +
-        '#particles-controls input[type=range]{margin:12px 0}' +
-        '#particles-controls input[type=range]::-webkit-slider-runnable-track{height:6px}' +
-        '#particles-controls input[type=range]::-moz-range-track{height:6px}' +
-        '#particles-controls input[type=range]::-webkit-slider-thumb{width:30px;height:30px;margin-top:-12px}' +
-        '#particles-controls input[type=range]::-moz-range-thumb{width:30px;height:30px}' +
-      '}'
-    document.head.appendChild(sbStyle)
+    button('randomize (r)', randomizeAll)
+    const pauseBox = checkbox('Pause (x)', paused, v => { paused = v })
+    checkbox('Fade links', !!options.fade, v => { options.fade = v })
 
     const refs = []
     for (const c of CONTROLS) {
-      const row = document.createElement('label')
-      row.style.cssText = 'display:block'
+      const label = document.createElement('label')
+      label.className = 'slider'
       const top = document.createElement('div')
-      top.style.cssText = 'display:flex;justify-content:space-between'
       const name = document.createElement('span')
       name.textContent = c.label
       const val = document.createElement('span')
-      val.style.opacity = '0.7'
+      val.className = 'value'
       const fmt = () => { val.textContent = (+options[c.key]).toFixed(c.step < 1 ? 1 : 0) }
       fmt()
-      top.appendChild(name)
-      top.appendChild(val)
+      top.append(name, val)
 
       const input = document.createElement('input')
       input.type = 'range'
@@ -296,35 +233,10 @@ function particleGeneratorFactory () {
       input.addEventListener('input', () => { options[c.key] = parseFloat(input.value); fmt() })
       if (c.reseed) input.addEventListener('change', seedParticles)
 
-      row.appendChild(top)
-      row.appendChild(input)
-      body.appendChild(row)
+      label.append(top, input)
+      panel.appendChild(label)
       refs.push({ c, input, fmt })
     }
-
-    const fadeRow = document.createElement('label')
-    fadeRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer'
-    const fadeName = document.createElement('span')
-    fadeName.textContent = 'Fade links'
-    const fadeBox = document.createElement('input')
-    fadeBox.type = 'checkbox'
-    fadeBox.checked = !!options.fade
-    fadeBox.addEventListener('change', () => { options.fade = fadeBox.checked })
-    fadeRow.appendChild(fadeName)
-    fadeRow.appendChild(fadeBox)
-
-    const pauseRow = document.createElement('label')
-    pauseRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer'
-    const pauseName = document.createElement('span')
-    pauseName.textContent = 'Pause (x)'
-    const pauseBox = document.createElement('input')
-    pauseBox.type = 'checkbox'
-    pauseBox.checked = paused
-    pauseBox.addEventListener('change', () => { paused = pauseBox.checked })
-    pauseRow.appendChild(pauseName)
-    pauseRow.appendChild(pauseBox)
-
-    const btnStyle = 'width:100%;margin-top:8px;padding:4px;cursor:pointer;background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit'
 
     function randomizeAll () {
       for (const { c, input, fmt } of refs) {
@@ -336,16 +248,6 @@ function particleGeneratorFactory () {
       seedParticles()
     }
 
-    const randomize = document.createElement('button')
-    randomize.textContent = 'randomize (r)'
-    randomize.style.cssText = btnStyle
-    randomize.addEventListener('click', randomizeAll)
-
-    // actions on top, then toggles, then sliders
-    body.prepend(fadeRow)
-    body.prepend(pauseRow)
-    body.prepend(randomize)
-
     window.addEventListener('keydown', event => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
       if (event.code === 'KeyR') { randomizeAll(); event.preventDefault() }
@@ -353,11 +255,13 @@ function particleGeneratorFactory () {
       else if (event.code === 'Backquote') { togglePanel(); event.preventDefault() }
     })
 
+    // open/closed state (default collapsed), toggled by + or backtick
     let collapsed = true
     try { collapsed = localStorage.getItem('particlePanelOpen') !== '1' } catch (e) {}
     function applyCollapsed () {
-      body.style.display = collapsed ? 'none' : 'block'
+      panel.hidden = collapsed
       toggle.textContent = collapsed ? '+' : '−'
+      toggle.setAttribute('aria-expanded', String(!collapsed))
     }
     function togglePanel () {
       collapsed = !collapsed
@@ -365,9 +269,8 @@ function particleGeneratorFactory () {
       try { localStorage.setItem('particlePanelOpen', collapsed ? '0' : '1') } catch (e) {}
     }
     applyCollapsed()
-    header.addEventListener('click', togglePanel)
-
-    document.body.appendChild(panel)
+    toggle.addEventListener('click', togglePanel)
+    document.getElementById('randomize').addEventListener('click', randomizeAll)
   }
 
   return renderParticles

@@ -33,7 +33,27 @@
   </style>
 </head>
 <body>
-  <a class="home-link" href="/" title="index" aria-label="back to index"><span class="home-btn">&#8617;</span></a>
+  <header class="canvas-head">
+    <a id="home" href="/" title="index" aria-label="back to index">&#8617;</a>
+    <h1>Particles</h1>
+    <span class="rule"></span>
+    <nav id="controls" aria-label="Controls">
+      <button id="randomize" title="Randomize (R)" aria-label="Randomize">&#10227;</button>
+      <button popovertarget="help" title="Help" aria-label="Help">?</button>
+      <button id="toggle" title="Settings (`)" aria-label="Settings" aria-expanded="false" aria-controls="settings">+</button>
+    </nav>
+  </header>
+  <div id="settings" hidden></div>
+  <div id="help" popover>
+    <h2>Particles <button class="small" popovertarget="help" popovertargetaction="hide">Close</button></h2>
+    <h3>Controls</h3>
+    <table>
+      <tr><th scope="row">click, tap, or drag</th><td>add particles</td></tr>
+      <tr><th scope="row"><kbd>R</kbd></th><td>randomize</td></tr>
+      <tr><th scope="row"><kbd>X</kbd></th><td>pause</td></tr>
+      <tr><th scope="row"><kbd>`</kbd></th><td>settings</td></tr>
+    </table>
+  </div>
   <canvas id="canvas"></canvas>
 
   <script src="/particles/particles.js"></script>

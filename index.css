@@ -154,44 +154,177 @@ main { pointer-events: auto; }
   touch-action: none; /* we handle orbit/pinch/pan gestures ourselves */
 }
 
-/* back-to-index button on galaxies/particles, mirrors the control panel + .gc-btn */
-.home-link {
+/* galaxies and particles: header, settings card, and help popover in the
+   look of /shapes/ and /vowels/. Body passes pointers through to the canvas,
+   so only the controls opt back in. */
+.canvas-head {
   position: fixed;
-  top: 8px;
-  left: 8px;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
-  pointer-events: auto; /* body sets pointer-events:none; opt this back in */
   display: flex;
-  background: rgba(0, 0, 0, 0.55);
-  padding: 10px 12px;
-  border-radius: 8px;
-  backdrop-filter: blur(4px);
-  color: #ddd;
-  text-decoration: none;
-  font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace;
-  opacity: 0.7;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: #e9eaee;
+  font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
 }
-.home-link .home-btn {
+.canvas-head a,
+.canvas-head button,
+#settings,
+#help { pointer-events: auto; }
+.canvas-head .rule,
+#help h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  align-self: center;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.28), transparent);
+}
+#home { display: inline-flex; align-items: center; color: #9aa0ab; text-decoration: none; }
+#home:hover, #home:focus-visible { color: #e9eaee; }
+.canvas-head h1 { margin: 0; font-size: 1.2rem; font-weight: 600; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+#controls { display: flex; gap: 6px; }
+.canvas-head button,
+#settings button,
+#help button {
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: 1.4;
+  color: #e9eaee;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s, text-shadow 0.2s;
+}
+#controls button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 15px;
   line-height: 1;
-  font-size: 16px;
 }
-.home-link:hover .home-btn,
-.home-link:focus-visible .home-btn {
-  background: rgba(255, 255, 255, 0.12);
+#help button.small { font-size: 10px; padding: 1px 8px; }
+#controls button[aria-expanded="true"] { background: rgba(255, 255, 255, 0.18); }
+.canvas-head button:hover,
+.canvas-head button:focus-visible,
+#settings button:hover,
+#settings button:focus-visible,
+#help button:hover,
+#help button:focus-visible { background: rgba(255, 255, 255, 0.12); text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
+.canvas-head :focus-visible,
+#settings :focus-visible,
+#help :focus-visible { outline: 1px solid rgba(255, 255, 255, 0.5); outline-offset: 2px; }
+
+#settings {
+  position: fixed;
+  top: 56px;
+  right: 16px;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 224px;
+  max-height: calc(100dvh - 72px);
+  padding: 4px 16px 12px;
+  overflow: hidden auto;
+  color: #e9eaee;
+  background: #0b0b0d;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
-.home-link:focus-visible {
-  outline: 1px solid rgba(255, 255, 255, 0.5);
-  outline-offset: 2px;
+#settings label { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 8px 0; cursor: pointer; }
+#settings label.slider { display: block; cursor: auto; }
+#settings label.slider > div { display: flex; justify-content: space-between; }
+#settings .value { color: #9aa0ab; font-variant-numeric: tabular-nums; }
+#settings > button { display: block; width: 100%; margin-top: 8px; }
+#settings select {
+  height: 26px;
+  padding: 0 6px;
+  font: inherit;
+  color: #e9eaee;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  cursor: pointer;
 }
-@media screen and (max-width: 50em) {
-  .home-link { padding: 14px 16px; }
-  .home-link .home-btn { width: 44px; height: 44px; font-size: 22px; }
+#settings input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: #bbb; cursor: pointer; }
+/* thin track and round thumb, draggable by touch */
+#settings input[type=range] { -webkit-appearance: none; appearance: none; display: block; width: 100%; margin: 4px 0; background: transparent; }
+#settings input[type=range]::-webkit-slider-runnable-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.25); }
+#settings input[type=range]::-moz-range-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.25); }
+#settings input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 15px; height: 15px; margin-top: -6px; border-radius: 50%; background: #e6e6e6; cursor: pointer; }
+#settings input[type=range]::-moz-range-thumb { width: 15px; height: 15px; border: 0; border-radius: 50%; background: #e6e6e6; cursor: pointer; }
+
+#help {
+  box-sizing: border-box;
+  width: min(480px, calc(100vw - 32px));
+  max-height: 82dvh;
+  padding: 16px 20px;
+  overflow-y: auto;
+  color: #e9eaee;
+  background: #0b0b0d;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+}
+#help::backdrop { background: rgba(0, 0, 0, 0.6); }
+#help h2 { display: flex; gap: 10px; align-items: center; margin: 0 0 10px; font-size: 1rem; font-weight: 600; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; }
+#help h2 button { order: 1; }
+#help h3 { margin: 14px 0 6px; font-size: 10px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: #9aa0ab; }
+#help table { display: table; width: auto; margin: 0; border-collapse: collapse; color: #9aa0ab; }
+#help tr { background: none; border: 0; }
+#help th, #help td { padding: 2px 0; border: 0; font-weight: 400; text-align: left; }
+#help th { padding-right: 2ch; }
+#help kbd { display: inline; margin: 0; padding: 0 5px; font: 11px ui-monospace, Menlo, Consolas, monospace; line-height: inherit; color: #e9eaee; white-space: nowrap; background: none; border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 3px; box-shadow: none; }
+
+/* phone: buttons dock at the bottom in thumb reach, settings open above them */
+@media (max-width: 600px) {
+  .canvas-head h1 { font-size: 1rem; }
+  #controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  #settings {
+    top: auto;
+    left: 16px;
+    right: 16px;
+    bottom: calc(68px + env(safe-area-inset-bottom));
+    width: auto;
+    max-height: 60dvh;
+  }
+}
+/* fingers need bigger targets than a cursor does */
+@media (pointer: coarse) {
+  #controls button { width: 44px; height: 44px; font-size: 18px; }
+  #help button.small { min-height: 30px; }
+  #settings { font-size: 15px; }
+  #settings label { margin: 16px 0; }
+  #settings select { height: 40px; font-size: 16px; }
+  #settings > button { padding: 12px; }
+  #settings input[type=checkbox] { width: 22px; height: 22px; }
+  #settings input[type=range] { margin: 12px 0; }
+  #settings input[type=range]::-webkit-slider-runnable-track { height: 6px; }
+  #settings input[type=range]::-moz-range-track { height: 6px; }
+  #settings input[type=range]::-webkit-slider-thumb { width: 30px; height: 30px; margin-top: -12px; }
+  #settings input[type=range]::-moz-range-thumb { width: 30px; height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .canvas-head button, #settings button, #help button { transition: none; }
 }
 
 /* identity as a luminous telemetry readout over the galaxy */

@@ -1,5 +1,5 @@
 // GALAXIES is a toy galaxy generator: stars orbit a black hole under softened n-body gravity.
-// drag to orbit, scroll to zoom, poke at the panel top-right. sibling of particles.js.
+// drag to orbit, scroll to zoom, tune it from the settings card. sibling of particles.js.
 
 const MAGIC_NUMBER = 7000 // baseline star count = W*H / this, scaled by density
 // Firefox has heavier per-element canvas/GC cost: lower cap, stricter ring LOD
@@ -322,7 +322,7 @@ function galaxiesFactory () {
 
     // don't hijack gestures over the control panel, the readout, or links
     function isInteractive (target) {
-      return target && target.closest && target.closest('#galaxy-controls, .telemetry, a, button, input, select, textarea, label')
+      return target && target.closest && target.closest('#settings, #help, .telemetry, a, button, input, select, textarea, label')
     }
 
     function setZoom (factor) {
@@ -956,7 +956,7 @@ function galaxiesFactory () {
     }
   }
 
-  // live control panel, top-right
+  // live settings
   const CONTROLS = [
     { key: 'tilt', label: 'Tilt', min: 0, max: Math.PI / 2, step: 0.01 },
     { key: 'spin', label: 'Spin yaw', min: -0.01, max: 0.01, step: 0.0002 },
@@ -979,171 +979,63 @@ function galaxiesFactory () {
     { key: 'holeGlow', label: 'Hole glow', min: 0.25, max: 3, step: 0.05 }
   ]
 
+  // fills the page's #settings card and wires its header buttons
   function buildControls () {
-    if (document.getElementById('galaxy-controls')) return
-    const panel = document.createElement('div')
-    panel.id = 'galaxy-controls'
-    panel.style.cssText = [
-      'position:fixed', 'top:8px', 'right:8px', 'z-index:10',
-      'background:rgba(0,0,0,0.55)', 'color:#ddd', 'pointer-events:auto',
-      'font:12px/1.4 ui-monospace,Menlo,Consolas,monospace', 'padding:10px 12px',
-      'border-radius:8px', 'backdrop-filter:blur(4px)',
-      'user-select:none', 'display:flex', 'flex-direction:column', 'gap:6px',
-      'max-height:calc(100vh - 16px)'
-    ].join(';') // no fixed width: shrinks to the buttons, grows to body when open
+    const panel = document.getElementById('settings')
+    if (!panel || panel.childElementCount) return
+    const toggle = document.getElementById('toggle')
 
-    const header = document.createElement('div')
-    header.className = 'gc-header'
-    header.style.cssText = 'display:flex;justify-content:flex-end;align-items:center;cursor:pointer;opacity:0.7;flex:0 0 auto'
-    const right = document.createElement('span')
-    right.style.cssText = 'display:flex;align-items:center;gap:4px'
-    const rnd = document.createElement('span')
-    rnd.textContent = '⟳'
-    rnd.title = 'randomize'
-    rnd.className = 'gc-btn'
-    const help = document.createElement('span')
-    help.textContent = '?'
-    help.className = 'gc-btn'
-    const toggle = document.createElement('span')
-    toggle.textContent = '+'
-    toggle.className = 'gc-btn'
-    right.appendChild(rnd)
-    right.appendChild(help)
-    right.appendChild(toggle)
-    header.appendChild(right)
-    panel.appendChild(header)
-
-    // help: controls, swapped per device (desktop pointer vs touch)
-    const helpBox = document.createElement('div')
-    helpBox.style.cssText = 'display:none;font-size:0.85em;opacity:0.8;line-height:1.7;flex:0 0 auto'
-    helpBox.innerHTML =
-      '<span class="help-desktop">' + [
-        'drag / wasd — orbit',
-        'scroll / q e — zoom',
-        'space/middle-drag, ijkl — pan',
-        'home — reset view',
-        'x — pause rotation',
-        'c — lock view on randomize', // help text can be explicit (no width limit)
-        'r or ⟳ — randomize',
-        'z — respawn galaxy',
-        '` — toggle panel'
-      ].join('<br>') + '</span>' +
-      '<span class="help-touch">' + [
-        'drag — orbit',
-        'pinch — zoom',
-        'two-finger drag — pan',
-        '⟳ — randomize'
-      ].join('<br>') + '</span>'
-    panel.appendChild(helpBox)
-    rnd.addEventListener('click', event => { event.stopPropagation(); randomizeAll() })
-    help.addEventListener('click', event => {
-      event.stopPropagation() // don't collapse the panel
-      helpBox.style.display = helpBox.style.display === 'none' ? 'block' : 'none'
-    })
-
-    const body = document.createElement('div')
-    body.className = 'gc-body'
-    body.style.cssText = 'overflow-y:auto;overflow-x:hidden;flex:1 1 auto;display:none;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.25) transparent'
-    panel.appendChild(body)
-
-    // dark scrollbar to match the panel (WebKit; Firefox uses the props above)
-    const sbStyle = document.createElement('style')
-    sbStyle.textContent =
-      '#galaxy-controls ::-webkit-scrollbar{width:8px}' +
-      '#galaxy-controls ::-webkit-scrollbar-track{background:transparent}' +
-      '#galaxy-controls ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.25);border-radius:4px}' +
-      '#galaxy-controls ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.4)}' +
-      '#galaxy-controls{touch-action:pan-y}' + // let the panel scroll on touch
-      // header buttons: a real box so the tap target isn't just the glyph
-      '#galaxy-controls .gc-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;cursor:pointer;line-height:1;font-size:16px}' +
-      '#galaxy-controls .gc-btn:hover{background:rgba(255,255,255,0.12)}' +
-      '#galaxy-controls .gc-body{width:190px}' + // sets the open panel width
-      '#galaxy-controls input[type=checkbox]{width:16px;height:16px;accent-color:#bbb;cursor:pointer}' +
-      '#galaxy-controls label{display:block;margin:8px 0}' +
-      '#galaxy-controls select{background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit;padding:2px 4px}' +
-      // custom range slider (thin track, round thumb) so it's draggable by touch
-      '#galaxy-controls input[type=range]{-webkit-appearance:none;appearance:none;width:100%;background:transparent;margin:4px 0}' +
-      '#galaxy-controls input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:rgba(255,255,255,0.25)}' +
-      '#galaxy-controls input[type=range]::-moz-range-track{height:3px;border-radius:2px;background:rgba(255,255,255,0.25)}' +
-      '#galaxy-controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;margin-top:-6px;border-radius:50%;background:#e6e6e6;cursor:pointer}' +
-      '#galaxy-controls input[type=range]::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:#e6e6e6;cursor:pointer}' +
-      '.help-touch{display:none}' + // desktop help by default
-      // on mobile: pin to the bottom, show touch help, enlarge everything
-      '@media (max-width:50em){' +
-        '#galaxy-controls{top:auto!important;bottom:8px!important;right:8px!important;max-height:60vh!important;font-size:15px!important;padding:14px 16px!important}' +
-        '.help-desktop{display:none}.help-touch{display:block}' +
-        // expanded panel fills the width (collapsed still hugs the buttons)
-        '#galaxy-controls .gc-body{width:calc(100vw - 48px)}' +
-        '.gc-header{font-size:20px!important}' +
-        '#galaxy-controls .gc-btn{width:44px;height:44px;font-size:22px}' +
-        '#galaxy-controls label{margin:16px 0}' +
-        '#galaxy-controls select{font-size:16px;padding:8px 10px}' +
-        '#galaxy-controls input[type=checkbox]{width:22px;height:22px}' +
-        '#galaxy-controls button{padding:15px;font-size:16px}' +
-        '#galaxy-controls input[type=range]{margin:12px 0}' +
-        '#galaxy-controls input[type=range]::-webkit-slider-runnable-track{height:6px}' +
-        '#galaxy-controls input[type=range]::-moz-range-track{height:6px}' +
-        '#galaxy-controls input[type=range]::-webkit-slider-thumb{width:30px;height:30px;margin-top:-12px}' +
-        '#galaxy-controls input[type=range]::-moz-range-thumb{width:30px;height:30px}' +
-      '}'
-    document.head.appendChild(sbStyle)
-
-    // galaxy type selector
-    const typeRow = document.createElement('label')
-    typeRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center'
-    const typeName = document.createElement('span')
-    typeName.textContent = 'Type'
-    const typeSelect = document.createElement('select')
-    typeSelect.style.cssText = 'background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit;padding:1px 2px'
-    for (const key of Object.keys(GALAXY_TYPES)) {
-      const opt = document.createElement('option')
-      opt.value = key
-      opt.textContent = key
-      typeSelect.appendChild(opt)
+    function button (text, onClick) {
+      const el = document.createElement('button')
+      el.textContent = text
+      el.addEventListener('click', onClick)
+      panel.appendChild(el)
     }
-    typeSelect.value = params.type
-    typeSelect.addEventListener('change', () => {
-      params.type = typeSelect.value
-      seedGalaxy()
-    })
-    typeRow.appendChild(typeName)
-    typeRow.appendChild(typeSelect)
-    body.appendChild(typeRow)
-
-    // gas palette selector
-    const palRow = document.createElement('label')
-    palRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center'
-    const palName = document.createElement('span')
-    palName.textContent = 'Palette'
-    const palSelect = document.createElement('select')
-    palSelect.style.cssText = 'background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit;padding:1px 2px'
-    for (const key of Object.keys(PALETTES)) {
-      const opt = document.createElement('option')
-      opt.value = key
-      opt.textContent = key
-      palSelect.appendChild(opt)
+    function row (text, control) {
+      const label = document.createElement('label')
+      const name = document.createElement('span')
+      name.textContent = text
+      label.append(name, control)
+      panel.appendChild(label)
+      return label
     }
-    palSelect.value = params.palette
-    palSelect.addEventListener('change', () => { params.palette = palSelect.value; refreshAccent() })
-    palRow.appendChild(palName)
-    palRow.appendChild(palSelect)
-    body.appendChild(palRow)
+    function checkbox (text, checked, onChange) {
+      const box = document.createElement('input')
+      box.type = 'checkbox'
+      box.checked = checked
+      box.addEventListener('change', () => onChange(box.checked))
+      row(text, box)
+      return box
+    }
+    function select (text, keys, value, onChange) {
+      const el = document.createElement('select')
+      for (const key of keys) el.add(new Option(key, key))
+      el.value = value
+      el.addEventListener('change', () => onChange(el.value))
+      row(text, el)
+      return el
+    }
+
+    button('respawn galaxy (z)', respawn)
+    const pauseBox = checkbox('Pause rotation (x)', paused, v => { paused = v })
+    const lockBox = checkbox('Lock view (c)', lockView, v => { lockView = v })
+    lockBox.parentNode.title = 'keeps pan/zoom when randomizing'
+    button('randomize (r)', randomizeAll)
+    const typeSelect = select('Type', Object.keys(GALAXY_TYPES), params.type, v => { params.type = v; seedGalaxy() })
+    const palSelect = select('Palette', Object.keys(PALETTES), params.palette, v => { params.palette = v; refreshAccent() })
 
     const refs = []
     for (const c of CONTROLS) {
-      const row = document.createElement('label')
-      row.style.cssText = 'display:block'
+      const label = document.createElement('label')
+      label.className = 'slider'
       const top = document.createElement('div')
-      top.style.cssText = 'display:flex;justify-content:space-between'
       const name = document.createElement('span')
       name.textContent = c.label
       const val = document.createElement('span')
-      val.className = 'rowval'
-      val.style.opacity = '0.7'
+      val.className = 'value'
       const fmt = () => { val.textContent = (+params[c.key]).toFixed(c.step < 0.01 ? 4 : 2) }
       fmt()
-      top.appendChild(name)
-      top.appendChild(val)
+      top.append(name, val)
 
       const input = document.createElement('input')
       input.type = 'range'
@@ -1151,7 +1043,6 @@ function galaxiesFactory () {
       input.max = c.max
       input.step = c.step
       input.value = params[c.key]
-      input.style.cssText = 'width:100%'
       input.addEventListener('input', () => {
         params[c.key] = parseFloat(input.value)
         fmt()
@@ -1160,38 +1051,10 @@ function galaxiesFactory () {
       })
       if (c.reseed) input.addEventListener('change', seedGalaxy)
 
-      row.appendChild(top)
-      row.appendChild(input)
-      body.appendChild(row)
+      label.append(top, input)
+      panel.appendChild(label)
       refs.push({ c, input, fmt })
     }
-
-    const pauseRow = document.createElement('label')
-    pauseRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer'
-    const pauseName = document.createElement('span')
-    pauseName.textContent = 'Pause rotation (x)'
-    const pauseBox = document.createElement('input')
-    pauseBox.type = 'checkbox'
-    pauseBox.checked = paused
-    pauseBox.addEventListener('change', () => { paused = pauseBox.checked })
-    pauseRow.appendChild(pauseName)
-    pauseRow.appendChild(pauseBox)
-    body.appendChild(pauseRow)
-
-    const lockRow = document.createElement('label')
-    lockRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;cursor:pointer'
-    lockRow.title = 'keeps pan/zoom when randomizing'
-    const lockName = document.createElement('span')
-    lockName.textContent = 'Lock view (c)'
-    const lockBox = document.createElement('input')
-    lockBox.type = 'checkbox'
-    lockBox.checked = lockView
-    lockBox.addEventListener('change', () => { lockView = lockBox.checked })
-    lockRow.appendChild(lockName)
-    lockRow.appendChild(lockBox)
-    body.appendChild(lockRow)
-
-    const btnStyle = 'width:100%;margin-top:8px;padding:4px;cursor:pointer;background:#222;color:#ddd;border:1px solid #444;border-radius:4px;font:inherit'
 
     function randomizeAll () {
       for (const { c, input, fmt } of refs) {
@@ -1217,14 +1080,10 @@ function galaxiesFactory () {
       seedGalaxy()
     }
 
-    const randomize = document.createElement('button')
-    randomize.textContent = 'randomize (r)'
-    randomize.style.cssText = btnStyle
-    randomize.addEventListener('click', randomizeAll)
-    body.appendChild(randomize)
+    function respawn () { refreshAccent(); computeGeometry(W, H); seedGalaxy() }
 
-    // r = randomize, v = toggle lock view (work even when a control has focus;
-    // modified combos like Cmd+R / Cmd+V are left to the browser)
+    // shortcuts work even when a control has focus. Modified combos like
+    // Cmd+R are left to the browser.
     window.addEventListener('keydown', event => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
       if (event.code === 'KeyR') {
@@ -1247,26 +1106,13 @@ function galaxiesFactory () {
       }
     })
 
-    function respawn () { refreshAccent(); computeGeometry(W, H); seedGalaxy() }
-
-    const reset = document.createElement('button')
-    reset.textContent = 'respawn galaxy (z)'
-    reset.style.cssText = btnStyle
-    reset.addEventListener('click', respawn)
-    body.appendChild(reset)
-
-    // pull the action controls to the top: respawn(z), pause(x), lock(c), then randomize
-    body.prepend(randomize)
-    body.prepend(lockRow)
-    body.prepend(pauseRow)
-    body.prepend(reset)
-
-    // open/closed state (default collapsed), toggled by the header or backtick
+    // open/closed state (default collapsed), toggled by + or backtick
     let collapsed = true
     try { collapsed = localStorage.getItem('galaxyPanelOpen') !== '1' } catch (e) {}
     function applyCollapsed () {
-      body.style.display = collapsed ? 'none' : 'block'
+      panel.hidden = collapsed
       toggle.textContent = collapsed ? '+' : '−'
+      toggle.setAttribute('aria-expanded', String(!collapsed))
     }
     function togglePanel () {
       collapsed = !collapsed
@@ -1274,9 +1120,8 @@ function galaxiesFactory () {
       try { localStorage.setItem('galaxyPanelOpen', collapsed ? '0' : '1') } catch (e) {}
     }
     applyCollapsed()
-    header.addEventListener('click', togglePanel)
-
-    document.body.appendChild(panel)
+    toggle.addEventListener('click', togglePanel)
+    document.getElementById('randomize').addEventListener('click', randomizeAll)
   }
 
   return renderGalaxy
