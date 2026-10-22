@@ -61,7 +61,7 @@ stylesheets:
 
 <canvas id="canvas"></canvas>
 
-<script src="/galaxies/galaxies.js"></script>
-<script>
-  galaxies()
+<script type="module">
+  import { mount } from '/galaxies/galaxies.js'
+  addEventListener('router:leave', mount(), { once: true })
 </script>

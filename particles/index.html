@@ -56,13 +56,9 @@
   </div>
   <canvas id="canvas"></canvas>
 
-  <script src="/particles/particles.js"></script>
-  <script>
-    particles({
-      a: 1,
-      distance: 96,
-      speed: 1
-    })
+  <script type="module">
+    import { mount } from './particles.js'
+    addEventListener('router:leave', mount({ a: 1, distance: 96, speed: 1 }), { once: true })
   </script>
 </body>
 </html>

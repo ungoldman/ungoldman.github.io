@@ -59,6 +59,9 @@ function particleGeneratorFactory () {
   }
 
   function renderParticles (opts) {
+    // every listener goes through on(), so the returned teardown removes them all
+    const teardown = new AbortController()
+    const on = (target, type, fn, opts) => target.addEventListener(type, fn, { ...opts, signal: teardown.signal })
     options = Object.assign({}, defaults, opts)
     setCanvasDimensions(canvas, ctx)
     W = canvas.width
@@ -74,10 +77,9 @@ function particleGeneratorFactory () {
       W = canvas.width
       H = canvas.height
     }
-    window.addEventListener('resize', throttle(handleResize, 500, { trailing: true }))
+    on(window, 'resize', throttle(handleResize, 500, { trailing: true }))
 
-    if (window.particleRenderLoop != null) clearInterval(window.particleRenderLoop)
-    window.particleRenderLoop = setInterval(draw, 50)
+    const loop = setInterval(draw, 50)
 
     function addParticle (event) {
       particles.unshift(new Particle(Object.assign({}, options, { x: event.clientX, y: event.clientY })))
@@ -85,24 +87,29 @@ function particleGeneratorFactory () {
     const addParticleThrottled = throttle(addParticle, 25)
 
     // prevent all touch events (still needed when using pointer*)
-    canvas.addEventListener('touchstart', event => event.preventDefault())
-    canvas.addEventListener('touchmove', event => event.preventDefault())
-    canvas.addEventListener('touchend', event => event.preventDefault())
-    canvas.addEventListener('touchcancel', event => event.preventDefault())
+    on(canvas, 'touchstart', event => event.preventDefault())
+    on(canvas, 'touchmove', event => event.preventDefault())
+    on(canvas, 'touchend', event => event.preventDefault())
+    on(canvas, 'touchcancel', event => event.preventDefault())
 
-    canvas.addEventListener('pointerdown', event => {
+    on(canvas, 'pointerdown', event => {
       event.preventDefault()
       addParticleThrottled(event)
-      canvas.addEventListener('pointermove', addParticleThrottled)
+      on(canvas, 'pointermove', addParticleThrottled)
     })
     CANCEL_EVENTS.forEach(ce => {
-      canvas.addEventListener(ce, event => {
+      on(canvas, ce, event => {
         event.preventDefault()
         canvas.removeEventListener('pointermove', addParticleThrottled)
       })
     })
 
-    buildControls()
+    buildControls(on)
+
+    return () => {
+      teardown.abort()
+      clearInterval(loop)
+    }
   }
 
   function Particle (opts) {
@@ -179,7 +186,7 @@ function particleGeneratorFactory () {
   }
 
   // fills the page's #settings card and wires its header buttons
-  function buildControls () {
+  function buildControls (on) {
     const panel = document.getElementById('settings')
     if (!panel || panel.childElementCount) return
     const toggle = document.getElementById('toggle')
@@ -248,7 +255,7 @@ function particleGeneratorFactory () {
       seedParticles()
     }
 
-    window.addEventListener('keydown', event => {
+    on(window, 'keydown', event => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
       if (event.code === 'KeyR') { randomizeAll(); event.preventDefault() }
       else if (event.code === 'KeyX') { paused = !paused; pauseBox.checked = paused; event.preventDefault() }
@@ -329,4 +336,6 @@ function throttle (func, wait, options) {
   return throttled
 }
 
-const particles = particleGeneratorFactory()
+export function mount (opts) {
+  return particleGeneratorFactory()(opts)
+}

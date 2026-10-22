@@ -277,6 +277,9 @@ function galaxiesFactory () {
   }
 
   function renderGalaxy (opts) {
+    // every listener goes through on(), so the returned teardown removes them all
+    const teardown = new AbortController()
+    const on = (target, type, fn, opts) => target.addEventListener(type, fn, { ...opts, signal: teardown.signal })
     options = Object.assign({}, defaults, opts)
     if (options.distance != null) params.distance = options.distance
     randomizeOnLoad()
@@ -311,14 +314,11 @@ function galaxiesFactory () {
       }
     }
     const onResize = throttle(handleResize, 500, { trailing: true })
-    window.addEventListener('resize', onResize)
+    on(window, 'resize', onResize)
 
-    if (window.galaxyRenderLoop != null) {
-      clearInterval(window.galaxyRenderLoop)
-    }
-    window.galaxyRenderLoop = setInterval(draw, 50)
+    const loop = setInterval(draw, 50)
 
-    buildControls()
+    buildControls(on)
 
     // don't hijack gestures over the control panel, the readout, or links
     function isInteractive (target) {
@@ -347,7 +347,7 @@ function galaxiesFactory () {
 
     // shortcuts work regardless of focus; preventDefault stops the focused
     // control's native reaction (page scroll, slider jump, button activation)
-    window.addEventListener('keydown', event => {
+    on(window, 'keydown', event => {
       if (event.metaKey || event.ctrlKey || event.altKey) return // leave system/browser shortcuts alone
       if (event.code === 'Space') {
         spaceHeld = true
@@ -361,23 +361,23 @@ function galaxiesFactory () {
         event.preventDefault()
       }
     })
-    window.addEventListener('keyup', event => {
+    on(window, 'keyup', event => {
       if (event.code === 'Space') { spaceHeld = false; updateCursor() }
       else heldKeys[event.code] = false
     })
     // don't leave keys/drag stuck if focus leaves the window mid-hold
-    window.addEventListener('blur', () => {
+    on(window, 'blur', () => {
       for (const k in heldKeys) heldKeys[k] = false
       spaceHeld = false; dragMode = null; updateCursor()
     })
 
-    window.addEventListener('wheel', event => {
+    on(window, 'wheel', event => {
       if (isInteractive(event.target)) return // let the panel scroll
       event.preventDefault()
       setZoom(event.deltaY < 0 ? 1.1 : 1 / 1.1)
     }, { passive: false })
 
-    window.addEventListener('mousedown', event => {
+    on(window, 'mousedown', event => {
       if (isInteractive(event.target)) return
       if (event.button === 1) {
         dragMode = 'pan' // middle-drag pans
@@ -391,7 +391,7 @@ function galaxiesFactory () {
       lastX = event.clientX
       lastY = event.clientY
     })
-    window.addEventListener('mousemove', event => {
+    on(window, 'mousemove', event => {
       if (dragMode === 'orbit') {
         yaw -= (event.clientX - lastX) * DRAG_SENS // drag pulls the galaxy along
         pitch += (event.clientY - lastY) * DRAG_SENS
@@ -403,7 +403,7 @@ function galaxiesFactory () {
       lastX = event.clientX
       lastY = event.clientY
     })
-    window.addEventListener('mouseup', () => { dragMode = null; updateCursor() })
+    on(window, 'mouseup', () => { dragMode = null; updateCursor() })
 
     // ---- touch: one finger orbits, two fingers pinch-zoom + pan ----
     const touches = new Map()
@@ -413,7 +413,7 @@ function galaxiesFactory () {
 
     function touchArray () { return [...touches.values()] }
 
-    window.addEventListener('touchstart', event => {
+    on(window, 'touchstart', event => {
       if (isInteractive(event.target)) return // let panel controls work
       event.preventDefault()
       for (const t of event.changedTouches) touches.set(t.identifier, { x: t.clientX, y: t.clientY })
@@ -427,7 +427,7 @@ function galaxiesFactory () {
       }
     }, { passive: false })
 
-    window.addEventListener('touchmove', event => {
+    on(window, 'touchmove', event => {
       if (!touches.size) return
       event.preventDefault()
       for (const t of event.changedTouches) {
@@ -453,8 +453,14 @@ function galaxiesFactory () {
       const pts = touchArray()
       if (pts.length === 1) { lastX = pts[0].x; lastY = pts[0].y } // 2 -> 1: keep orbiting
     }
-    window.addEventListener('touchend', endTouch)
-    window.addEventListener('touchcancel', endTouch)
+    on(window, 'touchend', endTouch)
+    on(window, 'touchcancel', endTouch)
+
+    return () => {
+      teardown.abort()
+      clearInterval(loop)
+      document.body.style.cursor = ''
+    }
   }
 
   function Particle (opts) {
@@ -980,7 +986,7 @@ function galaxiesFactory () {
   ]
 
   // fills the page's #settings card and wires its header buttons
-  function buildControls () {
+  function buildControls (on) {
     const panel = document.getElementById('settings')
     if (!panel || panel.childElementCount) return
     const toggle = document.getElementById('toggle')
@@ -1084,7 +1090,7 @@ function galaxiesFactory () {
 
     // shortcuts work even when a control has focus. Modified combos like
     // Cmd+R are left to the browser.
-    window.addEventListener('keydown', event => {
+    on(window, 'keydown', event => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
       if (event.code === 'KeyR') {
         randomizeAll()
@@ -1223,4 +1229,6 @@ function throttle (func, wait, options) {
   return throttled
 }
 
-const galaxies = galaxiesFactory()
+export function mount (opts) {
+  return galaxiesFactory()(opts)
+}
