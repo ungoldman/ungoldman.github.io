@@ -130,8 +130,8 @@ main h2 {
   }
 }
 
-/* home page */
-body {
+/* pages drawn on a full-screen #canvas: let drags fall through to it */
+body:has(> #canvas) {
   pointer-events: none;
   /* spawn-drags shouldn't accidentally select text; .telemetry opts back in */
   -webkit-user-select: none;
