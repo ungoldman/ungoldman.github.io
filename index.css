@@ -184,7 +184,7 @@ main { pointer-events: auto; }
 }
 #home { display: inline-flex; align-items: center; color: #9aa0ab; text-decoration: none; }
 #home:hover, #home:focus-visible { color: #e9eaee; }
-.canvas-head h1 { margin: 0; font-size: 1.2rem; font-weight: 600; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+.canvas-head h1 { margin: 0; font-size: 1.05rem; font-weight: 600; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
 #controls { display: flex; gap: 6px; }
 .canvas-head button,
 #settings button,
@@ -289,7 +289,6 @@ main { pointer-events: auto; }
 
 /* phone: buttons dock at the bottom in thumb reach, settings open above them */
 @media (max-width: 600px) {
-  .canvas-head h1 { font-size: 1rem; }
   #controls {
     position: fixed;
     left: 0;
@@ -412,6 +411,7 @@ main { pointer-events: auto; }
   grid-row: 1;
   font-size: 1.05rem;
   font-weight: 600;
+  line-height: 1.4; /* matches .canvas-head h1, which this row turns into */
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #e9eaee;
