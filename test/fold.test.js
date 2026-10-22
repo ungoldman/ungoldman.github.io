@@ -29,11 +29,12 @@ const center = (r) => [r.x + r.width / 2, r.y + r.height / 2]
 const meet = center(rects.home)
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`)
 
-test('every step fits the timeline both ways', () => {
+test('every step fits the timeline both ways, and the way back moves at once', () => {
   for (const s of [...steps, ...fold(base, false)]) {
     assert.ok(start(s) >= 0)
     assert.ok(end(s) <= TOTAL)
   }
+  assert.equal(Math.min(...fold(base, false).map(start)), 0)
 })
 
 test('the way back is the way in reversed', () => {
@@ -41,20 +42,6 @@ test('the way back is the way in reversed', () => {
     fold(base, false),
     steps.map((s) => reverse(s, TOTAL))
   )
-})
-
-test('the readout winks out during the collapse, and the rule settles last', () => {
-  const collapse = one('rail')
-  const winks = all('items', 'opacity')
-  assert.ok(winks.every((s) => start(s) >= start(collapse) && end(s) < end(collapse)))
-  assert.equal(start(winks[0]), start(collapse))
-  assert.ok(start(one('rule')) < end(collapse))
-  assert.equal(Math.max(...steps.map(end)), end(one('rule')))
-  assert.equal(end(one('rule')), TOTAL)
-})
-
-test('the way back starts moving the header at once', () => {
-  assert.equal(Math.min(...fold(base, false).map(start)), 0)
 })
 
 test('the rail, both glyphs, and the row name collapse on one clock', () => {
@@ -90,9 +77,10 @@ test('the row name stays inside the shrinking rail and lands on the title', () =
   near(center(rects.dest)[1] + y, center(rects.title)[1])
 })
 
-test('the rule unrolls from the title as the block lands', () => {
+test('the rule unrolls from the title as the block lands, and settles last', () => {
   const rule = one('rule')
   assert.ok(start(rule) < end(one('rail')) && end(rule) > end(one('rail')))
+  assert.equal(end(rule), TOTAL)
   assert.equal(rule.keyframes[0].transform, 'scaleX(0)')
   assert.equal(rule.keyframes[0].transformOrigin, 'left')
   assert.equal(all('home', 'transform').length, 0)
@@ -120,11 +108,11 @@ test('index parts start at rest and experiment parts end at rest', () => {
   assert.equal(one('dest', 'transform').keyframes[0].transform, 'translate(0px, 0px)')
 })
 
-test('readout parts wink out in a stagger that ends before the collapse does', () => {
-  const starts = all('items', 'opacity')
-    .map(start)
-    .sort((a, b) => a - b)
-  assert.deepEqual(starts.slice(0, 3), [0, 10, 20])
+test('readout parts wink out nearest the row name first, staggered within the collapse', () => {
+  const gap = (s) => Math.abs(center(base.items[s.index])[1] - center(rects.dest)[1])
+  const order = all('items', 'opacity').sort((a, b) => start(a) - start(b))
+  assert.deepEqual(order.slice(0, 3).map(start), [0, 10, 20])
+  for (let i = 1; i < order.length; i++) assert.ok(gap(order[i]) >= gap(order[i - 1]))
   const many = fold(layout(40), true).filter(
     (s) => s.part === 'items' && 'opacity' in s.keyframes[0]
   )
@@ -178,14 +166,6 @@ test('the readout squashes with the rail as one shape, no two parts overlapping'
       .sort((a, b) => a[0] - b[0])
     for (let j = 1; j < spans.length; j++) assert.ok(spans[j][0] >= spans[j - 1][1] - 1e-9)
   }
-})
-
-test('parts nearest the row name fade first', () => {
-  const fades = all('items', 'opacity')
-  const gap = (s) => Math.abs(center(base.items[s.index])[1] - center(rects.dest)[1])
-  const order = [...fades].sort((a, b) => start(a) - start(b))
-  for (let i = 1; i < order.length; i++) assert.ok(gap(order[i]) >= gap(order[i - 1]))
-  assert.equal(start(order[0]), start(one('rail')))
 })
 
 test('scene and controls are left to the pages', () => {

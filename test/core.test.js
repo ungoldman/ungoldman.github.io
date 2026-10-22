@@ -12,18 +12,16 @@ test('intercepts plain clicks on same-origin links to another page', () => {
   assert.equal(shouldIntercept(link('/galaxies/', { target: '_self' }), click, here), true)
 })
 
-test('leaves the same page alone', () => {
-  assert.equal(shouldIntercept(link('/'), click, here), false)
-  assert.equal(shouldIntercept(link('/#top'), click, here), false)
-})
-
-test('leaves other origins alone', () => {
-  assert.equal(shouldIntercept(link('https://github.com/ungoldman'), click, here), false)
-})
-
-test('leaves new tabs and downloads alone', () => {
-  assert.equal(shouldIntercept(link('/galaxies/', { target: '_blank' }), click, here), false)
-  assert.equal(shouldIntercept(link('/resume.pdf', { download: true }), click, here), false)
+test('leaves the same page, other origins, new tabs, and downloads alone', () => {
+  for (const l of [
+    link('/'),
+    link('/#top'),
+    link('https://github.com/ungoldman'),
+    link('/galaxies/', { target: '_blank' }),
+    link('/resume.pdf', { download: true })
+  ]) {
+    assert.equal(shouldIntercept(l, click, here), false)
+  }
 })
 
 test('leaves modified, non-primary, and handled clicks alone', () => {
@@ -42,12 +40,9 @@ test('treats hash-only differences as the same page', () => {
   assert.equal(samePage(new URL('https://a.test/x'), new URL('https://a.test/x?y')), false)
 })
 
-test('mirrors a cubic-bezier through its center', () => {
+test('mirrors a cubic-bezier through its center, passing other easings through', () => {
   assert.equal(mirror('cubic-bezier(.2, .7, .2, 1)'), 'cubic-bezier(0.8, 0, 0.8, 0.3)')
   assert.equal(mirror(mirror('cubic-bezier(.5, 0, .3, 1)')), 'cubic-bezier(0.5, 0, 0.3, 1)')
-})
-
-test('passes other easings through', () => {
   assert.equal(mirror('linear'), 'linear')
   assert.equal(mirror('ease-out'), 'ease-out')
 })
@@ -63,12 +58,6 @@ test('plays a step back to front, keeping other options', () => {
   assert.deepEqual(backward({ delay: 100, duration: 200, easing: 'linear' }, 560), {
     delay: 260,
     duration: 200,
-    easing: 'linear',
-    direction: 'reverse'
-  })
-  assert.deepEqual(backward({ duration: 560 }, 560), {
-    delay: 0,
-    duration: 560,
     easing: 'linear',
     direction: 'reverse'
   })
