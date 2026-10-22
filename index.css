@@ -182,7 +182,10 @@ main { pointer-events: auto; }
   align-self: center;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.28), transparent);
 }
-#home { display: inline-flex; align-items: center; color: #9aa0ab; text-decoration: none; }
+#home { position: relative; display: inline-flex; align-items: center; color: #9aa0ab; text-decoration: none; }
+/* larger hit area without moving the glyph, which the transition measures */
+#home::before { content: ""; position: absolute; inset: -12px; }
+@media (pointer: coarse) { #home::before { inset: -16px; } }
 #home:hover, #home:focus-visible { color: #e9eaee; }
 .canvas-head h1 { margin: 0; font-size: 1.05rem; font-weight: 600; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
 #controls { display: flex; gap: 6px; }
