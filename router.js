@@ -1,11 +1,9 @@
 import { LEAVE, routable, SPEED, samePage, shouldIntercept, speedIn } from './router/core.js'
 import { fold } from './router/fold.js'
 
-// Swaps same-origin pages in place, with Fold between the index and an
-// experiment. A page opts in by loading this module. See AGENTS.md for the
-// contract a page keeps.
+// Page contract in AGENTS.md.
 const SELF = '/router.js'
-const LEAVE_LIMIT = 1000 // ms an outgoing app may hold its page
+const LEAVE_LIMIT = 1000 // ms
 const MEASURED = ['dest', 'rail', 'top', 'bottom', 'home', 'title']
 const REQUIRED = [...MEASURED, 'rule']
 const loaded = new Set([...document.scripts].map((s) => s.src).filter(Boolean))
@@ -13,7 +11,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)')
 let busy = false
 let shown = location.href
 
-// ?speed=0.2 plays transitions at a fifth of normal speed for this tab, ?speed=1 resets
+// ?speed=0.2 slows transitions for this tab, ?speed=1 resets
 const speedParam = new URLSearchParams(location.search).get('speed')
 if (speedParam) sessionStorage.setItem(SPEED, speedParam)
 const speed = speedIn(sessionStorage)
@@ -30,7 +28,7 @@ addEventListener('click', (event) => {
   go(link.href, true)
 })
 
-// fetch on hover or focus, so the swap rarely waits on the network
+// prefetch on hover or focus
 const pages = new Map()
 function page(href) {
   const url = new URL(href)
@@ -52,7 +50,7 @@ for (const type of ['pointerover', 'focusin']) {
   })
 }
 
-// a history move during a swap is picked up when the swap finishes
+// history moves during a swap are picked up after it
 const moved = () => !samePage(location, new URL(shown))
 addEventListener('popstate', () => {
   if (moved()) go(location.href, false)
@@ -75,12 +73,11 @@ async function swap(href, push) {
   const doc = new DOMParser().parseFromString(await page(href), 'text/html')
   if (!doc.querySelector(`script[src="${SELF}"]`)) throw new Error(`${href} does not load ${SELF}`)
 
-  // on popstate location already points at the target, so read the page on screen
+  // on popstate, location already points at the target
   const from = new URL(shown).pathname
   const before = new Map(sheets(document).map((el) => [sheetKey(el), el]))
   if (push) history.pushState(null, '', href)
   shown = location.href
-  // the outgoing app can hold its page for its own exit with waitUntil
   const leaving = []
   const leave = new Event(LEAVE)
   leave.waitUntil = (promise) => leaving.push(promise)
@@ -100,7 +97,7 @@ async function swap(href, push) {
   const nodes = incoming
     .filter((n) => n.tagName !== 'SCRIPT')
     .map((n) => document.importNode(n, true))
-  // new nodes go first so getElementById finds them over the outgoing copies
+  // first, so getElementById finds new nodes over outgoing ones
   old[0].before(...nodes)
   for (const n of old) n.inert = true
   document.title = doc.title
@@ -139,37 +136,27 @@ function run(script) {
 }
 
 function transition(old, nodes, from, to) {
-  const animations = []
-  const play = (els, keyframes, timing) => {
-    for (const el of [els].flat()) {
-      if (!el) continue
-      const animation = el.animate(keyframes, { fill: 'both', ...timing })
-      animation.playbackRate = speed
-      // browsers drop a finished fill once a newer one covers the same
-      // property, even an additive layer, so keep them all until cancel
-      animation.persist()
-      animations.push(animation)
-    }
-  }
   const inward = Boolean(find(old, '.telemetry'))
   const parts = inward ? collect(old, nodes, to) : collect(nodes, old, from)
-  // pages without the shared chrome swap as they are
-  if (!parts || reduce.matches) return animations
+  if (!parts || reduce.matches) return []
   const box = (el) => el.getBoundingClientRect()
   const layout = Object.fromEntries(MEASURED.map((k) => [k, box(parts[k])]))
   layout.items = parts.items.map(box)
-  for (const step of fold(layout, inward)) {
-    const el = parts[step.part]
-    play(step.index == null ? el : el[step.index], step.keyframes, step.timing)
-  }
-  return animations
+  return fold(layout, inward).map(({ part, index, keyframes, timing }) => {
+    const el = index == null ? parts[part] : parts[part][index]
+    const animation = el.animate(keyframes, { fill: 'both', ...timing })
+    animation.playbackRate = speed
+    // browsers drop a finished fill once a newer one covers its property
+    animation.persist()
+    return animation
+  })
 }
 
-// the index readout and an experiment header, or null when either is missing
+// null unless both sides have the shared chrome
 function collect(index, experiment, path) {
   const header = find(experiment, 'header')
   const dest = find(index, `.manifest a[href="${CSS.escape(path)}"] .dest`)
-  // the clicked row stays put so its name can travel; its caret and description wink first
+  // the clicked row stays for its name to travel, its caret and description wink
   const row = dest?.closest('li')
   const rest = findAll(index, '.telemetry h1, .role, .manifest-label, .manifest li, .links')
   const parts = {
