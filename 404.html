@@ -1,57 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>404 / nope</title>
-  <link rel="shortcut icon" href="favicon.ico">
-  <style>
-    html {
-      background: #000;
-      font-family: 'Muli',
-                   'Lucida Grande',
-                   'Segoe UI',
-                   'Open Sans',
-                   'Helvetica Neue',
-                   'Helvetica',
-                   'Arial',
-                   sans-serif;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-    }
-    #canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100vw;
-      height: 100vh;
-      image-rendering: optimizeQuality;
-      cursor: crosshair;
-    }
-  </style>
-</head>
-<body>
-
-<main class="page">
-  <h1>404 / nope</h1>
-  <a href="/"><img src="http://gifrific.com/wp-content/uploads/2012/10/Sad-Zoidberg-Goes-Into-Garbage.gif" alt="sad zoidberg"></a>
+---
+layout: layouts/base.html
+permalink: 404.html
+title: Page not found
+description: Nothing lives at this address.
+stylesheets:
+  - /index.css
+---
+<header class="canvas-head">
+  <a id="home" href="/" title="index" aria-label="back to index">&#8617;</a>
+  <h1>404</h1>
+  <span class="rule"></span>
+</header>
+<main id="lost">
+  <p>page not found</p>
+  <a href="/">return to index</a>
 </main>
-
 <canvas id="canvas"></canvas>
 
-<script src="/particles/particles.js"></script>
-<script>
-  particles({
-    a: 1,
-    distance: 256,
-    particles: 42,
-    speed: 1
-  })
+<script type="module">
+  import { mount } from '/particles/particles.js'
+  import { winkControls } from '/router/controls.js'
+  const lost = [...document.querySelectorAll('#lost > *')].filter((el) => !el.closest('[inert]'))
+  // looked up now, since during a swap the id finds the incoming page's canvas
+  const canvas = document.getElementById('canvas')
+  const unmount = mount({ a: 1, distance: 256, particles: 42, speed: 1 })
+  winkControls(lost, true)
+  addEventListener('router:leave', (event) => {
+    unmount(event)
+    canvas.style.visibility = 'hidden'
+    event.waitUntil(winkControls(lost, false))
+  }, { once: true })
 </script>
-
-</body>
-</html>

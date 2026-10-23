@@ -190,10 +190,12 @@ main { pointer-events: auto; }
 .canvas-head h1 { margin: 0; font-size: 1.05rem; font-weight: 600; line-height: 1.4; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
 #controls { display: flex; gap: 6px; }
 /* shown by the app as it winks them in, see router/controls.js */
-#controls > :not(.ready) { visibility: hidden; }
+#controls > :not(.ready),
+#lost > :not(.ready) { visibility: hidden; }
 .canvas-head button,
 #settings button,
-#help button {
+#help button,
+#lost a {
   font: inherit;
   letter-spacing: inherit;
   line-height: 1.4;
@@ -222,10 +224,34 @@ main { pointer-events: auto; }
 #settings button:hover,
 #settings button:focus-visible,
 #help button:hover,
-#help button:focus-visible { background: rgba(255, 255, 255, 0.12); text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
+#help button:focus-visible,
+#lost a:hover,
+#lost a:focus-visible { background: rgba(255, 255, 255, 0.12); text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
 .canvas-head :focus-visible,
 #settings :focus-visible,
-#help :focus-visible { outline: 1px solid rgba(255, 255, 255, 0.5); outline-offset: 2px; }
+#help :focus-visible,
+#lost :focus-visible { outline: 1px solid rgba(255, 255, 255, 0.5); outline-offset: 2px; }
+
+/* 404: a note and a way home, centered in the scene */
+#lost {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  min-height: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+  color: #9aa0ab;
+  font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace;
+}
+#lost p { margin: 0; letter-spacing: 0.12em; }
+#lost a { pointer-events: auto; text-decoration: none; }
 
 #settings {
   position: fixed;
@@ -328,7 +354,7 @@ main { pointer-events: auto; }
   #settings input[type=range]::-moz-range-thumb { width: 30px; height: 30px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .canvas-head button, #settings button, #help button { transition: none; }
+  .canvas-head button, #settings button, #help button, #lost a { transition: none; }
 }
 
 /* identity as a luminous telemetry readout over the galaxy */

@@ -14,13 +14,10 @@ export default function (eleventyConfig) {
     'pizza.jpg',
     'resume.pdf',
     'resume',
-    'tmp',
-    '404.html'
+    'tmp'
   ]
   for (const path of passthrough) eleventyConfig.addPassthroughCopy(path)
 
-  // 404.html stays at root for GitHub Pages
-  eleventyConfig.ignores.add('404.html')
   eleventyConfig.ignores.add('resume/**')
   eleventyConfig.ignores.add('README.md')
   eleventyConfig.ignores.add('AGENTS.md')
