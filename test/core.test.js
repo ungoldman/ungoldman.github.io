@@ -20,7 +20,7 @@ test('leaves the same page, other origins, new tabs, and downloads alone', () =>
     link('/galaxies/', { target: '_blank' }),
     link('/resume.pdf', { download: true })
   ]) {
-    assert.equal(shouldIntercept(l, click, here), false)
+    assert.equal(shouldIntercept(l, click, here), false, l.href)
   }
 })
 
