@@ -27,6 +27,7 @@ test('controls wink out at once, in reverse order, and stay out', () => {
 test('winks each control at the router speed and settles when all are done', async (t) => {
   const calls = []
   const el = () => ({
+    classList: new Set(),
     animate(keyframes, timing) {
       const animation = { finished: Promise.resolve(timing.delay) }
       calls.push({ keyframes, timing, animation })
@@ -59,4 +60,14 @@ test('finds the controls rightmost first, then the settings panel, skipping the 
     pageControls(doc).map((c) => c.name),
     ['c', 'b', 'a', 'settings']
   )
+})
+
+test('marks controls ready on the way in, and skips the wink under reduced motion', async (t) => {
+  globalThis.matchMedia = () => ({ matches: true })
+  t.after(() => delete globalThis.matchMedia)
+  const el = { classList: new Set(), animate: () => assert.fail('animated') }
+  await winkControls([el], false)
+  assert.equal(el.classList.has('ready'), false)
+  await winkControls([el], true)
+  assert.equal(el.classList.has('ready'), true)
 })

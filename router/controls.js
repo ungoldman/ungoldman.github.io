@@ -25,7 +25,10 @@ export function controlWinks(count, inward) {
   }))
 }
 
+// controls stay hidden until marked ready, so they never show before winking in
 export function winkControls(elements, inward) {
+  if (inward) for (const el of elements) el.classList.add('ready')
+  if (globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return Promise.resolve()
   const speed = speedIn(globalThis.sessionStorage)
   const winks = controlWinks(elements.length, inward)
   return Promise.all(
