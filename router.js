@@ -5,7 +5,7 @@ import { fold } from './router/fold.js'
 const SELF = '/router.js'
 const LEAVE_LIMIT = 1000 // ms
 const MEASURED = ['dest', 'rail', 'top', 'bottom', 'home', 'title']
-const REQUIRED = [...MEASURED, 'rule']
+const REQUIRED = ['rail', 'top', 'bottom', 'home', 'title', 'rule']
 const loaded = new Set([...document.scripts].map((s) => s.src).filter(Boolean))
 const reduce = matchMedia('(prefers-reduced-motion: reduce)')
 let busy = false
@@ -150,7 +150,7 @@ function transition(old, nodes, from, to) {
   const parts = inward ? collect(old, nodes, to) : collect(nodes, old, from)
   if (!parts || reduce.matches) return []
   const box = (el) => el.getBoundingClientRect()
-  const layout = Object.fromEntries(MEASURED.map((k) => [k, box(parts[k])]))
+  const layout = Object.fromEntries(MEASURED.filter((k) => parts[k]).map((k) => [k, box(parts[k])]))
   layout.items = parts.items.map(box)
   return fold(layout, inward).map(({ part, index, keyframes, timing }) => {
     const el = index == null ? parts[part] : parts[part][index]

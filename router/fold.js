@@ -1,6 +1,6 @@
 import { OUT, reverse } from './core.js'
 
-// The way back plays this timeline backwards, so the header settles last.
+// The header settles last, so the way back, played backwards, moves at once.
 const COLLAPSE = [0, 240]
 const WINKS = [0, 160]
 const HANDOFF = [240, 300] // the merged glyph turns into the back link
@@ -24,7 +24,8 @@ const fade = (part, to, timing) => ({
   timing
 })
 
-// r: rects for dest, rail, top, bottom (glyphs), home, title, and items
+// r: rects for rail, top, bottom (glyphs), home, title, items, and dest, the
+// row for the page if the index has one
 export function fold(r, inward) {
   const [mergeX, mergeY] = [cx(r.home), cy(r.home)]
   const glyph = (g) => move(mergeX - cx(g), mergeY - cy(g))
@@ -40,7 +41,7 @@ export function fold(r, inward) {
   // Items squash offset and height together so none overlap. The row name
   // keeps its size and drifts to center, clear of the rail's ends.
   const mid = r.rail.y + r.rail.height / 2
-  const across = r.title.x - r.dest.x
+  const across = r.dest ? r.title.x - r.dest.x : 0
   const track = (box, squash) =>
     Array.from({ length: SAMPLES + 1 }, (_, i) => {
       const e = i / SAMPLES
@@ -72,7 +73,6 @@ export function fold(r, inward) {
       keyframes: [{ transform: 'none' }, { transform: glyph(r.bottom) }],
       timing: collapse
     },
-    { part: 'dest', keyframes: track(r.dest, false), timing: collapse },
     {
       part: 'bottom',
       keyframes: [
@@ -85,7 +85,6 @@ export function fold(r, inward) {
     },
     fade('top', 0, span(HANDOFF, 'linear')),
     fade('home', 1, span(HANDOFF, 'linear')),
-    fade('dest', 0, span(SWAP, 'linear')),
     fade('title', 1, span(SWAP, 'linear')),
     {
       part: 'rule',
@@ -96,9 +95,15 @@ export function fold(r, inward) {
       timing: span(RULE)
     }
   ]
+  if (r.dest) {
+    steps.push(
+      { part: 'dest', keyframes: track(r.dest, false), timing: collapse },
+      fade('dest', 0, span(SWAP, 'linear'))
+    )
+  }
   // nearest first, since the row name crosses them
   const nearest = r.items
-    .map((box, index) => ({ index, gap: Math.abs(cy(box) - cy(r.dest)) }))
+    .map((box, index) => ({ index, gap: Math.abs(cy(box) - (r.dest ? cy(r.dest) : mid)) }))
     .sort((a, b) => a.gap - b.gap)
   nearest.forEach(({ index }, rank) => {
     const start = Math.min(rank * STAGGER, WINKS[1] - WINK)

@@ -181,3 +181,19 @@ test('scene and controls are left to the pages', () => {
     'top'
   ])
 })
+
+test('without a row for the page, the header folds alone and the readout winks out from the rail center', () => {
+  const { dest, ...rest } = base
+  const s = fold(rest, true)
+  assert.equal(
+    s.some((x) => x.part === 'dest'),
+    false
+  )
+  const mid = rects.rail.y + rects.rail.height / 2
+  const gap = (x) => Math.abs(center(base.items[x.index])[1] - mid)
+  const order = s.filter((x) => x.part === 'items' && 'opacity' in x.keyframes[0])
+  order.sort((a, b) => start(a) - start(b))
+  for (let i = 1; i < order.length; i++) assert.ok(gap(order[i]) >= gap(order[i - 1]))
+  const moves = s.filter((x) => x.part === 'items' && 'transform' in x.keyframes[0])
+  assert.ok(moves.every((x) => nums(last(x).transform)[0] === 0))
+})
