@@ -9,6 +9,7 @@ const REQUIRED = [...MEASURED, 'rule']
 const loaded = new Set([...document.scripts].map((s) => s.src).filter(Boolean))
 const reduce = matchMedia('(prefers-reduced-motion: reduce)')
 let busy = false
+let queued = null
 let shown = location.href
 
 // ?speed=0.2 slows transitions for this tab, ?speed=1 resets
@@ -50,14 +51,17 @@ for (const type of ['pointerover', 'focusin']) {
   })
 }
 
-// history moves during a swap are picked up after it
+// history moves and clicks during a swap are picked up after it
 const moved = () => !samePage(location, new URL(shown))
 addEventListener('popstate', () => {
   if (moved()) go(location.href, false)
 })
 
 async function go(href, push) {
-  if (busy) return
+  if (busy) {
+    if (push) queued = href
+    return
+  }
   busy = true
   try {
     await swap(href, push)
@@ -66,11 +70,17 @@ async function go(href, push) {
     return
   }
   busy = false
+  const next = queued
+  queued = null
   if (moved()) go(location.href, false)
+  else if (next && !samePage(new URL(next), location)) go(next, true)
 }
 
 async function swap(href, push) {
-  const doc = new DOMParser().parseFromString(await page(href), 'text/html')
+  const text = await page(href)
+  // a history move while fetching wins over the click
+  if (push && moved()) return
+  const doc = new DOMParser().parseFromString(text, 'text/html')
   if (!doc.querySelector(`script[src="${SELF}"]`)) throw new Error(`${href} does not load ${SELF}`)
 
   // on popstate, location already points at the target
