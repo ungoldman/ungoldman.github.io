@@ -191,6 +191,9 @@ main { pointer-events: auto; }
 #controls { display: flex; gap: 6px; }
 /* shown by the app as it winks them in, see router/controls.js */
 #controls > :not(.ready),
+#menus > :not(.ready),
+header > p:not(.ready),
+header > button:not(.ready),
 #lost > :not(.ready) { visibility: hidden; }
 .canvas-head button,
 #settings button,

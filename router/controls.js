@@ -9,7 +9,9 @@ const winked = { transform: 'scaleY(0)', opacity: 0 }
 // rightmost first, skipping the outgoing page, which is inert during a swap
 export const pageControls = (doc) =>
   [
-    ...[...doc.querySelectorAll('#controls > *')].reverse(),
+    ...[
+      ...doc.querySelectorAll('#controls > *, #menus > *, header > p, header > button')
+    ].reverse(),
     ...doc.querySelectorAll('#settings')
   ].filter((el) => !el.closest('[inert]'))
 

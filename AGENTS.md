@@ -34,4 +34,6 @@ Node 22.12+. Do not alter version. Push to `main` deploys https://ungoldman.com 
 - Owns its scene and controls. It may animate them in on mount, and out from its teardown, which gets the leave event. `event.waitUntil(promise)` keeps the outgoing page in place until the promise settles, for up to a second.
 - Looks up its elements by id at mount time. Incoming nodes precede outgoing ones, so ids resolve to the new page when both have them. Outgoing nodes are `inert`, so a lookup for an element the new page lacks skips those (`router/controls.js` does).
 
+During a swap the outgoing page is pinned out of flow and keeps its inherited type, the body takes the incoming page's layout, and both pages' sheets apply. Incoming links land under inline page styles. So a page should set what it relies on rather than inherit it from a browser default, and hide what it should not leave on screen from its teardown. The router syncs `theme-color` and `viewport` in the head. Anything else a page sets on `html` or `body` is its own to clear.
+
 The router animates only the shared chrome. Fold plays between the index readout (`.telemetry`) and an experiment `header` holding `#home`, `h1`, and `.rule`. Other pairs swap without a transition.

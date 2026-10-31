@@ -4,8 +4,24 @@ import { fold } from './router/fold.js'
 // Page contract in AGENTS.md.
 const SELF = '/router.js'
 const LEAVE_LIMIT = 1000 // ms
+const CANVAS_FADE = 120 // ms
 const MEASURED = ['dest', 'rail', 'top', 'bottom', 'home', 'title']
 const REQUIRED = ['rail', 'top', 'bottom', 'home', 'title', 'rule']
+const BODY_HELD = [
+  'display',
+  'padding',
+  'margin',
+  'height',
+  'gridTemplateColumns',
+  'gridTemplateRows',
+  'columnGap',
+  'color',
+  'fontFamily',
+  'fontSize',
+  'fontWeight'
+]
+const INHERITED = ['color', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight']
+const SHARED_META = ['theme-color', 'viewport']
 const loaded = new Set([...document.scripts].map((s) => s.src).filter(Boolean))
 const reduce = matchMedia('(prefers-reduced-motion: reduce)')
 let busy = false
@@ -93,24 +109,37 @@ async function swap(href, push) {
   leave.waitUntil = (promise) => leaving.push(promise)
   dispatchEvent(leave)
 
+  // out of flow before anything moves, so neither page shifts the other
+  const old = [...document.body.children]
+  pin(old)
+
   const kept = new Set()
   const added = []
+  const first = sheets(document)[0] ?? null
   for (const el of sheets(doc)) {
     const key = sheetKey(el)
     if (before.has(key)) kept.add(key)
-    else added.push(document.head.appendChild(document.importNode(el, true)))
+    else {
+      // links under inline page styles, whose bare rules hold for the outgoing page
+      const node = document.importNode(el, true)
+      added.push(document.head.insertBefore(node, node.tagName === 'LINK' ? first : null))
+    }
   }
   await Promise.all(added.filter((el) => el.tagName === 'LINK').map(loadOf))
 
-  const old = [...document.body.children]
   const incoming = [...doc.body.children]
   const nodes = incoming
     .filter((n) => n.tagName !== 'SCRIPT')
     .map((n) => document.importNode(n, true))
   // first, so getElementById finds new nodes over outgoing ones
   old[0].before(...nodes)
-  for (const n of old) n.inert = true
+  for (const n of old) {
+    n.inert = true
+    if (n.matches('canvas')) retire(n)
+  }
+  holdBody([...before].filter(([key]) => !kept.has(key)).map(([, el]) => el))
   document.title = doc.title
+  for (const name of SHARED_META) syncMeta(name, doc)
 
   const animations = transition(old, nodes, from, location.pathname)
   for (const s of incoming.filter((n) => n.tagName === 'SCRIPT')) run(s)
@@ -119,7 +148,61 @@ async function swap(href, push) {
   for (const a of animations) a.cancel()
   for (const n of old) n.remove()
   for (const [key, el] of before) if (!kept.has(key)) el.remove()
+  document.body.removeAttribute('style')
   find(nodes, `a[href="${CSS.escape(from)}"]`)?.focus({ preventScroll: true })
+}
+
+// gone from under the incoming canvas, whose page draws from the start of the fold
+function retire(canvas) {
+  canvas.style.zIndex = -2
+  if (reduce.matches) {
+    canvas.style.visibility = 'hidden'
+    return
+  }
+  const fade = canvas.animate({ opacity: 0 }, { duration: CANVAS_FADE, fill: 'forwards' })
+  fade.playbackRate = speed
+}
+
+function pin(nodes) {
+  const frozen = nodes.map((n) => [n, n.getBoundingClientRect(), getComputedStyle(n)])
+  for (const [n, { x, y, width, height }, style] of frozen) {
+    if (!height) continue
+    for (const k of INHERITED) n.style[k] = style[k]
+    if (style.position === 'fixed' || style.position === 'absolute') continue
+    Object.assign(n.style, {
+      position: 'fixed',
+      left: `${x}px`,
+      top: `${y}px`,
+      width: `${width}px`,
+      height: `${height}px`,
+      margin: 0
+    })
+  }
+}
+
+// outgoing sheets stay for the fold, so hold the body's layout at the incoming
+// page's, or it lands where they put it and jumps when they go
+function holdBody(outgoing) {
+  const toggle = (disabled) => {
+    for (const el of outgoing) el.sheet.disabled = disabled
+  }
+  toggle(true)
+  const style = getComputedStyle(document.body)
+  const held = Object.fromEntries(BODY_HELD.map((k) => [k, style[k]]))
+  // a ratio, since a length would inherit as is into every font size
+  const ratio = parseFloat(style.lineHeight) / parseFloat(style.fontSize)
+  if (ratio) held.lineHeight = ratio
+  toggle(false)
+  // canvases sit at z-index -1, under a painted body
+  held.background = 'transparent'
+  Object.assign(document.body.style, held)
+}
+
+function syncMeta(name, doc) {
+  const selector = `meta[name="${name}"]`
+  const next = doc.querySelector(selector)
+  document.querySelector(selector)?.remove()
+  if (next) document.head.append(document.importNode(next, true))
 }
 
 const sheets = (doc) => [...doc.head.querySelectorAll('link[rel="stylesheet"], style')]
